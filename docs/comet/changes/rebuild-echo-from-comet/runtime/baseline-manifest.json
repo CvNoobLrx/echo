@@ -1,0 +1,3640 @@
+{
+  "schema": "comet.native.content-snapshot.v1",
+  "origin": "change-created",
+  "capture": {
+    "provider": "git"
+  },
+  "createdAt": "2026-08-05T14:44:49.265Z",
+  "complete": true,
+  "limits": {
+    "maxFiles": 10000,
+    "maxFileBytes": 268435456,
+    "maxTotalBytes": 268435456,
+    "maxManifestBytes": 1048576,
+    "maxDurationMs": 60000
+  },
+  "policy": {
+    "schema": "comet.native.snapshot-policy.v1",
+    "include": [
+      "**/*"
+    ],
+    "exclude": [],
+    "hash": "cc34dce5671bc1aefad09b658911a71d0434a26a1fbb4d8ba10de57b316f1f2f"
+  },
+  "entries": [
+    {
+      "path": ".gitignore",
+      "hash": "de6662c04cadc21404e45c7a339189246b814cd5e0cee4b9ef31c2dc5487b42d",
+      "size": 1147,
+      "type": "file"
+    },
+    {
+      "path": "api/.dockerignore",
+      "hash": "c3ee7dda64e192ec7cae0858701618ae478d90f5cb9b67b5b7790560616b7c74",
+      "size": 195,
+      "type": "file"
+    },
+    {
+      "path": "api/alembic.ini",
+      "hash": "0c2137c4ad2d185febfa495ac42646907499b16771adcbf49d2bc3895460696b",
+      "size": 689,
+      "type": "file"
+    },
+    {
+      "path": "api/app/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/celery_app.py",
+      "hash": "12df42438ab88efb65ef6affba02b2e030e8dc4aa755b52a43a45acf8980e183",
+      "size": 2663,
+      "type": "file"
+    },
+    {
+      "path": "api/app/config.py",
+      "hash": "4fc52cda56f6befb368e439390f095ee4c92976a1669daff48ea826d671da674",
+      "size": 9905,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/agent_config_controller.py",
+      "hash": "9bc2010f4a3555185b07b3dfa883d6f522e167ffc75ac41c840098e20911e990",
+      "size": 1551,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/agent_persona_controller.py",
+      "hash": "f90d3a489c9639ac1f3dc360c7595e52d21dd4c480d4b8eb3026667528823343",
+      "size": 2416,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/agent_task_controller.py",
+      "hash": "74acb3efda1bcdcfa33093ecb81ef86957c9170d7d46b26dc6f6cde785e615a6",
+      "size": 3358,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/auth_controller.py",
+      "hash": "a83a4c7588b76fcad7eb27ffcee26c69a5b34999f66229fc678cd65b6d079bcc",
+      "size": 3381,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/chat_controller.py",
+      "hash": "6fc20972fb8ad5f443d3a825f4b868aa2bac34a397b204fe45fc44d2bfe6244a",
+      "size": 9118,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/conversation_share_controller.py",
+      "hash": "69d6f371886849fb901f76265fc2b9a8cdc7345a74ebc8acac41b1ed2753c8e0",
+      "size": 2512,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/dashboard_controller.py",
+      "hash": "37684c7bdc2e44c3925f9f38fd665b95570e328e322419d28cf35d32d31145b1",
+      "size": 2133,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/document_controller.py",
+      "hash": "fef9601b4efc923de6d11d3da7b694385211bacf937e6ab3526483a7381f4289",
+      "size": 5769,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/emotion_controller.py",
+      "hash": "8a08fd6149403d9f5e4da48d715b9dc4af96af3ad6c79965df27f3b03d687bf2",
+      "size": 1694,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/favorite_controller.py",
+      "hash": "412366018538f7e947167681c854230b79d49107491eab6a0f7639c829e31b05",
+      "size": 1546,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/file_controller.py",
+      "hash": "a3e4fc3f921878fb12d4c21357df35d43c7dd8fe1cd0bc05f71555781db4a9a2",
+      "size": 1672,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/group_chat_controller.py",
+      "hash": "aa1039aa5e61158115beb542fb92c34c7531b6b30e70e977d584bcfcffd5ca38",
+      "size": 8214,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/health_controller.py",
+      "hash": "273bd163ce5a325cb4ef95fa45eb797f48d283810bf1062e8e6acf0d0a23a1d0",
+      "size": 918,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/image_controller.py",
+      "hash": "b721175a12e378d14534aeef97064d14b078fe7d185209922ab994bc5fab1ec6",
+      "size": 3201,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/knowledge_base_controller.py",
+      "hash": "a1cf0bf646ba458df2f77148d8e90cc24ba9fbdd97659134b1a1e6aaf26823e8",
+      "size": 2424,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/mcp_controller.py",
+      "hash": "3b1df97fabff826666571074f043cab4df0f41274b3dae1ef8bcfa164d731415",
+      "size": 2951,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/memory_controller.py",
+      "hash": "3c6a80909724ccf3eefb52cd8c65cab855af021fb72380e2e930b73e56157b0d",
+      "size": 9314,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/model_config_controller.py",
+      "hash": "40ab8c06a161965534f5d95351fac5bc7019f10be781b44900905cb7807e0347",
+      "size": 2700,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/music_controller.py",
+      "hash": "a3d50de91dc014488e4b4c9f08cf54c0ddb2f5de68a68766ad47184e201508c5",
+      "size": 4089,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/notify_controller.py",
+      "hash": "cf37c59d7b2b0639302a23bb979b5d386247eb2f5794c84e13810a2d829be65f",
+      "size": 1992,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/persona_group_controller.py",
+      "hash": "6b244d51b283597da2555108711467abc5f8fd46e47106dbd4d93b49ffceda91",
+      "size": 3113,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/research_controller.py",
+      "hash": "42a14ff78b2aad16f2a1bddaf7703de656525a1a1260b3b6a8005517b39fc05d",
+      "size": 6563,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/router.py",
+      "hash": "4ccd66a68b7f5367a4acae8652ab336265d0753bc746781bd899d32fc3ec4fb8",
+      "size": 2564,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/search_controller.py",
+      "hash": "1110ae9a1f0130957c345c9d8229225f13b5a74a3664e57206b781707b3619f9",
+      "size": 814,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/skill_controller.py",
+      "hash": "cbdc5a1e9bd2dad466f957320b6d57e4a9307220368cf74ddfdaa98c8eb5d1ec",
+      "size": 2937,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/tag_controller.py",
+      "hash": "4dcd75865c80710ebff0386a489a513b89054dcb26371669820208a53df1b66a",
+      "size": 1721,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/tool_controller.py",
+      "hash": "d51c871dbec6a3cf382a26659915f7b5d5ca88ff234aa4586b599edbe15d98ab",
+      "size": 1050,
+      "type": "file"
+    },
+    {
+      "path": "api/app/controllers/trace_controller.py",
+      "hash": "5b58e81c97ea12a3ca8a858b8daeed09b8583e7b714f23f83f825e7852abbd49",
+      "size": 2496,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/__init__.py",
+      "hash": "d348e4d51ce3a9da2e11bab04ae82b58a10f5c8f14e8e9dce1705538ba9fd8ca",
+      "size": 393,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/context_hint.py",
+      "hash": "937cec62412ae430e09f2f62dd71b989fbb3d034c99f16593d4b805425078a01",
+      "size": 1868,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/group_chat.py",
+      "hash": "78575a583e4176f7b5fb818d0319146fe0df9ff76262243921fa9876e3c1a964",
+      "size": 7145,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/__init__.py",
+      "hash": "d8deb67c7f1a3595a9bed4e8de7a7e833c75995498e532c25f9051addf8ce519",
+      "size": 1051,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/controller.py",
+      "hash": "36c8bd855317323acd85b384ad818d5049c918901e6dd6a4c00a60e0a2d7cea9",
+      "size": 15547,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/models.py",
+      "hash": "28046e0bd108f1e6ccc4af393eb7f6daec084a52f27510370544db14013f32e8",
+      "size": 4750,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/policy.py",
+      "hash": "e0c0e899ba1634b46ac4d82f255a4e7ea3e38fa3df6e55b9106a0a8f4881b0ae",
+      "size": 3419,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/repair/__init__.py",
+      "hash": "575c00b78525bb0446f2071e1903c7074adfba3c8173b33dddbdb217a3dac49c",
+      "size": 694,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/repair/base.py",
+      "hash": "65a927709be739a50ccd3d69e4e1f8300931b7f75574e9bf93c4c8fa5ec26a28",
+      "size": 1402,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/repair/chapter_rewrite.py",
+      "hash": "f0a10f3fcf5bbc773c288f8b53d676338f73a2db17da31b05fa472e62df8feab",
+      "size": 3536,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/repair/patch_repair.py",
+      "hash": "8b754e78067ac158fd183dd589a379b7623c1fe9a89d00967571873bad5c54f1",
+      "size": 4061,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/rubric/__init__.py",
+      "hash": "1222f8de9ed1ef5a6114bdff98408588c6389a35c66dfac1f8fbbb6a9568bea7",
+      "size": 592,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/rubric/research.py",
+      "hash": "a40b2e1a726b809fda9d01234f0d591d7f4097f11113109aaae723c9f37e958b",
+      "size": 3300,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/rubric/task.py",
+      "hash": "3f91e49d0920bd866179e181dfba39ae6e8d07b349b05482a24fe4860c95a082",
+      "size": 572,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/store.py",
+      "hash": "2fc76ad9d863e1863028ba942eebb3280befc980ced39931f5429a9dfc9dda94",
+      "size": 5467,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/verifier/__init__.py",
+      "hash": "e3fd163b9af9205c550cb242b44cce99b6507e3e72527afe9d2712ce23ad29e4",
+      "size": 887,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/verifier/base.py",
+      "hash": "f9e6b83e01de37ebad36428297a69ab2c806fec7b6f0e66c24aa11195b91e11f",
+      "size": 1521,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/verifier/llm_verifier.py",
+      "hash": "18c599074cd8a746feb57cb1c962bbe72b9d2391f4ea00bc1463a8e19046368c",
+      "size": 7197,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/verifier/prompt_renderer.py",
+      "hash": "ff886ee223944888d93491d75205507be7419f6769fdd7eb3ecb330e8921a87e",
+      "size": 783,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/verifier/prompts/critic_role.jinja2",
+      "hash": "14683b4c132cbcd72f0476ac20a02ee169a98eab6cc50278531e4545dcca21b0",
+      "size": 527,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/loop/verifier/prompts/verify_research.jinja2",
+      "hash": "ff030b4fb60037b06daa1591b8ba8abfa3940117be238cd277d072d6d29078e5",
+      "size": 1825,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/orchestrator.py",
+      "hash": "027ac589d97438ffa4a2844d76df3be7938aa0021f88c892178f1e8b596e17dd",
+      "size": 16871,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompt_renderer.py",
+      "hash": "972bb206d53f7824475a64038936f229201205ef53af3e170fff5abbb3089a5d",
+      "size": 693,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/__init__.py",
+      "hash": "3122897045e534a48009cbb372d0b520b8f2b9324710487768df197609cc040f",
+      "size": 55,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/group_host.jinja2",
+      "hash": "2eba0ff794ff448f48d1e4e1e1f134781416b4533b860fa645bad5b942fbcff4",
+      "size": 2081,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/group_speaker.jinja2",
+      "hash": "ffd615b4e11d5912dd839886d59c8f1f42613ea4063c6a78b5b8f0c535e8b5f0",
+      "size": 2666,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/human_style.jinja2",
+      "hash": "f4189ba63fabd1411d7dd387bdafcefe2ab416c4604952b784627d09ed4e2350",
+      "size": 2518,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/optimize_prompt.jinja2",
+      "hash": "9d90a40eecbe39f1683eac97e627bf4f9696c80ca4aaf4037805f50bbab406ee",
+      "size": 3369,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/optimize_skill_prompt.jinja2",
+      "hash": "0a40c035e2645c6ecbc2d80b3f906593d51c29539456545d5fac8ecc0285fef6",
+      "size": 4402,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/prompts/react.jinja2",
+      "hash": "c49508800745ead7e66754a8b308b95563cdc0d274543c928d545d96ffad742d",
+      "size": 1089,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/__init__.py",
+      "hash": "58b978e5520666f7d2b527ff2d615e13586df52382a715dccf22ff2ae25626d9",
+      "size": 495,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/curator.py",
+      "hash": "c853cd3f1c894b3277277b513b694292695d02c148db4ced4b882d8b6963dd5e",
+      "size": 4489,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/distiller.py",
+      "hash": "89818b138f50bfc2725f56ea15b5467d9e26eadda92dc626e1c96d0d543c292a",
+      "size": 4070,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/engine.py",
+      "hash": "22649ce5db5651b563eff1cfdef27c90da1b3ef7e7a0841f7df20eb3c20a477e",
+      "size": 23215,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/models.py",
+      "hash": "f0852c16f50bd718bfdeea83dab6197bfafa0ee93575ba42955ce73a6f4ecc60",
+      "size": 2823,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/planner.py",
+      "hash": "ef609ad5ef8955960ab669fe29bc88fc9000b65c63d7d3116ac8a0bec61cd618",
+      "size": 3833,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompt_renderer.py",
+      "hash": "072bbc626fc69223a4b1513dc04fb5420a5dc6a28bb4f97bd501ab71c3794fa7",
+      "size": 709,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/curate_outline.jinja2",
+      "hash": "263a05149f9ac2ec7da90c8c79bfb24c0fa72bf8bdea91214faa3887617235f8",
+      "size": 1584,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/distill.jinja2",
+      "hash": "3fab1622b4d01f847050feb4a06c1c4bed1353d6ed2b9c145cb2c3c19162fdaf",
+      "size": 1473,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/gap_check.jinja2",
+      "hash": "8b05eb94c6bc37e4db7e8bfe5cbbde65ee952ffd2f644e0dbf9f146bdf3217ae",
+      "size": 1093,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/optimize_topic.jinja2",
+      "hash": "f52af813543be0d11b8ba5fd5b013e3e1deb5c12a03f047e8e61798717e9afcd",
+      "size": 3247,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/plan.jinja2",
+      "hash": "c80e52206c95e5b2d72c7aea7fb7fecb67ec844601486f57c8c13658a6ba595a",
+      "size": 3105,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/summarize.jinja2",
+      "hash": "153bf01452716e4f3ae2376372fdb8960c75c85765a7e8c3e7ccf9a5038b297f",
+      "size": 962,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/prompts/write_section.jinja2",
+      "hash": "fd4a2fa55b4cc91fd0d7b1f2722118aa242a219db759ce1ef667b70275dbc952",
+      "size": 2780,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/reflector.py",
+      "hash": "cb2a6709e384f93e81c2f287790bfe9392af287989f93dd373c312ee15c833a6",
+      "size": 2071,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/retriever.py",
+      "hash": "1b18ef9de76041e3550b6411160c8dd56d1884bc38067826592112d0fabf1ef0",
+      "size": 16936,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/research/writer.py",
+      "hash": "8ead5badd27649a2cc4b1cc4ed20318ca0184726572baa68070bee1b35492383",
+      "size": 3113,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/__init__.py",
+      "hash": "d2d284422df56ab1a436d9c9a89212d9aeea8dab2248b8f2dcdee7923e3f0d0e",
+      "size": 543,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/base.py",
+      "hash": "7814f230f0bb6c3fe71633b1b3d48d430441c81efcfecdbfb334a061c55e21ee",
+      "size": 2379,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/builtin/__init__.py",
+      "hash": "95fbabdc97a69a77d932f9845caaba2c4c9af1628373cae13bde8a845ebb858e",
+      "size": 233,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/builtin/datetime_tool.py",
+      "hash": "face67f20d05d3090d22566cb36a6c7152ce83ed6afb3b9cea0b7ea038973b11",
+      "size": 1484,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/builtin/knowledge.py",
+      "hash": "680625c3ea3d798309d01cc6f05388df75a8a94753b2457a37a9edafc19dd8df",
+      "size": 2339,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/builtin/memory.py",
+      "hash": "99179c7601ea254c9dec9faa5d63f8d9af5465b485b25785a76d12aad1e3831a",
+      "size": 2127,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/builtin/schedule.py",
+      "hash": "d65ecd7d5ce8669da8515564f579a55350f3b000001a05ba94a4854e59d4df27",
+      "size": 3735,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/builtin/web_search.py",
+      "hash": "8a850bb6c38f31d271d1bfcbc0b333d347fee3bf3a24915e31f86cc56fa8c2d7",
+      "size": 2763,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/mcp/__init__.py",
+      "hash": "2b4264eedd00917bd34d24aabc7ccd1995976c6e1f8115ae6ac4fa26d5a7bb74",
+      "size": 299,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/mcp/connection.py",
+      "hash": "81f5ad4a8dd8e00f5b5d52d1dec20b2021e02d3e74b846fabe1cf8e9481178f0",
+      "size": 2483,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/mcp/loader.py",
+      "hash": "189dd00209e1e5d8b85174ff3ab804034252927685458e3b508b78c495cbc9ff",
+      "size": 7282,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tools/registry.py",
+      "hash": "3c4f60643fb555e97eb637022274730a89abc0207ba3abe37c09ba5716a25203",
+      "size": 5774,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tracing/__init__.py",
+      "hash": "b9f72371e18b4bf8515d7cc2aa02d2d6c494cabcb7ed9776db4d7faba2c9b119",
+      "size": 1130,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tracing/models.py",
+      "hash": "f6bd97e113e66c8bf49c33fee4cabfc9755899c3abc5b0c7d1aab6f25450c89f",
+      "size": 2212,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tracing/otel_attrs.py",
+      "hash": "59fb051aff711e2b1f16b0d59d8c72ca283dd7806288862cd549a6c5ed7e6cc5",
+      "size": 2404,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tracing/pricing.py",
+      "hash": "782c895771eba05fe7cc8f6753c8dc2b65dae0c1e9f9bae4581acdca45f4ff09",
+      "size": 3880,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tracing/span_recorder.py",
+      "hash": "cc253c893718046242d5ed1668b6c7fca911614e701a774ac78e4ff00687ee65",
+      "size": 9724,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/tracing/tracer.py",
+      "hash": "c67255f3c468ebaf62b643af2b53a2a991b47ea449fd5343f8419ccf576effd1",
+      "size": 11681,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/agent/web_search.py",
+      "hash": "7ce9de95aa576c599220fac6284b25a70c37930e34b81a8130dda7e21d9de8c3",
+      "size": 4904,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/asr/__init__.py",
+      "hash": "f30e52dc9067cb9618ce04f7284047be9d0b24b63a96b70effadaf6bf8546e58",
+      "size": 163,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/asr/transcriber.py",
+      "hash": "8407476506df6edb13e2781bd7ff7ee83afecea6880ffb6803fcb02fcd64c6d6",
+      "size": 6089,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/dashboard/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/dashboard/prompt_renderer.py",
+      "hash": "3769f245668291652aa18bab6b7f13b51034d216f6f7d366943adf7fee9269ab",
+      "size": 852,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/dashboard/prompts/daily_care.jinja2",
+      "hash": "175307048836772fbfbd5857ea31c11b2fcce2d71a589be41464eee3c53d30ad",
+      "size": 927,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/dashboard/prompts/daily_review.jinja2",
+      "hash": "8f5a1ee2d7e90c9b4b83015cec29eb3c834098c1f480a447b2952303e98b1cf7",
+      "size": 654,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/dependencies.py",
+      "hash": "5e03c7c24cbb8628673a63938547913009064bd7dc338797766335d023c7ab69",
+      "size": 1168,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/emotion/__init__.py",
+      "hash": "fba990e6332125ed838d86ffc0774cd93c38306650b2eccbad99caaa40a74e22",
+      "size": 407,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/emotion/aggregator.py",
+      "hash": "356b8eec041a6bae43de0acaed2d45033c099d5a11d1ef53f9c1837839c79916",
+      "size": 2045,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/emotion/analyzer.py",
+      "hash": "f7f1a7dbd54b2f83571974986a2135e9078be9b3e7ebc00fde966900b2a53bcc",
+      "size": 4108,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/emotion/ontology.py",
+      "hash": "19272e697017efbd3581ffdef23c8ebc747259860e24ec45d5ccd1681f483605",
+      "size": 2571,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/emotion/prompt_renderer.py",
+      "hash": "391691b5ab495ba9f99005f88814c1a9dce782c5b98d7c393f5965168920d4a9",
+      "size": 709,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/emotion/prompts/extract_emotion.jinja2",
+      "hash": "eb7ac05773f2bc01d4a9c1d7036cc87fc3b0862a7c8e566b2191dcf2e2c37d19",
+      "size": 4110,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/exceptions.py",
+      "hash": "831292e53882b469e0a245d61901997639b781810538b863c99a497e815d9775",
+      "size": 1507,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/export/__init__.py",
+      "hash": "6a5c4301af3a3f6e7df662e14241171df6228286eee1b569ba625261768b420b",
+      "size": 89,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/export/md_to_docx.py",
+      "hash": "7d4dd133d422d4a121b350d9a57a45c39ba97be4470fae9f1f1f719681425453",
+      "size": 5429,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/llm/__init__.py",
+      "hash": "e88caf525db76881db60b1f99b7f89538b1bd4d40f90de0e4a51858aa6fa061d",
+      "size": 202,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/llm/chat_model.py",
+      "hash": "85373c1f0584c75887acd362e5e888564ecdfd47f3aea56220ba7c79f38816c8",
+      "size": 3207,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/llm/client.py",
+      "hash": "2f1d8482f1cff276f1db398612bfdfda522367324cc4a1cd893b5902ca215f02",
+      "size": 14289,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/llm/provider.py",
+      "hash": "a4e2fa7dfa36b90b3896279d35aa733dbac24fbfe437560344e39f83a89401e7",
+      "size": 4460,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/llm/resolver.py",
+      "hash": "20af156de105eaed4b59361d3cf2d66aed2d22d271d9ec8fd0c15e9a3c29d8b0",
+      "size": 1763,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/logging.py",
+      "hash": "71b988d878d2b03c6637b0db25983c3cff9f1fb313a8d8507f127fcaea6ffa84",
+      "size": 2871,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/clustering/__init__.py",
+      "hash": "91747e647ac1af3c67e562132fcc873b7de5607661975943d5d5f974ccfddeb5",
+      "size": 244,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/clustering/label_propagation.py",
+      "hash": "fafac529b83997b251947bae898d216ea2f11082d8964e3dd02dd341f014bf36",
+      "size": 9619,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/consolidation/__init__.py",
+      "hash": "5c237cc4de9af7e80cf05499bae5fbb01c7bc6255f320faae62086e45e4b1e41",
+      "size": 197,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/consolidation/consolidator.py",
+      "hash": "64c39472ab19518c0b4e98559c263db9192a4bd186908673215d5a72724d8dfc",
+      "size": 4091,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/extraction/__init__.py",
+      "hash": "a4e56c6fa71830e4b3472b0fccd2a0a20867b7cf14ea595274bbd5f206b410aa",
+      "size": 257,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/extraction/dedup.py",
+      "hash": "60cc6b9f10f7f609f352241758375f3fb87f33693e93119ffacae046482be2e9",
+      "size": 8525,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/extraction/embedder.py",
+      "hash": "984961ba4dcf3a1ee55af7cde0f40bf3d887b5e304fd76abb9321fb1210b2a4e",
+      "size": 815,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/extraction/models.py",
+      "hash": "f86afb44ed9b5e1f570c9dcb105f72f6d12d7d62b4406a7c7a210e16f2d45962",
+      "size": 6495,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/extraction/orchestrator.py",
+      "hash": "8e397bd00ce9a27c523712a18e0f1a5032a5b48110dc6a38e28e8e5b6e185a44",
+      "size": 12041,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/extraction/triplet_extractor.py",
+      "hash": "3cf16a0102aa4fe339ad35116d19f1e7efb01692358a991c0fa3ef0bfe4a03ff",
+      "size": 2610,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/graph_models.py",
+      "hash": "3e9df791cb9681ded9a5782a98cb8bfb005507293007296921d78647208c3047",
+      "size": 10235,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/graph_schema.py",
+      "hash": "ceefb16d9e64f72258f51ce32621845a3574aff70ef4a2c902fd7cb4511ae2d4",
+      "size": 5276,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/json_utils.py",
+      "hash": "38ff18b42b3ee61f190b878a919a9b5b93194704998f97a174b3a1b72a40b772",
+      "size": 2799,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/ontology.py",
+      "hash": "109c29deb6a1690067dd2511b0782df714506f8f3c31e2d9ad4be47bf0cc27cf",
+      "size": 4481,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/preprocessing/__init__.py",
+      "hash": "c43dcbb5bb03d9a020e87907002cf3bcf6f062e3105ab118dedd0e48407f5a52",
+      "size": 213,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/preprocessing/chunker.py",
+      "hash": "f882bc5e7f4f822fc23f08bf3be8c4517024b2547ef5f6a67659d3fab4f649a3",
+      "size": 1253,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/preprocessing/statement_extractor.py",
+      "hash": "b0183529f01a00fdc39bc5a822d46556ac2f3e25292dfa169d085f5c6fd1dafa",
+      "size": 1428,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompt_renderer.py",
+      "hash": "d326c5cd8c75ff64fab23ec5b4cd295a156c0df64924e8b844a1e3b3efc1082a",
+      "size": 986,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompts/__init__.py",
+      "hash": "ce292f5ccb26786d1c3d09a80b2ebd3a5ca28f853f1eecd26cbf85a54194e538",
+      "size": 166,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompts/dedup_entity.jinja2",
+      "hash": "ca7b19d81dab78eaa929c70f2d49c7fa5e7cc9c10a6709723cb84516bda4a02c",
+      "size": 1467,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompts/enhance_profile.jinja2",
+      "hash": "54bb8cc4f0218f72d33b5c209206523a9c6d1321fb1f2551b6d2f70e3074cf37",
+      "size": 1433,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompts/extract_statement.jinja2",
+      "hash": "42f771f6b9095cbca1a444173dae9d0babb86a95aa469740a89dbf4edded1218",
+      "size": 4695,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompts/extract_triplet.jinja2",
+      "hash": "82e67457c25f8e07909a769103a8ad35e557af2c79f07fd49d8fa8e39f539276",
+      "size": 9939,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/prompts/reflect.jinja2",
+      "hash": "5fe001a906ceb3b597065e25b9cafb10e9e0444ee19c4869b2857fbfa63e8e84",
+      "size": 2456,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/reflection/__init__.py",
+      "hash": "31e9286040fd158143a7f21c04e96c361d337ac23b426c24c4fc031c0a14b336",
+      "size": 67,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/reflection/reflector.py",
+      "hash": "2393f0b632bdbd731686141888cdae40872790508fdd19caabffcd67fe5b5514",
+      "size": 6668,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/retrieval/__init__.py",
+      "hash": "011f66292ec9623c527debfd932f20a4ccb1043d567b5e6cc41231a90d06d692",
+      "size": 259,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/retrieval/active_recall.py",
+      "hash": "90c0dc0f757162b07b69ed364d6d6b495b6ef77bb6974e25bc14b2429ffb2291",
+      "size": 5342,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/memory/retrieval/searcher.py",
+      "hash": "238246905b21f662e6f2ecdaa7590686f16166fc48fcdea52a0b249d0e271c7c",
+      "size": 10509,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/music/__init__.py",
+      "hash": "d9342440747e340b501527d1597d54daac2bfa088c6efeba9569b1ff1807843d",
+      "size": 103,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/music/migu_client.py",
+      "hash": "c0b0a4dbde2824a2b854bff019bbb17e5cef8634b6706267e829a5b99d6f3c57",
+      "size": 7062,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/music/mood_tagger.py",
+      "hash": "e9143b474b8bad14c626e6b90826c87b3bfc79ea9a5c6e8f21ad7d0981ccde8b",
+      "size": 3628,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/music/prompt_renderer.py",
+      "hash": "5439982263fd68760e86b93cc1d1217ff4989eb0dbe1a426ebb489c99a3f0421",
+      "size": 703,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/music/prompts/tag_song_mood.jinja2",
+      "hash": "0c1712adce7960625b473a025ace99b34eb5dbf4874779ff06a25848f752f4d8",
+      "size": 2614,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/music/recommender.py",
+      "hash": "117ccff83ebcfad5849e2b57184e269a3367c4fea498b2f0460eb5d64613e979",
+      "size": 2692,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/notify/__init__.py",
+      "hash": "3245020d8e67f2154cf9d8fff41865192a33b59b98343d97e816666e1092d239",
+      "size": 118,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/notify/pusher.py",
+      "hash": "c91ac3e18d025d99e12983e4964753f295e1647f968df582669658c974044f37",
+      "size": 4367,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/__init__.py",
+      "hash": "7df70531e09e6084f39cb601ca19b89a83ee82ce8515c78f622f95e8a23ef25b",
+      "size": 97,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/chunking/__init__.py",
+      "hash": "f6b579879d9958b170cf9ad9cb7244ed6df0c01efba0ca6241e900d08aab4138",
+      "size": 266,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/chunking/block_chunker.py",
+      "hash": "305654be933886082510f13c2bfc0a301dfea1102ca39fe7533067f5f887979a",
+      "size": 7182,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/chunking/models.py",
+      "hash": "13d5a20b7012037009a1e0d375f89aa98e74c283dd87d962003eeb42a83e3766",
+      "size": 1174,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/classifier.py",
+      "hash": "2399998fb91a030864ef3f23f1aa3d298bd8dc6693756f1e713ab42156e4df92",
+      "size": 2669,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/evaluation.py",
+      "hash": "75ea18b1bb2c44c541f4812c13ad326fc5f2b2f266495903adb58161100d803e",
+      "size": 1493,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/image_compress.py",
+      "hash": "8b5d40ef63ee80e4cbbb0850ebc6c39ba4421d938fe3861a6b08358ccc7189fa",
+      "size": 2091,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/image_describe.py",
+      "hash": "601ae6da7f56b73fd52d57a37166bea401e7af60009608378e23aa264e5a1906",
+      "size": 2565,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/indexing/__init__.py",
+      "hash": "55dd27e7d49d954d755406d5b620abfd02bfdbcd3fa299659eee6e5a04e179eb",
+      "size": 584,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/indexing/es_index.py",
+      "hash": "4be4f481c2e3fc42f84679fb43f8b1717db8bfc1310e9acea5c90be84166d1a8",
+      "size": 6721,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/indexing/es_store.py",
+      "hash": "59757d157744afae33cae50382a8b392426b407b3d4f55e919ff641f632f78b9",
+      "size": 5146,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/__init__.py",
+      "hash": "86287865ba0df64ef31780904b3be48319db7cbf2d263755d31ca3debb4c4a2e",
+      "size": 463,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/enrichers/__init__.py",
+      "hash": "0d7d7eb08706e46191c3552dbd494d1ef8ac0a2d8887b2484f8a988e9c73dee5",
+      "size": 216,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/enrichers/image_enricher.py",
+      "hash": "db4baf7254919ac0a29bee8ecaeb037738bab28a7fc9d2f470ea5f3d149bb6a6",
+      "size": 3781,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/inspector.py",
+      "hash": "d7f42c48212a06cb2a0176867af0fbcb36ded40e75a49e0bbea4781fd97c577e",
+      "size": 3359,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/models.py",
+      "hash": "bf370968e9b297f8985a1a367f37e29363ac3a09deef6b3c5cc28383ebc2dda3",
+      "size": 2028,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/normalizer.py",
+      "hash": "31b4790308a3f71eff65245de69e2802a904f9f21d2db0d34716c6ff32c4a410",
+      "size": 1433,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/parsers/__init__.py",
+      "hash": "078206e8fab96d4fe23a9915054958647da2c4023aefac7ecfdd3abcaf3245d1",
+      "size": 473,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/parsers/base.py",
+      "hash": "9ee808a9deae291d9bb01636347a182c05ec44036ae9e099add32235b4b5a22e",
+      "size": 684,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/parsers/docling_models.py",
+      "hash": "ced172cb86d6beda8bd3f7dca79a1d50d23074842fa93724bf02b0ab25f5cb3d",
+      "size": 2551,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/parsers/docling_parser.py",
+      "hash": "948779c21218b1fa11f28f6593049d60fce99a30a9cbef7d16fc542755de5e58",
+      "size": 7066,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/parsers/plain_parser.py",
+      "hash": "bd74c5aa8888390c99486c1474bf2253be3bcf8a65c2d7764b2a61408cdbfcee",
+      "size": 6012,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/parsers/pymupdf_parser.py",
+      "hash": "ff1c25c8e88d00bd647f78eebe364d3a91ab7da1f57076958ad21392c933b3ea",
+      "size": 3327,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/pipeline.py",
+      "hash": "f64bbfe60fbe01c61e89d3960f0d02b6e795f96505a41d217c9370ff6bd5befb",
+      "size": 2143,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/quality.py",
+      "hash": "42ae4014e9e484cc98061bd4f59c2bc4be6455d61e0ad3ab4f2e1ce1d9a18cb3",
+      "size": 618,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/ingestion/router.py",
+      "hash": "86347996551f01cf876d9eb411b0c6104fdae3f757104d05986b6f60aad9022d",
+      "size": 2973,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/retrieval/__init__.py",
+      "hash": "42ba0401c5a2c97bc3a035da243a48e947aa0132260331bf31fadfb756a7865f",
+      "size": 171,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/retrieval/search.py",
+      "hash": "2af7e66c928d0c3f8f68b202b5de5fee9f1185838d5b1fa392e10c08c14863ef",
+      "size": 13317,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/rag/web_crawler.py",
+      "hash": "7a06b062481e543664de0ddc7b25254957f345aded2d41c33acbbb5bc319add9",
+      "size": 2880,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/realtime/__init__.py",
+      "hash": "1d188021f0aafcfe3d0a099552beb8b608d160455d42be60c4c8504ca11cbc58",
+      "size": 81,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/realtime/bus.py",
+      "hash": "7610dfda4cd7dd2869b44f2a70e8ef14c9c667b225d97350dcefaed89e6020d1",
+      "size": 8859,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/request_context.py",
+      "hash": "0e8dfb61970115f0a0d640fc1f5281c32bcade108fa195b5e926133c005680ed",
+      "size": 1126,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/response.py",
+      "hash": "dfdd2387ece1ea0c5a28c6517424300240b73e26ebd60a4da910a501f7e6e9d4",
+      "size": 532,
+      "type": "file"
+    },
+    {
+      "path": "api/app/core/security.py",
+      "hash": "a9c94f98cf674954705d4f0897448d3907ab2799e9eb5c96840dd8e7ba330043",
+      "size": 1928,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/backfill_kb.py",
+      "hash": "de004685c73b76453536507a82768481dbaf17652c9cba0c464393025af515bf",
+      "size": 2738,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/elastic.py",
+      "hash": "6de63588000f947d064056d7756b4464675bfec200a5129a3c4126bf3771a954",
+      "size": 1083,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/migrate.py",
+      "hash": "a64242d162cc829579ddddcfd2fbc9fac740ec113175a392eca26533021a5754",
+      "size": 1755,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/neo4j.py",
+      "hash": "354d6e9f2a3dc328ae54e602023b0ffe618c112f8e288d8f1f4e0c04f2134b4e",
+      "size": 897,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/postgres.py",
+      "hash": "750c283b5bd96692e0e0b3373281124f8dba536dcdd2e7ecf91a46c774c67a7d",
+      "size": 2610,
+      "type": "file"
+    },
+    {
+      "path": "api/app/db/redis.py",
+      "hash": "ff7cc61db7861a06b0e8c9e70cd24aaf3c674e58b78159723338a78b519af90f",
+      "size": 983,
+      "type": "file"
+    },
+    {
+      "path": "api/app/main.py",
+      "hash": "f35caee7f5e0a7beb0cdb4f660f503596fc11d1042dbeaf62bbb8582ab1415f9",
+      "size": 2891,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/__init__.py",
+      "hash": "e7a9181f727a8e4b4806b9edf37e9135827137fe76f0f0d3fe07b0342b6bfbd8",
+      "size": 2614,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/agent_config_model.py",
+      "hash": "a417c27059588a3f13e539753993307dd6e48a8148bc4fe901f1bca2643dbfe9",
+      "size": 2398,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/agent_persona_model.py",
+      "hash": "1ef438bc3c820597d4e2d4c91a51d9344ac0c3bd2ecbb2842aad0c96c5e6cf2e",
+      "size": 2118,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/agent_task_model.py",
+      "hash": "8208f8cfd3b468061b24d8f85589f2021668f736e7350068038429367a5a9016",
+      "size": 2764,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/agent_trace_model.py",
+      "hash": "e6b0e8e0777830c8fb18be27a0bf9bd7c6c5095ad363977a2d31e5926cb37dd5",
+      "size": 7538,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/conversation_model.py",
+      "hash": "be09439c9195b9af47a6943c964cc5aab2a293f17d6161855687a7e916da424f",
+      "size": 3159,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/conversation_share_model.py",
+      "hash": "8f590749b362a81c8e58ec22a80ffd2048532ed0a59f61d94b07ead3a096c3e1",
+      "size": 2566,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/daily_review_model.py",
+      "hash": "7695928c049f6f8c0332c569b471e4dd8308f018ef9c803b9a88e9e4a42886df",
+      "size": 1449,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/document_block_model.py",
+      "hash": "3ecdae905d9317d06b045f03505f6e52caed3d16e7c0599a242957207daed0c0",
+      "size": 1537,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/document_model.py",
+      "hash": "f4c11c3cc8c5c382ae78ef902e266807eefaa138bdfc459eb65082ce1e4afb4b",
+      "size": 2900,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/emotion_model.py",
+      "hash": "d1773531289eb6961326ed9700b2b78095cb135b6c249e62ba651d3a8d319f9a",
+      "size": 3003,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/favorite_model.py",
+      "hash": "76aee178004c22f7c115b358dbbf1b5f700c99ae26626f529def95c7fa685cd4",
+      "size": 1562,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/group_member_model.py",
+      "hash": "007a4bef3c8693d02c5d3d0bac99d521e64848a5251a7ca37f87e60519e80725",
+      "size": 1753,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/image_model.py",
+      "hash": "ecd895decb3ef4d79d2c2c9d6fd2b7cd6b5ad5599da7cc983aea5eb15158a478",
+      "size": 2211,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/knowledge_base_model.py",
+      "hash": "306376aed62bc4d5880f1d8efd825b9dcb7f00b6f109f5ef83010752897fb79f",
+      "size": 1916,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/loop_model.py",
+      "hash": "f0f69a657008bef27522583994f07df3f369e387a704c2b154a8152d1b800e6e",
+      "size": 5203,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/mcp_server_model.py",
+      "hash": "42da8b8dc23aa0fb36b3c27e377f8a980dfa697affb09bfb7fb142d4c6420132",
+      "size": 2557,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/memory_correction_model.py",
+      "hash": "2f71e7d448d93a6bbacacb18e547b0f70b687b366facbaf9df6bdb87a60bd6f1",
+      "size": 2378,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/memory_model.py",
+      "hash": "90954fe6897e34a313bdd6cb252416b38c3b4c3c98ca8493fe9709c4ebb9fd92",
+      "size": 2134,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/message_feedback_model.py",
+      "hash": "14698c489d6f750a6f5bc4a07d9258ee5c1415dfd623b7c0e137fed969f5fe1e",
+      "size": 1832,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/model_config_model.py",
+      "hash": "8136bb7ab29ea22091e671ef89dda74f0bcf1efff28021046535191a9c97b37a",
+      "size": 1978,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/notify_channel_model.py",
+      "hash": "365bab7bc0eb848bc58482e909354950e14d3d5458eebad3d6d2b462aa1c9bde",
+      "size": 1899,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/persona_group_model.py",
+      "hash": "5df290320311e56941437a955e31566d134d061125f09e349ff12746ff41d2e4",
+      "size": 2156,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/play_history_model.py",
+      "hash": "e9e383f01a23ca0b0d74453cfb4103126b2bd47bccbb650bcac5ebe933ca7356",
+      "size": 1376,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/report_share_model.py",
+      "hash": "8ed76f1cb51ac0ce70a96d678c23050aef550907bdd3bf6861d6fb01ae9bb2ce",
+      "size": 2135,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/research_report_model.py",
+      "hash": "450763060fd0a4d059aa76d9d5b7e392170dbf21ad52d37c96abfc1178c25798",
+      "size": 2244,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/skill_model.py",
+      "hash": "1544a3a094b8ba4a400b90005b730328a2b846ad2f53fe78515234df738f8fe7",
+      "size": 3286,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/song_model.py",
+      "hash": "51d9d8e01dbe99b3b5c00e032f32ffe7f179cfd0d0872535343f59305aea55f5",
+      "size": 2787,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/tag_model.py",
+      "hash": "2f5d32d7ea0fe0e239e1f254a3f5fb6e1d5ebd6eb546b194f76bb592abd41e67",
+      "size": 1770,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/tool_config_model.py",
+      "hash": "c208672f79f95977f48b5e7136217e4675f3815cff0f2aad1df22943edc1b460",
+      "size": 1631,
+      "type": "file"
+    },
+    {
+      "path": "api/app/models/user_model.py",
+      "hash": "ecd522c540c9867ec3505b57e803d0f3572be90813520d649c08079c2987cd41",
+      "size": 1367,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/agent_config_repository.py",
+      "hash": "3235295e2e57ae330422fe259d3c2d572841d135063ebc798124c39977ab393e",
+      "size": 964,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/agent_persona_repository.py",
+      "hash": "8dae36b78fdd2c1e7f150c4082b97fae44a864d50d2f14cbf2c19315b0ff4e3d",
+      "size": 2469,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/agent_task_repository.py",
+      "hash": "0cf659faadc7043540cef7fe5182254a2bb1d766b154ce77706e0deddad7fa72",
+      "size": 2463,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/agent_trace_repository.py",
+      "hash": "2c0d53929aa529365a1669f2b0fad3790381db1d874d82f8782649223dd12160",
+      "size": 7190,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/conversation_repository.py",
+      "hash": "37f4f014ebb88261f156892584f6ca79706230fb9c043c1c6f4c00440d117f53",
+      "size": 4130,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/conversation_share_repository.py",
+      "hash": "46d78c0d73603a8412b56960ace8dc8c929d668e8348ba93c9c89c2016f3514a",
+      "size": 2361,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/document_block_repository.py",
+      "hash": "fed87dd18947f1cf36c3ccee9d4a303f4f477828180bf308b7b9e98044b5f8da",
+      "size": 2718,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/document_repository.py",
+      "hash": "0ee6b4705efb638fc4146e6713c49855b384d26904572cfab65bb049cbee7c8d",
+      "size": 3316,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/emotion_repository.py",
+      "hash": "6f4baff4c1bb66ea9dc6d9de26985a6e746ac62e293493d2cbe4a03e6a7f5448",
+      "size": 3291,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/favorite_repository.py",
+      "hash": "7b81594e38da41c662dbcab905220ba09ec980f0885c35e73ef3151abc02cfac",
+      "size": 1829,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/group_member_repository.py",
+      "hash": "1729193f616748c84d739b2d07b1ae632b8eaa0d49c859b86a82427ade4106ed",
+      "size": 1609,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/image_repository.py",
+      "hash": "a82aa057391fc35ea97db03745cebef891ef05e147787ee0dc0806083c3d2acc",
+      "size": 2848,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/knowledge_base_repository.py",
+      "hash": "da2cd3a54ea1ba1e260500206deff61d94a5fb3457f3a94011553730a232dc0e",
+      "size": 5079,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/mcp_server_repository.py",
+      "hash": "056d3792bade0b1065ddd4e494c8fd04b1cdb9d91c9fa5755c62b63489a4dea2",
+      "size": 1908,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/memory_correction_repository.py",
+      "hash": "fef12111efccfe75840007459f9455596b71f78e5b1811b7632e13423f756813",
+      "size": 2281,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/memory_repository.py",
+      "hash": "3534c3863984c5964186412b32fad7100ec132eb63eaa08976826bcf1e494a51",
+      "size": 1626,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/message_feedback_repository.py",
+      "hash": "e63f2f0c789b0d8eb0e83d585ea744b513992b026b9c7d75228c0752688beb47",
+      "size": 2480,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/model_config_repository.py",
+      "hash": "c67ed597910c1da61e678eb8adb9f1cb7ba4fe9b416ed05c5a9978c11f8bec46",
+      "size": 2104,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/neo4j/__init__.py",
+      "hash": "b3fd07c0e949ced3c4648377a14ee6890d5aade58e56ae11ec9733bc141823fe",
+      "size": 156,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/neo4j/community_repository.py",
+      "hash": "6f7fce768a14c058d65558df3ef15334232108e83eac8428428ac016935a2010",
+      "size": 4471,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/neo4j/cypher_queries.py",
+      "hash": "17e5aea24ad2d07718960b449b58077805feebb844207d8a347684a06e673926",
+      "size": 27542,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/neo4j/memory_graph_repository.py",
+      "hash": "71e13b6a9bbacae1def92a1d782297f6cac0381fcbc1f130031f7e17e3599206",
+      "size": 27495,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/notify_channel_repository.py",
+      "hash": "a5f3dc8fe87f0a1144684ca0b438c80782bbd71c33ed941165221aad9e1ba3ec",
+      "size": 1801,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/persona_group_repository.py",
+      "hash": "e7d458bd61d778b9f0c2b1f7c257f7a5ee014360903a8785bdbed9b68c1e34f9",
+      "size": 1742,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/play_history_repository.py",
+      "hash": "9b185eb3804d5e266058aeb538414d187e97e543b950a63d79859dcfb270e911",
+      "size": 1242,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/report_share_repository.py",
+      "hash": "6abcf3e34e6c57dee4838e6cb3ee60ae05ea03d3d8f1e7719d3630a0ffe5cae7",
+      "size": 2173,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/research_report_repository.py",
+      "hash": "1fa1ba96428f4bd9a040f668d24ebe8e6f4ec7ee53202242b1b96b465dadea0e",
+      "size": 3411,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/skill_repository.py",
+      "hash": "117ca34f81275bc0e0f9cdce9952ce1c07f892003a75afa45496f95099a7223b",
+      "size": 1570,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/song_repository.py",
+      "hash": "70b19193b8e5afcedf5cd84249faffcfe21189ceb383a0294ecc7cd333f3fdd3",
+      "size": 2035,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/tag_repository.py",
+      "hash": "fbb911ebaa2beebc5cc2e321a72b7b0357834d9d19d6e830cde26526e395f943",
+      "size": 6913,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/tool_config_repository.py",
+      "hash": "5a80aea97c755addf91880e1ca046f2d9bb5b86f44299675f28d917056ebc093",
+      "size": 1749,
+      "type": "file"
+    },
+    {
+      "path": "api/app/repositories/user_repository.py",
+      "hash": "65704ce16009cf6dc76c4a63fff19408b1bc2ff132c86dc4710a84f60dd1dbf7",
+      "size": 1538,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/agent_config_schema.py",
+      "hash": "3b8732ce398de232d3725c5eb5ff017ace418de201b0e701a2e5bfa34457dc66",
+      "size": 868,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/agent_persona_schema.py",
+      "hash": "62db8d7ff79012abd002a9b4cd3efe4138ae2ade0e8aa36514295eccda432be0",
+      "size": 1094,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/agent_task_schema.py",
+      "hash": "d0698d2d12d06a2e13ac2c9d7f40355be0aa011ae3baebaf827a03f3ad1ac7af",
+      "size": 701,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/auth_schema.py",
+      "hash": "4de940a07b8fc67a995b644cc249de9389909529105f591b3aefde2ecb1bda58",
+      "size": 1009,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/chat_schema.py",
+      "hash": "f80685aa7d3d68d6de446e4dcf958a55551b0dcddac4080393aecad03a09ea4e",
+      "size": 1926,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/conversation_share_schema.py",
+      "hash": "ad039f8a8dad9ecdff1eb47deb55370a161f479d70469de7c70ec6e7fda175d4",
+      "size": 1065,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/document_schema.py",
+      "hash": "e6f87b0be3923787346b602ffd035d8af169274b36486c7f216dd18d666f871d",
+      "size": 1952,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/favorite_schema.py",
+      "hash": "4a6047f2c4ed3588b5787cc31c5a3c7951a9519fc75bc987d6515987cfaec746",
+      "size": 375,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/group_chat_schema.py",
+      "hash": "3ae7c905c0c3bf04fb2e552466d47e296ad4b487547ee5e748ae21c78a85be82",
+      "size": 1378,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/image_schema.py",
+      "hash": "e99c9f0b886596885523120bfd1bbf0415ff7a4af0b5986ab0d646d14f3fa6b1",
+      "size": 504,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/knowledge_base_schema.py",
+      "hash": "4f83ba77e833594a1bc8bae89a18a02996799eb46fcc1efbdc9040f4b73201bf",
+      "size": 980,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/mcp_schema.py",
+      "hash": "990c7695f7454639555e78905ae7df87a0a40b5ac7518603bda34bc28df98daa",
+      "size": 1716,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/memory_schema.py",
+      "hash": "8a56a7bed80d850cf50a59f385e33e9be99841264280bb9f119bfeb6c8cf547b",
+      "size": 493,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/model_config_schema.py",
+      "hash": "497f296bdf7f363f58d518e71f10516490563af474602590d471a6348b2d2c9e",
+      "size": 1522,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/music_schema.py",
+      "hash": "714462e48aa5c38e450661b47bc798e847fad44568751c37644d3a23a99ac836",
+      "size": 1607,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/notify_schema.py",
+      "hash": "20300df7a3ffd0f84d7e4f7e78e483d4fbf6aa1c17e24635149de40acb7b4d12",
+      "size": 566,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/persona_group_schema.py",
+      "hash": "96f626937e3afb76f032501bcd80ea80fa870f364e9f298ed017f159799259c0",
+      "size": 977,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/report_share_schema.py",
+      "hash": "4b1f2c7da15b42882c1f3c4a5eec96d8914d6fa0f1526e0ad9071e3fc42a9725",
+      "size": 368,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/research_schema.py",
+      "hash": "ad26875fab33badf0ad6ae930f991269b9998bede7962bad0b5d039f1da1738f",
+      "size": 739,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/skill_schema.py",
+      "hash": "5881d98a4421fc500870c6549867df850d786b6bff423aa7695df7836657a41d",
+      "size": 2267,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/tag_schema.py",
+      "hash": "25878e758b4d07578d0399f1d18038a7646aa1de3802832384cc643f33995644",
+      "size": 502,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/tool_schema.py",
+      "hash": "d33187528c092c70d8310bcbf164fbb96f2cd965a433857c4c13f879ce017faf",
+      "size": 428,
+      "type": "file"
+    },
+    {
+      "path": "api/app/schemas/trace_schema.py",
+      "hash": "e51e518b76994da6cbe650cfb8373a8dc16a9e870afa914c9f6803da2eb4a019",
+      "size": 2477,
+      "type": "file"
+    },
+    {
+      "path": "api/app/scripts/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/scripts/download_docling_models.py",
+      "hash": "860c12ec49db03da585bf57fae82b8928bfadc7ba4c8b21dd281ae72c5a61180",
+      "size": 1280,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/agent_config_service.py",
+      "hash": "5f61ff2bd21fec53641ef73a999f54a8123f20820b39bb7620e411696fbd7181",
+      "size": 4575,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/agent_persona_service.py",
+      "hash": "2e5e0ce96600ed87f04c4e924510d276f1f5fe38139906c6d6d1afebcfec1ac7",
+      "size": 5454,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/agent_task_service.py",
+      "hash": "58b5294154613602578e42c6d980784e6ad07bd304ab397f9443d74de483c0e2",
+      "size": 9657,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/auth_service.py",
+      "hash": "b2e525cf5a061b080cc81bc33fe602f4026f984aadb8dc12fa5ef2949f0e8b96",
+      "size": 3952,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/chat_service.py",
+      "hash": "cb0a629e2c7476cfa9b052eaf119a147849a9d6e12806621b70c54803863d38e",
+      "size": 45209,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/conversation_service.py",
+      "hash": "72637f3c8f550831ed9a0333a5dc349cc642ef9ebb549a7e5b0e1e5821acd639",
+      "size": 3912,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/conversation_share_service.py",
+      "hash": "7948262922f420ddb22a2ba73236509629b3d49300807a5b35a1eafb52e2f6c2",
+      "size": 15220,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/daily_review_service.py",
+      "hash": "2e05fb13eee770c13fc4eeaeab9d36513ebb60572295fd7856e02c2545c75ec6",
+      "size": 16268,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/dashboard_service.py",
+      "hash": "ce9d13c229bbfa578510d79ddf8ba5832dd76f8601d19c98ef822213798273cd",
+      "size": 10759,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/document_service.py",
+      "hash": "8da7d92df2d8cf6e36e0c9bd2ac67c705d9365186634cbf903940e75dac0c132",
+      "size": 12580,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/emotion_service.py",
+      "hash": "06f33dd5fca263b126e3327c4ab87faad8b436b040d3dde53f8bc98f8f5c520d",
+      "size": 4605,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/favorite_service.py",
+      "hash": "85ab336a02184bf79931fa9f9636ad55f872ce07d42e5554b7c04a24411eb07b",
+      "size": 2121,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/group_chat_service.py",
+      "hash": "26b5bb7ca115a0f125700d437021de1368cd3ed8b7da1f4afd062b06cd93ef5d",
+      "size": 48678,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/image_service.py",
+      "hash": "3d1c434facc41986a90dca3a1c261a97db7cb4cd04b20e4b31e631cc7d00a85c",
+      "size": 7166,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/knowledge_base_service.py",
+      "hash": "ecda6f04133d10b26491aff8946198d9d163fe06d74722aaeb813036341e632c",
+      "size": 6226,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/mcp_service.py",
+      "hash": "2a4688427b52a57204cfd4db5d2de510c725c13e32824407469605b14fd4dbbf",
+      "size": 8118,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/memory_service.py",
+      "hash": "ee4b893147e7217c9dc57686b38fe4ca9aa765302b4e22c366e63109cca65fcf",
+      "size": 24396,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/model_config_service.py",
+      "hash": "c68ff45d7bf071c34669d717d7a8357050f70cc9f6ac330b30310ab284499e88",
+      "size": 4742,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/music_service.py",
+      "hash": "41b50ce7a223b39bc0eb94d99722fa1192ea496326490d2c4809cde754906cc7",
+      "size": 15127,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/notify_service.py",
+      "hash": "575c4b965807ef0be2a816db88d7f91e0103905bbf215e3691d1152e486dccf9",
+      "size": 4559,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/persona_group_service.py",
+      "hash": "78a69d423403377289d215c385ed1451151d276007af4dc6220469b9bbd8c4a3",
+      "size": 9038,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/persona_scenario_builtins.py",
+      "hash": "faf7940c7436780d9ab877aa5307e4b0927cdea355be52abb1b8d9ffd406164b",
+      "size": 40003,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/report_share_service.py",
+      "hash": "659d9d6109420debd38b935c2a9dfb2a0412742c68c556c39a506720f3e6b843",
+      "size": 5115,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/research_service.py",
+      "hash": "c5ec79374e75d2ddb23de2639667643c47c6dd5dd3342b18a6520225e43a4c4f",
+      "size": 25354,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/search_service.py",
+      "hash": "2b1d06d4ab20ff8f0b46f50fbd3d9c8906b0fea095a6033e94d5a09b6a5d029e",
+      "size": 2880,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/skill_builtins.py",
+      "hash": "e5a3e6c0c2dbc87d5663a136ebb71ab5bad95e9d2038a572267b4f82253bf3d3",
+      "size": 4746,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/skill_service.py",
+      "hash": "d0fc1c9e83cdf4364560d0e47e0c30e9ade2d6d3da23caeba4d25619c483096d",
+      "size": 8699,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/tag_service.py",
+      "hash": "449f5bfe391b837c459f7c87ec40d9803b8c5b3528df7ee6732a8128fdc2ebc2",
+      "size": 2420,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/tool_service.py",
+      "hash": "e6e8dc196a98fa5f0a3a2b43408bedc323107db7c4d5fd79233b6e349b7723f0",
+      "size": 1464,
+      "type": "file"
+    },
+    {
+      "path": "api/app/services/trace_service.py",
+      "hash": "651933364d6309621914720bb9da08a38cead068f980cdbbe569b21695c6eb95",
+      "size": 2845,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/__init__.py",
+      "hash": "f690f1fc16a04342fc0675482725a25505d91f146f2592f3eaa18c03c7a7cc80",
+      "size": 360,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/agent_task.py",
+      "hash": "62b8b60c9cc7d33b2af49f26df32fb1ec0d6fed534bbf4b31d89aa6d209be522",
+      "size": 14102,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/beat.py",
+      "hash": "67b611da9437242c27f294ea403ccf6ab2e9578a725dd69095ea37f4e4ac8476",
+      "size": 7915,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/emotion.py",
+      "hash": "f6d233ceb65cb2e453bdc680365b4df5fbfd1802aa07aacae4efdd73abcb7339",
+      "size": 4021,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/image.py",
+      "hash": "9db887c406682aafdd4e46e5479df6ec581b71b7caeb4eb1aa35b2342dff45bb",
+      "size": 4666,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/memory.py",
+      "hash": "9288f3e206e97b3e466caf1578db617b9521a0c206781ad3e238f784a26178d0",
+      "size": 3045,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/music.py",
+      "hash": "3b3e950b987b0d553f9ed931df23fbe05df28b1fc6cebf5703c8d771237eea70",
+      "size": 3898,
+      "type": "file"
+    },
+    {
+      "path": "api/app/tasks/parse.py",
+      "hash": "9c01a8ee436f3c2d2bf748330fed21dd98e417a6daee127b13f665814c6c17cd",
+      "size": 8751,
+      "type": "file"
+    },
+    {
+      "path": "api/Dockerfile",
+      "hash": "2127fb78e47c7b7104b9923b73b4aa1f45a847c59f71cfcba38c8f8dcb0d3a96",
+      "size": 740,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/__init__.py",
+      "hash": "9542e2582193038a11619cac3fa57eef4ba48ab303a925984d7899328e51f5a6",
+      "size": 234,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/__init__.py",
+      "hash": "253811d9716e5a5062df396984b750eb394570ce51210c236a73bc811fa86716",
+      "size": 1175,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/_common.py",
+      "hash": "71acc21039f8711e14eeba4f027cdc00c633ec6a2ab4f20abb5eae4f22bf282f",
+      "size": 3897,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/cmteb_t2/__init__.py",
+      "hash": "8c0d7fc083d05438bb4a3a5cd46ab451c47befc4541f1f6451d98729ff9ed40e",
+      "size": 338,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/cmteb_t2/loader.py",
+      "hash": "ac883b3627bfaac7e2847d013ba727110bb29461eca6808e43a12563f86a0ce3",
+      "size": 3497,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/cmteb_t2/README.md",
+      "hash": "3ffedc3e2b9a8f61b646c7f5f4927d389e4c5b54ed7de83e34712cb5fe0e5f34",
+      "size": 1975,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/cmteb_t2/runner.py",
+      "hash": "1197406a983264b5f60ca84768d54690d19f7cf4cbc776387fa2a55746cd1130",
+      "size": 8162,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/hotpotqa/__init__.py",
+      "hash": "bda101c09a60acb84c65b98f7888846e3d2650130bf54319fe03996fdbc7f043",
+      "size": 371,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/hotpotqa/loader.py",
+      "hash": "d188a80efce806094837c55c323ad0901d6a52476871c1f95fc143374a1fefdf",
+      "size": 2370,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/hotpotqa/qa_verifier.py",
+      "hash": "52079202182c1c404496fee1e30098bc2c09bd961b8d4498e2362765df9d0e57",
+      "size": 2586,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/hotpotqa/README.md",
+      "hash": "49e3cba903ad4ef6f07bad772190d02b300082c433f6f2865af10c8d117bae36",
+      "size": 2538,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/benchmarks/hotpotqa/runner.py",
+      "hash": "eaf095e2b2d058bfbde225011f00a42e0e62001c8e732a66085c7e186a4f5d06",
+      "size": 15136,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/clients.py",
+      "hash": "fb0a0c939676992ed4bb4e30609653261bdb608e2c13d2d8cac4964c22774e94",
+      "size": 4610,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/eval_config.py",
+      "hash": "9622775f3fdaa2855297595ba45b9b519177e1e0e6521fdb975ff6117857ff65",
+      "size": 2006,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/giant-panda.md",
+      "hash": "399526b0ae0494fb2ca8fd8661f21ab235981cecbbca7257fccbf8f29cf973c8",
+      "size": 725,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/great-wall.md",
+      "hash": "eea37f6b169bfbcaf35f50fd8afb88c25e9346ba2a0b22fbf8b3c4976c982532",
+      "size": 721,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/marie-curie.md",
+      "hash": "dc99da6dfd5d8d8d9c90d8541048f90925e7789662a9fab0af081a4b47c745b0",
+      "size": 760,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/mount-everest.md",
+      "hash": "3d134685080b3e60c2c76178acc4e6bdbb614cabee8f6645e3ae4aee9b3b597e",
+      "size": 652,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/nobel-prize.md",
+      "hash": "e970d59249d939aa6eec29dfbb4582a33a543afd7874e339a4dbdbeea7d1cd0d",
+      "size": 758,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/penicillin.md",
+      "hash": "4b14eacb1b9aacb64e024dbebe3736fe70ab4e4649ee829f45acc716211047f4",
+      "size": 800,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/photosynthesis.md",
+      "hash": "0ba94db21ce4e175bc43a974806910f1406e414eb6a9737257423a5b8b1d34f3",
+      "size": 800,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/radium.md",
+      "hash": "d27dd45ed1849b5c4490de9ac5bc40cc2c4e2b0b500c30722b35924859f5d61c",
+      "size": 658,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/solar-system.md",
+      "hash": "c8316197e4698c699ff285e635f808900f73a4e10fd1498b8ee41988e7e3eb5f",
+      "size": 735,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/corpus/yangtze-river.md",
+      "hash": "437135952cdf3f1fb2221fd67dc84e99d45b50108fd0ca480dd6387516f67388",
+      "size": 703,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/dialogues.json",
+      "hash": "24e1e52edbf22d88d8fae3af65f6cc692e16e09047ec58b5fd915b98b9dfa371",
+      "size": 1623,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/gold/dedup.json",
+      "hash": "613d40794c16c9cedcc3f1bc74dd1c6192c4c0df3b7dcf26ca870836eadd91df",
+      "size": 921,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/gold/extraction.json",
+      "hash": "1a7f084c91068c6e3103a92b71787dd9a96913540409e681b00dd358604d84e4",
+      "size": 2493,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/gold/memory_retrieval.json",
+      "hash": "97b145174fe01b40df2731b14059db92f59cbf1455bc354ae707420b0f3ae0e9",
+      "size": 1832,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/fixtures/gold/retrieval.json",
+      "hash": "b640b3f1bbd799bb26b4f6863d1acc48f24bd1df097eb9a63754e92cc4e4e446",
+      "size": 2475,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/metrics.py",
+      "hash": "f4e5bcc7f6b7a07edaf388c3f961cc80d98cdfce982d7929273b325cc7e9c902",
+      "size": 4960,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/pipeline/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/pipeline/setup.py",
+      "hash": "3df7ce5a0318567c17c0590589841ef147d4c26a7bcd87571d877a2c2921b752",
+      "size": 3385,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/pipeline/teardown.py",
+      "hash": "69d8269f141510d3b60d1a28bc42dbdf4389073e4fbbbbb868a09ff6f43fc3ac",
+      "size": 1094,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/rag_structured/cases.example.json",
+      "hash": "33680e07764619212043df12b4d6d16136c1658bcd2fd999b5dfb82918c83100",
+      "size": 154,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/rag_structured/README.md",
+      "hash": "abe7a5eb69919d321081c9c80a7c90e70e755d13c82ddd4ebe3d43ae3734d050",
+      "size": 510,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/README.md",
+      "hash": "c8fd4f0ebff9e233a27abfdac796193e31ab0693fb08e159841b182a30b3fbda",
+      "size": 5587,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/reporters.py",
+      "hash": "919a9f56715c87b2cddf82428990e7fb05d078c91a08eb27519287d3311ed769",
+      "size": 2635,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/run_eval.py",
+      "hash": "b40a26988bdf07ee9e34fa48aa85e8eb5f8640dd8a36506279278ab332016d55",
+      "size": 9198,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/tasks/__init__.py",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/tasks/dedup.py",
+      "hash": "a092ea1348880ff71fb585d7e1dcb774f0a2d96da2e68b2355cc1f332e798af8",
+      "size": 2879,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/tasks/extraction.py",
+      "hash": "987c2511d4738cebc4997597b8f52e407d00c9b8b08ce35559a52e7526389b9e",
+      "size": 3455,
+      "type": "file"
+    },
+    {
+      "path": "api/eval/tasks/retrieval.py",
+      "hash": "a72bc6ee29ab5df59357f5e7399c16b226ebc06f795c7df5d70d707ffe3d7e94",
+      "size": 3552,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/env.py",
+      "hash": "4d11975b6d183a789a435c10a17b7eb947452fac59403633d642017df8dc1f5b",
+      "size": 2143,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/script.py.mako",
+      "hash": "8deb5f094438977523c1467f84cf17cb007e8ba48ea44a902a13295237dbffe4",
+      "size": 661,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/.gitkeep",
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/01fc36f0b2cb_create_model_configs_table.py",
+      "hash": "ac473bbac8d47348b19eb502635becf7ab21af22095a205fddb7ead4d2f0a9cd",
+      "size": 2170,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/0301daa19c01_create_mcp_servers_table.py",
+      "hash": "edc5af34dbc4074139a96484afafa906c9e5a41754bf2f179b3a8c74b7bc69e2",
+      "size": 2200,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/0674bf974270_create_songs_table.py",
+      "hash": "76fd63b367e69903b389720533b9ab5dac0fd6c0046162ca042fb5916e41a4bb",
+      "size": 2432,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/09b8dbbe982a_新增对话人格表与头像开关.py",
+      "hash": "00d6d5a49e85b031bd9bace6889a36e086ddad8aaab596b33cd732a6db8921ed",
+      "size": 2146,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/0e8cc9897396_create_memories_table.py",
+      "hash": "d66670df416ef6265aae598b93e448ca91503d77685e6bbe30ee4e187b779830",
+      "size": 2033,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/115eb519d14d_persona_groups表_agent_personas加in_group_.py",
+      "hash": "d333c74eb3b09ca45eaeb53e0ba33538d463c85a5850ffc8d0839c6b202f754c",
+      "size": 2305,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/2307490b0a25_create_tool_configs_table.py",
+      "hash": "47795bfc28262b3e4071efb1e9e141d7e43264b587673bbf9ec284409dbcc29a",
+      "size": 1968,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/252ffcda08e1_add_songs_playable.py",
+      "hash": "22e963a62843bc0c1296ef541da1d44509eb160071e295861b31f57a973cbccb",
+      "size": 830,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/2628f0e24602_notify_channels_推送渠道表_agent_tasks_.py",
+      "hash": "57a7eee40226e7c80c555745301076ad38d751e29fc11f0c990f07be96b98fba",
+      "size": 2065,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/31176cc42a17_conversations加群聊字段_messages加sender_.py",
+      "hash": "164a5800843a30eefbd3847ad47b33fd3b7aef93bdd5d597b3d489bf8aa2bc09",
+      "size": 1683,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/3b74e7025aee_create_skills_table.py",
+      "hash": "9c6061814480a4c2f609d6b4cfb5823f6463734302486a9b7802a9f74f472840",
+      "size": 2213,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/3dffbe27b7d7_add_users_avatar.py",
+      "hash": "6eb13912c9ce43dc07f1a989ffe9f87fce2879c06f7016cbc6c47430aae99fe5",
+      "size": 833,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/45e5059b4825_users_加_briefing_seen_at_简报已读基准.py",
+      "hash": "6304cca23dd958bf766b82f909d7eec1fc84eebcf2e64b628ea675bae29d0a93",
+      "size": 887,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/5ca36380b3f0_conversations加群聊工具开关enable_tools.py",
+      "hash": "8b1f5620cb52c658bcedd3810df3053fde19c7730b1f4e2a5039a2b7a7cd5c4d",
+      "size": 1108,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/6727223d45f9_agent_traces_agent_spans_tracing_数据底座.py",
+      "hash": "fe095e1668bda17f3b54bbc8897f0d01738531de688edbdb28443c969673ab5e",
+      "size": 6526,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/71ffb5842f86_create_conversations_messages_agent_.py",
+      "hash": "696557f7815624dff2f28feaaa0eeda2e8729ab34ce260b5c8adb7c2ed8bba4c",
+      "size": 3343,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/78d133beb913_create_message_feedbacks_table.py",
+      "hash": "3e52c7a4f5bc92e36a054073c81c7358c8985a6087132c1186d72e71fa61e8e4",
+      "size": 2355,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/7a3c4d5e6f01_loop_runs_iterations_verifier_loop.py",
+      "hash": "d1c8c19735f4a723ebfb4f97ad2dd015bddbfdc42b499edfdd6fb7d28cd2af1a",
+      "size": 4413,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/8440c3519b07_新增知识库表_documents_images_加_kb_id.py",
+      "hash": "e63f3d44183d6548826c194e357371bd6aaa1197f417a73060a00f4a64d8f3df",
+      "size": 2818,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/88b4f7f8cf58_create_favorites_daily_reviews_tables.py",
+      "hash": "fe206ddb85ea2f2b99dbe744c6f09a69d97d071251495df80021fa364155fab8",
+      "size": 2678,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/8b9b786d9b53_skill_add_enabled.py",
+      "hash": "634eb90f508634fc0db0a2cf821624816873d7cbd302d07b5288a00ae2116ab9",
+      "size": 968,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/8f4f801a0397_create_documents_images_tags_tables.py",
+      "hash": "0699a2116622934303458e05522f10d3225c298449e74e4101afd0e099fa64b4",
+      "size": 5178,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/935266f63718_create_emotion_tables.py",
+      "hash": "874cac125b00746614fc8b898acce0896e334fe37c371baa8e6af95ee8de4cbe",
+      "size": 3229,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/9596cfc27bc1_share_add_avatars.py",
+      "hash": "126434ebcc18256f97b01cd02e17a6efb2be8b48dd82dddb72b6a3b7d0d57dcc",
+      "size": 1163,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/979c6e3c897f_create_research_reports_table.py",
+      "hash": "f19be31464b96b717a643349d31b6e8d55f30808daf8557956092efe381cc3ca",
+      "size": 2167,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/9d2abf6b960b_report_shares_报告分享表.py",
+      "hash": "b32269e8ddee175b54df8daf9f3147e0eb9fc52781c0ce083b164c172cd0c282",
+      "size": 2535,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/a7c9f2d4e801_add_document_blocks_and_parse_metadata.py",
+      "hash": "0f60931ec172a5d73c893e77b589a8578b88704f532d20612be973bae12bd94f",
+      "size": 3560,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/b8d195cf3e7a_memory_corrections_人类反馈数据池.py",
+      "hash": "f0fc55a45a147055bddccd05e77aee0c1c1f7f1d20cb3d487af73d6ebfbc7744",
+      "size": 2750,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/bf7ad4190462_agent_configs_加_human_mode_全局真人模式.py",
+      "hash": "9999df33b4a0918efc6a8e4baa6a6f0a8b00e2de73e38a6bfeff384f7631b6ec",
+      "size": 907,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/c3e5a1f7b902_add_document_reparse_controls.py",
+      "hash": "a82026683512e3bb21c5f0ad9215fa8471833f5e634dc4fb855dac8137ac7503",
+      "size": 1101,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/ce4a6722698a_群成员表_消息sender_user_id_会话join_code.py",
+      "hash": "3cce6c7c30d1a129d06261c6f06bfcbbba348eecac1fb0a0605e90b0242e7c88",
+      "size": 2357,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/cf7ae75691ea_agent_config_add_enable_active_recall.py",
+      "hash": "984a18ed3e2775dccc5f064301d2170ff30abbf205faa678a5da0d2e47c465c5",
+      "size": 1100,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/d2a89321228e_add_users_nickname_and_play_histories.py",
+      "hash": "c506a67d1ef5121f3c61f342a51f81e1ffd6ef1779c17837a28517c62edc1f19",
+      "size": 1817,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/d429ecd1d3a9_create_conversation_shares.py",
+      "hash": "f166140722d886d75f28b1f5233ff157e3a9da9c97a47bd6305fa57e0cca404e",
+      "size": 2609,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/d826fb83fb90_create_users_table.py",
+      "hash": "53a521079f58a8886cc529b9a1b72e1ae7b547e1fa1bfca4fba84d85c1c15ba2",
+      "size": 1542,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/db88b5cfcf7b_agent_config_add_enable_cross_session.py",
+      "hash": "87c1d45c1f8f7d019c049a7ef9ac36f4181a2576d54c7844fb5fff4251a77637",
+      "size": 1099,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/e004fbfb8ac6_create_agent_tasks_table.py",
+      "hash": "c5367f97fe3cf798cd1c4fac13171069f4daf54e34feee40679e391c37686eb6",
+      "size": 2541,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/e33f64acf851_daily_review_add_care.py",
+      "hash": "1532f5927eddc831b6b69a0f5582342277dd03a304e855f6d6309da913a65e3e",
+      "size": 838,
+      "type": "file"
+    },
+    {
+      "path": "api/migrations/versions/f30e6fa335e9_知识库加_chat_enabled.py",
+      "hash": "64672b6bf5736d518ac4c86b0d90a9228ef0d2957eff812823049b994f2a484a",
+      "size": 990,
+      "type": "file"
+    },
+    {
+      "path": "api/pyproject.toml",
+      "hash": "e14a37eaaa8bd001241c06e0b852d8aadad32d32481be13ebc11cb2b62299944",
+      "size": 1802,
+      "type": "file"
+    },
+    {
+      "path": "api/README.md",
+      "hash": "4975c5010093869eed795119280ebd1383fa7c80a2e97f5f5fb0f7e583e2ef52",
+      "size": 21594,
+      "type": "file"
+    },
+    {
+      "path": "api/run.py",
+      "hash": "67fda024c3e915d373e90087529e6b0b6e3104ebf554f158f416041e932e96e5",
+      "size": 501,
+      "type": "file"
+    },
+    {
+      "path": "api/uv.lock",
+      "hash": "7aa7838fe7b1a1c11c82c6ee86105ce40e5801efb5a005f84aab2d7b387f73a5",
+      "size": 885162,
+      "type": "file"
+    },
+    {
+      "path": "docker-compose.prod.yml",
+      "hash": "06d50e0fae3703c1043590d55a7365f9c0cbe30746542e5aedae01eff459c5fc",
+      "size": 3065,
+      "type": "file"
+    },
+    {
+      "path": "docker-compose.yml",
+      "hash": "e295c6bd0612ea91ec694b5151e188c9e068feb4d444ea5932be09aee1d47e61",
+      "size": 3394,
+      "type": "file"
+    },
+    {
+      "path": "docker/es/Dockerfile",
+      "hash": "58c93a6938eb60853f1707c932d9b47c32e4541139c746f3c1a6e2778e690d7c",
+      "size": 306,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/00-对话人格角色卡.md",
+      "hash": "79dadc32079f5b9edcaccfd50a7d7d919f5ec2e0cac825977c78e7e0c4b1c04d",
+      "size": 16044,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/01-多知识库.md",
+      "hash": "3988b18f58062c737957fcbbefa650a011ec834b1f8bbd19e358d7d347a79e07",
+      "size": 20370,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/02-Skills技能.md",
+      "hash": "d1e8665abf75df02d5d54f96720caa91d49e90661356fa5b848a1cf1991528bd",
+      "size": 19854,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/03-反思引擎.md",
+      "hash": "e6d9bfd4f465b1e7122ef227c4771495690ba3153f5ea4e7d1e3ef9fe39336df",
+      "size": 18163,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/04-记忆主动召回.md",
+      "hash": "dbb2db196524458fea75a98896f255468f88b87f6c2fa882c1381fdd2af63a09",
+      "size": 15001,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/05-跨会话上下文.md",
+      "hash": "9e11090517f97924cdaee7ac32d73e859a5c4598ddb204fe8f39b8a15162f0cd",
+      "size": 13134,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/06-AI主动关心.md",
+      "hash": "96d7931f5821e33f9f6ec2310cd81dd4d8f7bf5bb0f7d8b92bc5a256607bd27c",
+      "size": 15269,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/07-划词追问.md",
+      "hash": "e6baf64b1c13bff6122c4a3c49142f75cc2edbd64fa178fcecc1f2fa4be56cb7",
+      "size": 8306,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/08-对话分享.md",
+      "hash": "8eaa4d18109f96b70a8d8baecc5231f5007b9aa5b495e768d7b981d0a3d93972",
+      "size": 17266,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/09-群聊多Agent.md",
+      "hash": "535b90e0f7f8aabd9beace0ce70a07beb18c6f54aecbf1dae27b75efca58d557",
+      "size": 22002,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/10-ASR语音输入.md",
+      "hash": "1066e1327142c0f2c1c7fb8288ba6d8bbfae3ca56749368360e1ce6f68247305",
+      "size": 15516,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/README.md",
+      "hash": "184ca1062e78447fa97baf631a4d8d6aca690d19c88d85bb8aaf4bbd1c603693",
+      "size": 2192,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.3/releasenotev0.0.3.md",
+      "hash": "101b0e6beec6e1ab0b2ae4973bf09eef69e0caa259ccf4d5aa9ac1cce4abb0a2",
+      "size": 7442,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/00-深度研究引擎.md",
+      "hash": "a529c3ff72f55b383494b9889482a196026ddea9205ccd7abd58c7ca8ff29b99",
+      "size": 13612,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/01-定时主动任务.md",
+      "hash": "e97d071351ad60b99811b9305671ed5efa1c690fbe203850584b0eef58089c27",
+      "size": 10585,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/02-报告分享与导出.md",
+      "hash": "dfbcfada2dbe1d34f0788cff24b21bc34e34e9f11f774286df13d20bfad659e0",
+      "size": 7853,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/03-消息推送.md",
+      "hash": "2eb486a51476fa6faf7fc143ab9b1b3dad23a702a86e2601e0955ed8b8b0aec5",
+      "size": 6711,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/04-真人对话模式.md",
+      "hash": "0283bbcf035361c7963456324058831ccbe6e0074e811dddd529342d6beecac5",
+      "size": 9485,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/05-知识库文档预览.md",
+      "hash": "1c4b9edaa2a6695387253e1201fe12c28adb11f300ceb4bff5b0903ffe58c578",
+      "size": 4997,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/README.md",
+      "hash": "54aa7c2aa574de54d1735b48258e59834699cddf69ce5f99007b180acd195864",
+      "size": 2747,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.4/releasenotev0.0.4.md",
+      "hash": "3656ba2d36e78cdf7c877de1c111288397bbe4e6ec513ba0bc410e7367396349",
+      "size": 8399,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.5/Agent-Tracing-与成本.md",
+      "hash": "2881acd2a2024fe29be1af50037a7c76d2586261d2a2ee52f3348606c65e66bf",
+      "size": 16667,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.5/Loop-Engineering-Verifier-Loop.md",
+      "hash": "b136043b2f265d62e5ee8a1d87345926ce274443f8f38c1d61b9bbe72bafb37b",
+      "size": 12266,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.5/公共评测基准.md",
+      "hash": "4a9e84dad57ee8468cac01fc9e163ffb3a1e129683efb8e53f2f9caa935f0f65",
+      "size": 9434,
+      "type": "file"
+    },
+    {
+      "path": "docs/_archive-release设计与八股/releasev0.0.5/记忆审查与人类反馈.md",
+      "hash": "6fde751be1ec75caa5de02b5be7046c03747a58bba6bed2d4d337d131cf63d70",
+      "size": 8650,
+      "type": "file"
+    },
+    {
+      "path": "docs/00-总览与面试开场/01-能力地图与JD对照.md",
+      "hash": "08e657989df39e472a1bf5b7bd2f5720e12ba832c2091ed33d516c2be9168d8a",
+      "size": 6172,
+      "type": "file"
+    },
+    {
+      "path": "docs/00-总览与面试开场/02-简历撰写指南.md",
+      "hash": "a3d1c6166836619fa6e8a06849e1b0869cc3a86e6b58ae11a3e94b3c17b9e58a",
+      "size": 32791,
+      "type": "file"
+    },
+    {
+      "path": "docs/00-总览与面试开场/README.md",
+      "hash": "ee780b0b1c1bef3e11b25892b03bae6d42e4fd0af5cddd6137c29735c2685fbd",
+      "size": 9227,
+      "type": "file"
+    },
+    {
+      "path": "docs/01-LLM应用工程/01-模型抽象与多provider适配.md",
+      "hash": "3b87015a34f196d3e67950b55535f7df3866baef7fbd7d4210ca5456d84e4c0f",
+      "size": 12257,
+      "type": "file"
+    },
+    {
+      "path": "docs/01-LLM应用工程/02-SSE流式输出.md",
+      "hash": "6d2b78fe592f1744f7f5a0fc9dc63be090d59fdcbef448df1589db162597b287",
+      "size": 10920,
+      "type": "file"
+    },
+    {
+      "path": "docs/01-LLM应用工程/03-语音输入ASR(浏览器+云端异步).md",
+      "hash": "ce0c022956ef2380b821a68f3fa6d22d4b38cbd02ac68223e755aa21b38a0231",
+      "size": 9088,
+      "type": "file"
+    },
+    {
+      "path": "docs/01-LLM应用工程/04-配置加密·连接池·统一响应异常.md",
+      "hash": "c3e2a9f2ec308cb88589252613bc67cab9cb6123ed0fd1378a000a4f92e3247f",
+      "size": 11146,
+      "type": "file"
+    },
+    {
+      "path": "docs/02-RAG知识库/01-分块与中文分词.md",
+      "hash": "ac8281d249ae8366b4ba44a98b07ef93a3b8fb19dbff0fcedb0d1d3420ee4fdb",
+      "size": 10227,
+      "type": "file"
+    },
+    {
+      "path": "docs/02-RAG知识库/02-混合检索与rerank.md",
+      "hash": "f58c77c5b84fa2fc29751db02de9424e34e13898be99c93b2759ae21e838ce4e",
+      "size": 10870,
+      "type": "file"
+    },
+    {
+      "path": "docs/02-RAG知识库/03-引用溯源与多知识库.md",
+      "hash": "d7cecdae33fd22f13dfbd967efa5e3e188c94bea22bc6dbed370eca53c802cf4",
+      "size": 9609,
+      "type": "file"
+    },
+    {
+      "path": "docs/02-RAG知识库/04-多模态识别与文档预览.md",
+      "hash": "24371422ae7258e61339eacf52ac7828516483fe0d7f056fdac784dd190badee",
+      "size": 10496,
+      "type": "file"
+    },
+    {
+      "path": "docs/02-RAG知识库/05-全局搜索与语义门控.md",
+      "hash": "2599dbfdc92e042026b095709ca84997bf90eefcd2f9ff631495480fe5ec4a60",
+      "size": 8614,
+      "type": "file"
+    },
+    {
+      "path": "docs/03-Agent核心/01-FunctionCalling与ReAct双路径.md",
+      "hash": "e42698543187133090b35505084480f55c2a78fcaac33035b8c7b3c6098d680b",
+      "size": 12621,
+      "type": "file"
+    },
+    {
+      "path": "docs/03-Agent核心/02-工具注册中心与MCP接入.md",
+      "hash": "b074ddf08b5a822d16a20f812b098852db248a85cf3c93fa3f8ed5225b2ffeb7",
+      "size": 11281,
+      "type": "file"
+    },
+    {
+      "path": "docs/03-Agent核心/03-角色卡(人格)与提示词优化器.md",
+      "hash": "b28372b6bec67d8293aa057330125b550c52fb68c72db9385ff3e429215460cb",
+      "size": 10715,
+      "type": "file"
+    },
+    {
+      "path": "docs/03-Agent核心/04-Verifier-Loop自闭环质量保障.md",
+      "hash": "1a1a9a49a7a138f38078f61be3a07c95ba294314361475757fec6b64ed45b366",
+      "size": 12382,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/01-三元组萃取与四层溯源图谱(含事件萃取).md",
+      "hash": "3a6a3ed4a362d4835aea7dcaa8d7e15b84d8dcc02c67b7248a6f53389cae3325",
+      "size": 18375,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/02-实体去重与图混合检索.md",
+      "hash": "6a92911a73e1715559a7d6fdf459b06f140e272205f8937c1f9fc6824bb8c12d",
+      "size": 11208,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/03-社区聚类与记忆分层巩固.md",
+      "hash": "62a49190341e72cfaad7e58c4554f293cf30d7503eba368040f3cbfd86ad3f7a",
+      "size": 11210,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/04-反思引擎(Insight).md",
+      "hash": "1040dc0e0d60d5a5eb5a3b024a207d8724a785f6ca41e7a7646e3547048de8af",
+      "size": 9124,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/05-主动召回与跨会话上下文.md",
+      "hash": "c53cd30f2ff2efbc8d6e39a9f3b1f20a50ed99dc7cc2f525c316f17d793ccd13",
+      "size": 10671,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/06-记忆审查与人类反馈闭环.md",
+      "hash": "1001087e053b3b214ed698890edb8fa65b0438f0be39b4d2d7216e13fe2f260a",
+      "size": 12010,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-记忆/07-Graph-RAG原理与MemoryBear改进面试话术.md",
+      "hash": "1053dede5f4f290696b743871b4245d36deac569afe9e93d53c0fb35791c86ca",
+      "size": 30904,
+      "type": "file"
+    },
+    {
+      "path": "docs/05-多Agent编排/01-深度研究引擎(规划-检索-提炼-写作).md",
+      "hash": "bf9102e737aa1b05123e9cbd16a06ccfd47bd86cb72ed6ba9c9cb72d62acfac4",
+      "size": 12108,
+      "type": "file"
+    },
+    {
+      "path": "docs/05-多Agent编排/02-定时主动任务调度.md",
+      "hash": "2f45d7e935f6cfd398fa3d5e02df77843f50bc411cfb5caa1c6eddcb557e4155",
+      "size": 10539,
+      "type": "file"
+    },
+    {
+      "path": "docs/05-多Agent编排/03-多Agent群聊(主持人调度).md",
+      "hash": "be232ab6fa0199207d6da79b78160c8ad700b0b27072c6682bb2b963a6599b3d",
+      "size": 10095,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-工程化与部署/01-账号鉴权与安全(JWT-加密-SSRF-隔离).md",
+      "hash": "77d40220c20fd834014797ad011a2d7f255a2484f958af96dbcc2e7002b205e5",
+      "size": 8930,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-工程化与部署/02-Celery异步多队列.md",
+      "hash": "92e69a49e2dbce065acfe5321641b93b90b8cf99548732f1dc1920681cb52c52",
+      "size": 8610,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-工程化与部署/03-分享与导出(对话-报告快照-公开页-Word).md",
+      "hash": "3223767d6628662e4867563107ca3f6b48584ad6dd1a161906e396bae51b02b1",
+      "size": 8746,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-工程化与部署/04-消息推送(Server酱-企微-钉钉-webhook).md",
+      "hash": "c4e07eea686e3035d5d8b6e5f0411c1f83b1a2d5c91f285953f338d4f74ecf4d",
+      "size": 8069,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-工程化与部署/05-部署·HTTPS·踩坑集.md",
+      "hash": "1f6eb29a15d7a9e3719e37b019baf9015cdeb41f850945cdcfedd864471a6507",
+      "size": 7322,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-工程化与部署/06-全链路可观测Tracing与成本核算.md",
+      "hash": "a86b1465ac1b2a6dde9f880afb17848ee96311d3efb2f1ae6fdbdb276b5eee02",
+      "size": 15265,
+      "type": "file"
+    },
+    {
+      "path": "docs/07-情绪与个性化/01-情绪计算(valence-arousal).md",
+      "hash": "6a088cd559da1ee2f1282cd21d09cdfec5336e472755ab3468d7ee23a5240099",
+      "size": 8762,
+      "type": "file"
+    },
+    {
+      "path": "docs/07-情绪与个性化/02-情绪化音乐推荐.md",
+      "hash": "ea913e718a7c753753cb699c9bfc29cf04b8d8ab97f3494a8f7d84c086fb080b",
+      "size": 8480,
+      "type": "file"
+    },
+    {
+      "path": "docs/07-情绪与个性化/03-真人对话模式·AI主动关心·每日回顾.md",
+      "hash": "6309f55ff27e6b1780995b1a8aa5f34415b0a2753fcda44493e1c91e9f2dcefe",
+      "size": 9863,
+      "type": "file"
+    },
+    {
+      "path": "docs/08-评测体系/01-评测框架与自制集.md",
+      "hash": "e08c45c073b648692e10492d3626e19184262596718f85cccf8057df9a9bbd48",
+      "size": 10490,
+      "type": "file"
+    },
+    {
+      "path": "docs/08-评测体系/02-公共评测基准(C-MTEB与HotpotQA).md",
+      "hash": "3d76264a9ea15665682a3d4a214aa5fc9dbb3d089852c3f83668981d05121423",
+      "size": 12292,
+      "type": "file"
+    },
+    {
+      "path": "docs/99-面试速记/高频问答速查.md",
+      "hash": "f2cc422c77ff08b941570b6186589f9257a0472f6f283442f7a6c9e4d1e6ed44",
+      "size": 9089,
+      "type": "file"
+    },
+    {
+      "path": "docs/README.md",
+      "hash": "4d563f73c14df57d49122ec7fcbc2d8c3e6d86b9c995c8695d195e87f7d83c95",
+      "size": 8064,
+      "type": "file"
+    },
+    {
+      "path": "docs/release-notes/v0.0.5.md",
+      "hash": "984771dda8241b4d7ca9136cafff1d2cfa46cbda22c7f0f443b4778f01a2e4a8",
+      "size": 12998,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "hash": "e24a48f6b53e6b3e3b6c88ca5bdbae2fb015c967f0a23bad96263a3c2950164d",
+      "size": 17537,
+      "type": "file"
+    },
+    {
+      "path": "web/.dockerignore",
+      "hash": "fc84263a8d02f9f7e9ee7f682aed10c86c5f4d5f7bcce047f60d44861ac092f6",
+      "size": 38,
+      "type": "file"
+    },
+    {
+      "path": "web/.gitignore",
+      "hash": "0811eaa01447bbd30df265cab42e6f86ceb53d124200f4f711f5f7bd19f0fd30",
+      "size": 50,
+      "type": "file"
+    },
+    {
+      "path": "web/Dockerfile",
+      "hash": "a4f6d2d0fd9a40e529d5ec39b78f7b6b7811d05a3742eb6510099119e86db408",
+      "size": 373,
+      "type": "file"
+    },
+    {
+      "path": "web/index.html",
+      "hash": "30762c95bd9213d73c75e86685dc451cd75ba1fd0012958e9a5c8d501ab6ff97",
+      "size": 373,
+      "type": "file"
+    },
+    {
+      "path": "web/nginx.conf",
+      "hash": "f21083b93afef5aa01e3cf8904202ca8d05a3932cb428863f141c6c4405bd92f",
+      "size": 1486,
+      "type": "file"
+    },
+    {
+      "path": "web/package-lock.json",
+      "hash": "83c70138b3f4e611bfa60bce760953835fbc7f1863d83cae4361e62feeeef399",
+      "size": 200452,
+      "type": "file"
+    },
+    {
+      "path": "web/package.json",
+      "hash": "4d57090bb7caab8a016e276458ca8da85a42ff4d5205a9e369825246d3bb4252",
+      "size": 898,
+      "type": "file"
+    },
+    {
+      "path": "web/public/d50287ecf3fca243988a08be64af4077.txt",
+      "hash": "6aa8d9da88a74485393ef6c9a717ed9654dd07857896eb128c2b47650c07d1a5",
+      "size": 42,
+      "type": "file"
+    },
+    {
+      "path": "web/public/logo.png",
+      "hash": "8c5e61e4d03e10c2cd0abe8272194abd57f4dc46e73f79bc50d3f59fc8b86632",
+      "size": 727993,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/agentConfig.ts",
+      "hash": "241b411030f3eedc56cd0d29c278d7eb522c9e08fe416cdb524d54e5bffecf90",
+      "size": 839,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/agentTask.ts",
+      "hash": "c319f760ee0ca72c93be27567c641a26f7820e30ef5d7a3d942e6f4c173206f5",
+      "size": 2369,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/auth.ts",
+      "hash": "131161d69c13360eda80a50cafa295e58d0ed6997b53ef6773f59d9afb582cdc",
+      "size": 1551,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/chat.ts",
+      "hash": "379734a5bf9f29a727a0bdd561704178964080f3672806cd5d26db51d09472af",
+      "size": 19382,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/client.ts",
+      "hash": "1119ef1e10bfe18783d2bac6e2331911303512b3df1e3663f6f25453a8e2fefb",
+      "size": 1440,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/dashboard.ts",
+      "hash": "4759eefa6aabd0ce7733d4d41893ab10736feca82ec1619eed3af7b2330541da",
+      "size": 1864,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/documents.ts",
+      "hash": "19a5735b3352625f7fcd79226975fd7ee53dd9ff4ec90b5530aa859cbc349238",
+      "size": 5333,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/emotion.ts",
+      "hash": "7c951d764c2f7416bab888f27a8e738f7793955ee3ad65fecadf5cd47934244b",
+      "size": 1458,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/favorites.ts",
+      "hash": "680a7e59976ead2de6978c14b15a5048b801ffb0e4682be5ea55d6585b074a83",
+      "size": 1012,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/images.ts",
+      "hash": "334225de2a95116a5e76512d9b6e096019c5b6d56196bdf78a52e5d1910fe71f",
+      "size": 1970,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/knowledgeBases.ts",
+      "hash": "32404befb8c29116b8b1fa8fd8684923cd4de1d0c673b3e270b63ee35c2e5b05",
+      "size": 1355,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/mcp.ts",
+      "hash": "137f718b2ee4d4775c997778e1fc5ecce0efc974b944a65635fa575a147c1a12",
+      "size": 1729,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/memories.ts",
+      "hash": "7cd5bccc59cc9e08b5ce49ae459e59651a63d813e7de55bef74b44aaa0dc9866",
+      "size": 8077,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/models.ts",
+      "hash": "d2550dbeb501a84822c77fd69718243c5f0326fea5b4a62d4311b10dbec80b5a",
+      "size": 1604,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/music.ts",
+      "hash": "e0e86cb080ed5b68b1e83a61e4256a77b98f22f7d53ddb9d53d073547f3fd437",
+      "size": 3845,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/notify.ts",
+      "hash": "198e1f088cda7e80e84671f569626e1b7373a8088b6bdd72bb4562157dbaf0b6",
+      "size": 1200,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/personaGroups.ts",
+      "hash": "757806b93db9d8cd11055aa738bda71d63fd0bc91bd33846637e198fbcaab481",
+      "size": 1669,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/personas.ts",
+      "hash": "a74eba48d0a1b029e9b3e66fc1ab926efd6a98d856286c0d77052970d2f9c85e",
+      "size": 1075,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/research.ts",
+      "hash": "ca782e01307b6a857451917d18dc5b12e28091d0b8f7d6b50b6528dc2b8caa5b",
+      "size": 10983,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/search.ts",
+      "hash": "f55ceca164cb86f76dcc7c1c53c398c6c724dfc9831b6c8a4442fd7cd0a96252",
+      "size": 548,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/shares.ts",
+      "hash": "8c497cbfe0a45c98810953c82413adf4859975192dd50c5e110421d1af869dd3",
+      "size": 1373,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/skills.ts",
+      "hash": "9f55ded95452a5b737852de82f8ef8443960b0ca8be704f343d15cb77508a68c",
+      "size": 1693,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/tags.ts",
+      "hash": "917d235081d613a0abdde6819dd8562789fc28b4f887f70b6d00c29393f1be10",
+      "size": 799,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/tools.ts",
+      "hash": "0b159d08671c35bce53eeb62a95afe89b4381580813f7d061fe75a12863a22d9",
+      "size": 607,
+      "type": "file"
+    },
+    {
+      "path": "web/src/api/traces.ts",
+      "hash": "63e84ab0f02bff756843a6d85de4a641de4bed5e72c8c7563abbe9247a8497aa",
+      "size": 2577,
+      "type": "file"
+    },
+    {
+      "path": "web/src/App.tsx",
+      "hash": "2a58ff00ec35e12d4c6ffb3983ade315a1996b6a55a78cf1ebbfdfc03f3998ca",
+      "size": 3555,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/AuthenticatedFileFrame.tsx",
+      "hash": "21fcfbdd3bc5a32f2f78abc6b51abd81d31e7d8dd50a00083785d910c7af2bac",
+      "size": 1998,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/AuthenticatedImage.tsx",
+      "hash": "bcad782a61e6c5f27712e433e1d217024c37b413524f655823fd86f8e2142c63",
+      "size": 3146,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/BeianFooter.tsx",
+      "hash": "431436fb23de7cc9bfdec17baa42ffa6d189b16a2db2b212074d33290444bd93",
+      "size": 1756,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/ErrorBoundary.tsx",
+      "hash": "d07ad6564180bfc64b16780f87999dae5779f897016c554773f6bec38488fb37",
+      "size": 3551,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/FavoriteButton.tsx",
+      "hash": "c59555994be2078dc7bb49d70e0fc56e3acb8113e0e8ab29b036eca2dd762b10",
+      "size": 1832,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/GroupComboAvatar.tsx",
+      "hash": "5cf67f954f3f90b250b8a4ae9a9059afc3ab5bcffd8240e2d157c4a79270428c",
+      "size": 2436,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/GroupMemberAvatars.tsx",
+      "hash": "355e58a3964de99d72170b646f7025f07bf0665a4cc2f148035daa4cf39364a3",
+      "size": 1641,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/MarkdownMessage.tsx",
+      "hash": "f6750e146089b202c63406aa7d5e9745400f44a4ad68302476ea7fcf3c4f10d3",
+      "size": 4575,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/memory/ReviewPanel.tsx",
+      "hash": "1598688ffc6de1df7d571ef5f55df248521732e68f54141190c49bb55a79f0af",
+      "size": 26355,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/MusicPlayer.tsx",
+      "hash": "621faa3a2cf7675d657e02cc3ebbc98c1e18ac9786910b40f9139e43e9384242",
+      "size": 15351,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/RequireAuth.tsx",
+      "hash": "29def2812630321e7609cb8d90fc3ea79b93760020dea149681bc724f8986c25",
+      "size": 1181,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/research/LoopHealthCard.tsx",
+      "hash": "25733079d5fa8b9c64c463bde3b64921f40c6adebf55b74e428c7dceab35e13d",
+      "size": 5159,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/research/QualityCard.tsx",
+      "hash": "2bf1b9c3c5acb49fc5fa36e425a3e0ef5e22eb80c5829d96fec82d66f85cf9cf",
+      "size": 8145,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/TagFilterBar.tsx",
+      "hash": "2075dd0eb8b3f2ae7dc0d083b048c21510704b8f59fa9232374fb88ea3fe5f89",
+      "size": 1315,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/trace/CostCard.tsx",
+      "hash": "f4c6f8b38b0498417eafb8649877387dafc985ab14899ac74a40e375d5358d9c",
+      "size": 5406,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/trace/TraceNarrative.tsx",
+      "hash": "d4625e3f4507d027040dbd24bc7fcc72d6056be82e5ea84257189600e56306e2",
+      "size": 16059,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/trace/TraceTimeline.tsx",
+      "hash": "b5fe5075701470beb7d6f24981bea7424b3b2d12b66a69f5c74ac73013994519",
+      "size": 21609,
+      "type": "file"
+    },
+    {
+      "path": "web/src/components/VoiceInputButton.tsx",
+      "hash": "446680823bcd6e02fae20d6c32d2c89d8ecd6d7e22593a32adbf1feca2a90884",
+      "size": 7336,
+      "type": "file"
+    },
+    {
+      "path": "web/src/images/logo.png",
+      "hash": "8c5e61e4d03e10c2cd0abe8272194abd57f4dc46e73f79bc50d3f59fc8b86632",
+      "size": 727993,
+      "type": "file"
+    },
+    {
+      "path": "web/src/index.css",
+      "hash": "d731d6cedd4878805b8e45e3a1b88263b9a314b2e0ea6d7637681ee62becdb47",
+      "size": 122004,
+      "type": "file"
+    },
+    {
+      "path": "web/src/layouts/MainLayout.tsx",
+      "hash": "820ebd9d1507095bdfdb67c345a58d2da0040560b3542c0c88c83c238288b2fe",
+      "size": 16862,
+      "type": "file"
+    },
+    {
+      "path": "web/src/main.tsx",
+      "hash": "4592c4cdac452e480e9f3814281288c562d8de5242309ed9847db12a37775e84",
+      "size": 504,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/agent/PersonaCard.tsx",
+      "hash": "0afd5ee0bab4f32c93d79de53c5588b83a5f7cb3490035a60ca1c9a7f5db4814",
+      "size": 3330,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/agent/PersonaEditModal.tsx",
+      "hash": "8f3a1026e6ead745ef72f40b9fc24ae3e4eab4ed17b9e5c376819bf970594e5b",
+      "size": 6620,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/agent/personaGradient.ts",
+      "hash": "c72d133e6258c0773d11290ba334df3ed041183f665a319746153b1a6d3a4bd1",
+      "size": 1324,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/agent/PersonaGroupEditModal.tsx",
+      "hash": "e417cdb282662c627a54b760cc4e85d2764b852b0c965ab60ab2423f2c116eb4",
+      "size": 5591,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/AgentConfigPage.tsx",
+      "hash": "7546db7ad6c83833d3101c461e30e8a570a45e945e10644a2d9275181f5263aa",
+      "size": 14645,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/AgentTaskPage.tsx",
+      "hash": "ba56cdcb3d45bbfd4885d028bc8a9b9f922b02337f48855f437c0dd1a7c5914f",
+      "size": 17288,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/auth/ParticleField.tsx",
+      "hash": "4eaafba4dc8fc927b0b3a652df156a1d1013e5f5323d1b64c884872dde8f142e",
+      "size": 4588,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/ChatProcess.tsx",
+      "hash": "9a34f9bd9af244f956ef812a234911285bf69e5eeb4c31ea5d7b3637eba1fac9",
+      "size": 11079,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/groupByDate.ts",
+      "hash": "b316a29cf9dfa2bab68bffe8d26596167514d906b24aade3f22af64d0d43e054",
+      "size": 2099,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/HumanBubbles.tsx",
+      "hash": "ce67dd83810074d6d5357733c47df38dce8eb2b902696dff31cbbdf0112105de",
+      "size": 2696,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/MessageItem.tsx",
+      "hash": "aa5993b86dfc4c664fc1bf2dc088a9def62a255c6b1fb55656b7043ca89d954b",
+      "size": 14272,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/SelectionPopover.tsx",
+      "hash": "0b0f972900b294d4977c970be3c0f193656beb26286bb04aef67143c470551dd",
+      "size": 3283,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/ShareModal.tsx",
+      "hash": "ddede76f1fe60a3c7a059e06b0339c7e0b912e28f21108fd54d4c5eab02f77a0",
+      "size": 6416,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/chat/types.ts",
+      "hash": "0e8f553041cf10302e5e9ac92abdcc51da4379f04c9327d6d450cdaa7a43f2a7",
+      "size": 3909,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ChatPage.tsx",
+      "hash": "4bc82f3e2052937fdf28817ecb2074f96d889c1a7f0e5cf118b996288aaa64f4",
+      "size": 45526,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/FavoritesPage.tsx",
+      "hash": "ed0d7f6c5c1f9536fd1735246811cd62ea6230cfc6ba17be3c3a07cbfed58e04",
+      "size": 6359,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/GraphPage.tsx",
+      "hash": "60dae78a93a4f522825e87f7701cb0236917c954023835964087b5dccba1bfbe",
+      "size": 22268,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/GroupChatPage.tsx",
+      "hash": "b4b9461c9994ea30dbfcc4800165218eefe5c611c0c27423dcfc5ff74c63dc4c",
+      "size": 60830,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/HomePage.tsx",
+      "hash": "5379dff206421bedf2434caad78bce11535a7620e07c47fd2097c11ad7ba2bd9",
+      "size": 20797,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ImagePage.tsx",
+      "hash": "eff3c11595727ede6a6c21b9f42d183526aed4b28ccd584b959b1872fb413a8e",
+      "size": 14564,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/JoinGroupPage.tsx",
+      "hash": "2ab4a61f5c30ec08f09bf2e75a70f3ab98c5209d661576765d7a48304f2a3422",
+      "size": 1891,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/knowledge/helpers.tsx",
+      "hash": "b4b4ec5d4dbcb0089c11644254a511c2c19355371ec2de78f6b2081f91582ad9",
+      "size": 2845,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/KnowledgeBasePage.tsx",
+      "hash": "5bbfd341f3ee1442baa244f55c58a7a980ed1ba8cd57301f0a82baa0e5c00f3f",
+      "size": 8156,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/KnowledgeDetailPage.tsx",
+      "hash": "ac937c59f48d7dc0547b0a96d0ad8e80a0030496ea093e9175fd9645b4a29fca",
+      "size": 30467,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/LoginPage.tsx",
+      "hash": "e0916f20cfa95341714ba0cea2f8e99fad3745dbdb3c8070da8dd19a886757e2",
+      "size": 6349,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/MemoryPage.tsx",
+      "hash": "ad11f3040a7ae5581a2acafaf7b0f6b0b73f10a0092f203add95b992ee4398e1",
+      "size": 46258,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/modelConfig/constants.ts",
+      "hash": "8d36e6872cfbc07b870b28e82b74a8c95830967e4bec6bb3cdc6887475da851a",
+      "size": 3347,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/modelConfig/ModelConfigModal.tsx",
+      "hash": "9220116062caac362c846113b0ef7d0cbf2e63d0acca382703bd12fcf17ef33e",
+      "size": 3988,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ModelConfigPage.tsx",
+      "hash": "c486cbe35ea33ba4843163be075ee9e7162f89cb13de1bf319ce02bd2b98ceaa",
+      "size": 22063,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/music/lrc.ts",
+      "hash": "197201aded81a671cc228f3ce5fa6c04010fbede496b925628e6a9613966fc32",
+      "size": 1520,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/MusicLibraryPage.tsx",
+      "hash": "3cb64d9bd85e8ca9c049d9edd898643ca072461e228255a2dc5d2fa5e5791c0d",
+      "size": 20518,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/NotifyChannelPage.tsx",
+      "hash": "6ddce53c5ba8bc7ae21b9245c72a039c85d0401ca7d58d8dd253d55f09c16f66",
+      "size": 8660,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ProfilePage.tsx",
+      "hash": "c655899aeb371c45fce76bf7985b1ea02b95f4d050a3e7b1aaab04701df2407e",
+      "size": 8858,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ReportSharePage.tsx",
+      "hash": "1420c0366ff75f58dcaf6413e783310286dcacf64956d2823bf40d88c1bf1472",
+      "size": 2344,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ResearchPage.tsx",
+      "hash": "3d4079a06e45a766cbd7b391bbfaf9561732def09f9fe754f8b05e7e4f292172",
+      "size": 30210,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/SearchPage.tsx",
+      "hash": "8933d701f7dcb9067777169e029949c3d3d4b44659f196c1d4f99741d28d28f6",
+      "size": 6262,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/SharePage.tsx",
+      "hash": "b4d6a0b8e227ac4eb8b6eb64e65066616c8e1ff32bfffc78b36e63e53e1edcfb",
+      "size": 5114,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/skill/SkillEditModal.tsx",
+      "hash": "591611f446b09801efe6e93add6a844b9a8b8024fbf8bdda4828e65ca27b37fe",
+      "size": 8348,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/SkillPage.tsx",
+      "hash": "193dc5b60c04442c5c05d68d905c16388d4c44f56d0800f3555dfda61618d237",
+      "size": 6359,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/ToolConfigPage.tsx",
+      "hash": "90bd3068fc3907139d869a34a8f394ca93e4b99c1b1bed063fe721e11ac76dd2",
+      "size": 2990,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/tools/McpServers.tsx",
+      "hash": "f68e3660b739874f1fbaa74cc098305a00ee22fd6e20a9b024446254add2aab7",
+      "size": 12713,
+      "type": "file"
+    },
+    {
+      "path": "web/src/pages/TracesPage.tsx",
+      "hash": "d4cbbc1f18da80337220e3472940fc2e6358a6bb5489c324d138b8eef99facc2",
+      "size": 22634,
+      "type": "file"
+    },
+    {
+      "path": "web/src/stores/authStore.ts",
+      "hash": "28e6e4190b9876463b14830b6b2ff4b3e3a5e7f3a5b1308a903b931ebbe10db2",
+      "size": 2019,
+      "type": "file"
+    },
+    {
+      "path": "web/src/stores/chatHeaderStore.ts",
+      "hash": "5ac81e99e1ff430234357cdadd07e2f6cba20f4125d7efda7db2ed15fcbf0f13",
+      "size": 1151,
+      "type": "file"
+    },
+    {
+      "path": "web/src/stores/groupHeaderStore.ts",
+      "hash": "523fd94e6650c380e687247decf19a92a2b57818e33570ae193f0d2bf1821cad",
+      "size": 1503,
+      "type": "file"
+    },
+    {
+      "path": "web/src/stores/knowledgeBaseStore.ts",
+      "hash": "9accc97ce35bf8e14f709ac5aa3a64afc7772f0f98f5f941c1ca331b0b206751",
+      "size": 856,
+      "type": "file"
+    },
+    {
+      "path": "web/src/stores/musicStore.ts",
+      "hash": "672e54a50fed168251c7d9f991416773f5fdd7a5172dd93ff0712d314d16edc0",
+      "size": 6039,
+      "type": "file"
+    },
+    {
+      "path": "web/src/stores/skillStore.ts",
+      "hash": "135fa4f0b5ac24b2b481f02a31cd0f4aeea846fcf24eeb40de30033f501e2c02",
+      "size": 688,
+      "type": "file"
+    },
+    {
+      "path": "web/src/theme.ts",
+      "hash": "72f33a0e49dace2e8661a42855f8492eb1427777be0c5d5223e219078fbbea49",
+      "size": 1571,
+      "type": "file"
+    },
+    {
+      "path": "web/src/utils/clipboard.ts",
+      "hash": "3b3fa7a714f36cda41385510ee0a763d2372fe1002350c3e90c337b1d122fcc4",
+      "size": 1210,
+      "type": "file"
+    },
+    {
+      "path": "web/src/vite-env.d.ts",
+      "hash": "424faf9241dd699dda995b367ed36665732da1e6ec1f33b2fd40394488ecac92",
+      "size": 39,
+      "type": "file"
+    },
+    {
+      "path": "web/tsconfig.json",
+      "hash": "d7cc685496855d1e078219330fb33bd422f1856d448c1d24a3cbd833f471a8b1",
+      "size": 597,
+      "type": "file"
+    },
+    {
+      "path": "web/tsconfig.node.json",
+      "hash": "43353cca6639e068394814333be5184844c6e376b2f8a0deaac89ec1eb3a10ef",
+      "size": 290,
+      "type": "file"
+    },
+    {
+      "path": "web/vite.config.ts",
+      "hash": "a67827d2d010a72762ec45ba86d1a4a87d7065eacb30597c9b44cf3d4212ef9f",
+      "size": 461,
+      "type": "file"
+    }
+  ],
+  "omitted": [],
+  "omittedCount": 0
+}
