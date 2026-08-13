@@ -7,6 +7,9 @@
 四层溯源：Dialogue（来源）→ Chunk（片段）→ Statement（陈述）→ Entity（实体），
 实体间挂 RELATION 三元组边。返回写入统计，供上层记录 PG memories 溯源。
 """
+import hashlib
+import re
+import unicodedata
 from datetime import datetime
 
 from app.core.llm.client import LLMClient
@@ -62,6 +65,33 @@ def _parse_dt(value: str | None) -> datetime | None:
         return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
     except ValueError:
         return None
+
+
+def _normalize_event_text(value: str | None) -> str:
+    """事件去重文本规范化：统一全半角、大小写、空白与标点。"""
+    normalized = unicodedata.normalize("NFKC", value or "").casefold()
+    return re.sub(r"[\W_]+", "", normalized, flags=re.UNICODE)
+
+
+def _event_id(
+    user_id: str,
+    title: str,
+    description: str,
+    event_time: datetime | None,
+    dialog_at: datetime,
+) -> str:
+    """按事件语义生成稳定 ID，保证批内去重和重试幂等。"""
+    effective_time = event_time or dialog_at
+    time_key = effective_time.isoformat(timespec="seconds")
+    raw = "|".join(
+        (
+            user_id,
+            _normalize_event_text(title),
+            _normalize_event_text(description),
+            time_key,
+        )
+    )
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
 
 
 async def run_extraction(
@@ -209,30 +239,40 @@ async def run_extraction(
     stats.relation_count = len(relations)
 
     # 9. 事件 → Event 节点 + INVOLVES 边（按 participants 名字匹配到最终实体）
-    events: list[EventNode] = []
-    involves: list[InvolvesEdge] = []
+    event_by_id: dict[str, EventNode] = {}
+    involves_by_pair: dict[tuple[str, str], InvolvesEdge] = {}
     for ev, name_map in pending_events:
         title = (ev.title or "").strip()
         if not title:
             continue
-        event_node = EventNode(
-            user_id=user_id, title=title,
-            description=ev.description or "",
-            event_time=_parse_dt(ev.event_time),
+        description = (ev.description or "").strip()
+        event_time = _parse_dt(ev.event_time)
+        stable_id = _event_id(
+            user_id, title, description, event_time, dialog_at
+        )
+        event_node = event_by_id.setdefault(
+            stable_id,
+            EventNode(
+                id=stable_id,
+                user_id=user_id,
+                title=title,
+                description=description,
+                event_time=event_time,
+            ),
         )
         # 参与者名字 → 本块 EntityNode → 重定向到最终实体 id
-        linked: set[str] = set()
         for pname in ev.participants:
             ent = name_map.get((pname or "").strip())
             if not ent:
                 continue
             eid = resolve(ent.id)
-            if eid in final_by_id and eid not in linked:
-                linked.add(eid)
-                involves.append(InvolvesEdge(
+            pair = (event_node.id, eid)
+            if eid in final_by_id and pair not in involves_by_pair:
+                involves_by_pair[pair] = InvolvesEdge(
                     user_id=user_id, event_id=event_node.id, entity_id=eid
-                ))
-        events.append(event_node)
+                )
+    events = list(event_by_id.values())
+    involves = list(involves_by_pair.values())
     stats.event_count = len(events)
 
     # 10. 写图（单事务原子落库）
@@ -241,6 +281,11 @@ async def run_extraction(
         entities=final_entities, mentions=mentions, relations=relations,
         events=events, involves=involves,
     )
+
+    # 清理升级前或旧任务留下的完全重复事件，并保留其参与者关系。
+    removed_events = await MemoryGraphRepository().merge_duplicate_events(user_id)
+    if removed_events:
+        logger.info("清理重复事件: user=%s removed=%d", user_id, removed_events)
 
     # 11. 反思增量触发：累计新增实体数达阈值则派发一次单用户反思（失败不影响萃取）
     try:

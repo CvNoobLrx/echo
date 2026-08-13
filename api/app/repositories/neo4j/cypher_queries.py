@@ -93,8 +93,42 @@ SET n.user_id = row.user_id,
     n.description = row.description,
     n.event_time = row.event_time,
     n.embedding = row.embedding,
-    n.created_at = row.created_at
+    n.created_at = coalesce(n.created_at, row.created_at)
 RETURN count(n) AS cnt
+"""
+
+EVENT_DUPLICATE_GROUPS = """
+MATCH (ev:Event {user_id: $user_id})
+WHERE ev.event_time IS NOT NULL
+WITH toLower(trim(coalesce(ev.title, ''))) AS title_key,
+     toLower(trim(coalesce(ev.description, ''))) AS description_key,
+     toString(ev.event_time) AS time_key,
+     collect(ev.id) AS ids
+WHERE size(ids) > 1
+RETURN ids
+"""
+
+EVENT_PARTICIPANTS = """
+MATCH (ev:Event {user_id: $user_id, id: $event_id})
+      -[r:INVOLVES]->(entity:Entity {user_id: $user_id})
+RETURN entity.id AS entity_id, coalesce(r.role, '') AS role,
+       coalesce(r.created_at, '') AS created_at
+"""
+
+EVENT_RELINK_PARTICIPANTS = """
+UNWIND $rows AS row
+MATCH (keep:Event {user_id: $user_id, id: $keep_id})
+MATCH (entity:Entity {user_id: $user_id, id: row.entity_id})
+MERGE (keep)-[r:INVOLVES]->(entity)
+SET r.user_id = $user_id,
+    r.role = CASE WHEN coalesce(r.role, '') = '' THEN row.role ELSE r.role END,
+    r.created_at = coalesce(r.created_at, row.created_at)
+RETURN count(r) AS cnt
+"""
+
+EVENT_DELETE_DUPLICATE = """
+MATCH (ev:Event {user_id: $user_id, id: $event_id})
+DETACH DELETE ev
 """
 
 # ── 边批量写入 ──

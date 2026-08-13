@@ -61,6 +61,7 @@ async def _extract(session: AsyncSession, mem_uuid: uuid.UUID) -> None:
             source_message_id=(
                 str(memory.source_message_id) if memory.source_message_id else None
             ),
+            dialog_at=memory.created_at,
         )
 
         memory.status = MEMORY_STATUS_DONE

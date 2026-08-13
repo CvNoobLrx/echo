@@ -210,6 +210,44 @@ class MemoryGraphRepository:
             len(events), len(mentions), len(relations), len(involves),
         )
 
+    async def merge_duplicate_events(self, user_id: str) -> int:
+        """合并标题、描述、事件时间完全相同的历史事件节点。"""
+
+        async def _txn(tx) -> int:
+            result = await tx.run(cq.EVENT_DUPLICATE_GROUPS, user_id=user_id)
+            groups = [list(record["ids"]) async for record in result]
+            removed = 0
+            for ids in groups:
+                if len(ids) < 2:
+                    continue
+                keep_id = sorted(ids)[0]
+                for duplicate_id in ids:
+                    if duplicate_id == keep_id:
+                        continue
+                    participant_result = await tx.run(
+                        cq.EVENT_PARTICIPANTS,
+                        user_id=user_id,
+                        event_id=duplicate_id,
+                    )
+                    rows = [dict(record) async for record in participant_result]
+                    if rows:
+                        await tx.run(
+                            cq.EVENT_RELINK_PARTICIPANTS,
+                            user_id=user_id,
+                            keep_id=keep_id,
+                            rows=rows,
+                        )
+                    await tx.run(
+                        cq.EVENT_DELETE_DUPLICATE,
+                        user_id=user_id,
+                        event_id=duplicate_id,
+                    )
+                    removed += 1
+            return removed
+
+        async with self._driver.session() as session:
+            return await session.execute_write(_txn)
+
     # ── 去重支持：取用户已有同类实体 ──
 
     async def list_entities_by_type(self, user_id: str, type_: str) -> list[dict[str, Any]]:
