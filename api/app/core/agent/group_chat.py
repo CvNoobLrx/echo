@@ -10,11 +10,10 @@
 """
 from collections.abc import AsyncGenerator
 
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
-
 from app.core.agent.prompt_renderer import render_agent_prompt
 from app.core.logging import get_logger
+from app.core.llm.chat_model import NativeChatModel
+from app.core.llm.types import HumanMessage, SystemMessage
 from app.core.memory.json_utils import parse_json_object
 
 logger = get_logger(__name__)
@@ -52,7 +51,7 @@ def _persona_brief(system_prompt: str) -> str:
 
 
 async def decide_speakers(
-    host_model: ChatOpenAI,
+    host_model: NativeChatModel,
     members: list[dict],
     transcript: str,
     user_text: str,
@@ -129,7 +128,7 @@ def build_speaker_messages(
 
 
 async def stream_speaker(
-    model: ChatOpenAI,
+    model: NativeChatModel,
     persona_prompt: str,
     self_name: str,
     member_names: list[str],

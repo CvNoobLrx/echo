@@ -4,13 +4,12 @@
 """
 from datetime import date
 
-from langchain_openai import ChatOpenAI
-
 from app.config import settings
 from app.core.agent.research.models import Learning, PlanSection
 from app.core.agent.research.prompt_renderer import render_research_prompt
 from app.core.agent.tracing import push_llm_usage
 from app.core.logging import get_logger
+from app.core.llm.chat_model import NativeChatModel
 from app.core.memory.json_utils import parse_json_object
 
 logger = get_logger(__name__)
@@ -20,7 +19,7 @@ _MAX_LEARNINGS_PREVIEW = 40
 
 
 async def find_gap_queries(
-    model: ChatOpenAI,
+    model: NativeChatModel,
     topic: str,
     sections: list[PlanSection],
     learnings: list[Learning],

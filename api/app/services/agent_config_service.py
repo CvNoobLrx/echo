@@ -1,12 +1,12 @@
 """Agent 配置业务服务：取/更新用户的 Agent 个性化配置（每用户一条，懒创建）。"""
 import uuid
 
-from langchain_core.messages import HumanMessage
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.agent.prompt_renderer import render_agent_prompt
 from app.core.exceptions import BizError
 from app.core.llm.chat_model import build_default_chat_model
+from app.core.llm.types import HumanMessage
 from app.core.logging import get_logger
 from app.models.agent_config_model import AgentConfig
 from app.repositories.agent_config_repository import AgentConfigRepository

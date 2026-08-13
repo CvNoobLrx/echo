@@ -11,7 +11,6 @@ import asyncio
 import uuid
 from collections.abc import Awaitable, Callable
 
-from langchain_openai import ChatOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
@@ -22,6 +21,7 @@ from app.core.agent.research.models import (
     Source,
 )
 from app.core.logging import get_logger
+from app.core.llm.chat_model import NativeChatModel
 
 logger = get_logger(__name__)
 
@@ -326,7 +326,7 @@ async def gather_mcp_sources(
     session: AsyncSession,
     user_id: uuid.UUID,
     topic: str,
-    model: ChatOpenAI,
+    model: NativeChatModel,
     supports_fc: bool,
     emit: EmitFn | None = None,
 ) -> list[Source]:
@@ -358,11 +358,11 @@ async def gather_mcp_sources(
 
 
 async def _run_mcp_loop(
-    model: ChatOpenAI, mcp_tools: list, topic: str, emit: EmitFn | None = None
+    model: NativeChatModel, mcp_tools: list, topic: str, emit: EmitFn | None = None
 ) -> list[Source]:
     """绑定 MCP 工具跑有界工具循环，把工具结果收成来源。"""
     from app.core.agent.orchestrator import run_function_calling
-    from langchain_core.messages import HumanMessage, SystemMessage
+    from app.core.llm.types import HumanMessage, SystemMessage
 
     sys = (
         "你是研究助手。请使用可用的工具，围绕用户的研究主题搜集有价值的事实与数据。"

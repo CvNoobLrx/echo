@@ -30,12 +30,15 @@ import random
 import uuid
 from contextlib import asynccontextmanager
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from app.config import settings
 from app.core.agent.tracing.models import SpanRecord, TraceRecord
 from app.core.agent.tracing.pricing import estimate_cost_cny
 from app.core.agent.tracing.span_recorder import get_recorder
+
+if TYPE_CHECKING:
+    from app.core.llm.types import Usage
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +117,21 @@ class _SpanHandle:
             tr.total_cost_cny = round(tr.total_cost_cny + self._record.cost_cny, 6)
             if model_name and model_name not in tr.models_used:
                 tr.models_used.append(model_name)
+
+    def set_usage(
+        self,
+        usage: Usage | None,
+        model_name: str | None = None,
+    ) -> None:
+        """直接记录原生模型运行时返回的 Usage。"""
+        if usage is None:
+            return
+        self.set_tokens(
+            input=usage.input_tokens,
+            output=usage.output_tokens,
+            cached=usage.cached_tokens,
+            model_name=model_name,
+        )
 
     def set_iteration_id(self, iteration_id: uuid.UUID | None) -> None:
         """verifier/repair span 关联到 ② loop_iterations 的某一轮。"""
@@ -300,7 +318,7 @@ def current_span_iteration_id() -> uuid.UUID | None:
 
 
 def push_llm_usage(resp_or_msg: Any, model: Any = None) -> None:
-    """从 LangChain ChatOpenAI 的响应/聚合 chunk 抽 usage_metadata,
+    """从原生模型响应、流式聚合 chunk 或 Usage 抽 token 用量，
     把 token 用量与 cost 累加到当前活动 span(planner/writer 等)。
 
     用法:
@@ -316,7 +334,10 @@ def push_llm_usage(resp_or_msg: Any, model: Any = None) -> None:
     sp = _current_span.get()
     if sp is None:
         return
-    usage = getattr(resp_or_msg, "usage_metadata", None) or {}
+    if hasattr(resp_or_msg, "to_metadata"):
+        usage = resp_or_msg.to_metadata()
+    else:
+        usage = getattr(resp_or_msg, "usage_metadata", None) or {}
     if not usage:
         return
     in_t = int(usage.get("input_tokens", 0) or 0)

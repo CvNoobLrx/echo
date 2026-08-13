@@ -1036,7 +1036,7 @@ class GroupChatService:
         yield _sse("done", {"conversation_id": str(conv.id)})
 
     async def _load_image_parts(self, image_keys: list[str]) -> list[dict]:
-        """读图片并压缩成多模态内容块（LangChain image_url 格式）。"""
+        """读图片并压缩成 OpenAI 兼容的 image_url 内容块。"""
         import base64
         from pathlib import Path
 
@@ -1076,7 +1076,7 @@ class GroupChatService:
         - 有图：发言消息带图片内容块，让角色看图分析；与工具可叠加（多模态模型支持
           function calling 时边看图边调工具，如发股票图各角色联网查实时行情分析）。
         """
-        from langchain_core.messages import HumanMessage, SystemMessage
+        from app.core.llm.types import HumanMessage, SystemMessage
 
         from app.core.agent.orchestrator import run_function_calling, run_react
 

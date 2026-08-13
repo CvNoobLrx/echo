@@ -1,8 +1,7 @@
 """联网搜索工具：从互联网获取实时信息。需用户配置 websearch 模型。"""
-from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, Field
 
-from app.core.agent.tools.base import ToolBuildContext, ToolSpec, register_tool
+from app.core.agent.tools.base import AgentTool, ToolBuildContext, ToolSpec, register_tool
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -26,7 +25,7 @@ async def _get_websearch_config(session, user_id):
     return cfg.provider, decrypt_secret(cfg.api_key_encrypted)
 
 
-async def _build(ctx: ToolBuildContext) -> StructuredTool | None:
+async def _build(ctx: ToolBuildContext) -> AgentTool | None:
     ws = await _get_websearch_config(ctx.session, ctx.user_id)
     if not ws:
         # 未配置 websearch 模型 → 不构建该工具
@@ -50,7 +49,7 @@ async def _build(ctx: ToolBuildContext) -> StructuredTool | None:
         stats_holder[KEY] = {"web_count": web_count, "provider": provider}
         return f"联网搜索到以下信息：\n\n{result}" if result else "联网搜索没有返回结果。"
 
-    return StructuredTool.from_function(
+    return AgentTool.from_function(
         coroutine=_run,
         name=KEY,
         description="从互联网搜索最新信息。当问题需要实时信息、最新新闻、或知识库/记忆中没有的网络资料时使用。",

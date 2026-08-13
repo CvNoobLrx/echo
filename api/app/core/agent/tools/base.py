@@ -5,8 +5,9 @@
 """
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
+from typing import Any
 
-from langchain_core.tools import StructuredTool
+from pydantic import BaseModel
 
 # 工具类型
 TOOL_TYPE_BUILTIN = "builtin"
@@ -28,8 +29,44 @@ class ToolBuildContext:
     kb_ids: list[str] | None = None
 
 
-# builder 签名：异步，返回一个 StructuredTool 或 None（无法构建则跳过）
-BuilderFn = Callable[[ToolBuildContext], Awaitable[StructuredTool | None]]
+@dataclass
+class AgentTool:
+    """Agent 可调用工具，兼容内置函数与远程 MCP 工具。"""
+
+    name: str
+    description: str
+    input_schema: dict[str, Any]
+    coroutine: Callable[..., Awaitable[object]]
+    args_schema: type[BaseModel] | None = None
+
+    @classmethod
+    def from_function(
+        cls,
+        *,
+        coroutine: Callable[..., Awaitable[object]],
+        name: str,
+        description: str,
+        args_schema: type[BaseModel],
+    ) -> "AgentTool":
+        return cls(
+            name=name,
+            description=description,
+            input_schema=args_schema.model_json_schema(),
+            coroutine=coroutine,
+            args_schema=args_schema,
+        )
+
+    async def ainvoke(self, arguments: dict[str, Any] | None) -> object:
+        values = arguments or {}
+        if not isinstance(values, dict):
+            raise ValueError("工具参数必须是 JSON 对象")
+        if self.args_schema is not None:
+            values = self.args_schema.model_validate(values).model_dump()
+        return await self.coroutine(**values)
+
+
+# builder 签名：异步，返回一个 AgentTool 或 None（无法构建则跳过）
+BuilderFn = Callable[[ToolBuildContext], Awaitable[AgentTool | None]]
 
 
 @dataclass
@@ -40,7 +77,7 @@ class ToolSpec:
     name: str  # 中文展示名
     description: str  # 给用户看的说明（工具配置页）
     icon: str  # 前端图标（emoji）
-    builder: BuilderFn  # 构建 StructuredTool 的异步函数
+    builder: BuilderFn  # 构建 AgentTool 的异步函数
     needs_config: bool = False  # 是否需要额外配置（如联网需 websearch 模型）
     config_hint: str = ""  # 需要配置时的提示文案
     default_enabled: bool = True  # 默认是否启用
@@ -59,6 +96,7 @@ def register_tool(spec: ToolSpec) -> ToolSpec:
 __all__ = [
     "TOOL_TYPE_BUILTIN",
     "TOOL_TYPE_MCP",
+    "AgentTool",
     "ToolBuildContext",
     "ToolSpec",
     "BUILTIN_REGISTRY",

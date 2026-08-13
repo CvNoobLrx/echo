@@ -12,18 +12,16 @@
 工具统计（命中数 / 实体数 / 网页数 等）由各工具写入 ctx.stats_holder[tool_key]，
 本编排器在产 tool_result 事件时读取并附在事件上，前端 chip 副文动态绑定。
 """
-import ast
 import json
 import re
 import time
 from collections.abc import AsyncGenerator
 
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from langchain_core.tools import StructuredTool
-from langchain_openai import ChatOpenAI
-
 from app.core.agent.prompt_renderer import render_agent_prompt
+from app.core.agent.tools.base import AgentTool
 from app.core.agent.tracing import get_tracer
+from app.core.llm.chat_model import NativeChatModel
+from app.core.llm.types import AIMessage, HumanMessage, SystemMessage, ToolMessage
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -36,23 +34,13 @@ def _format_observation(observation: object) -> str:
     """把工具返回值格式化为人类与 LLM 都能读的文本。
 
     设计目标：
-    - MCP 工具常返回 ``[{'type': 'text', 'text': '...'}]``（或其字符串形式），
-      抽出 text 字段拼接，避免出现一坨 Python 字面量噪声。
+    - MCP 2.0 工具结果进入编排前已经标准化；列表结果仍逐项抽取 text。
     - 普通 dict / list 用 JSON 美化输出，保留结构感。
-    - 字符串原样返回；若它本身是 Python 字面量字符串（容器），尝试 literal_eval 后递归格式化。
+    - 字符串原样返回。
     - 任意对象优先取 ``text`` 属性（兼容 mcp.types.TextContent 等）。
     """
-    # 字符串：先看是不是 Python 字面量序列化的形式（如 "[{'type': 'text', ...}]"）
     if isinstance(observation, str):
-        text = observation.strip()
-        if text and text[0] in "[{(" and text[-1] in "]})":
-            try:
-                parsed = ast.literal_eval(text)
-                if not isinstance(parsed, str):
-                    return _format_observation(parsed)
-            except (ValueError, SyntaxError):
-                pass
-        return text
+        return observation.strip()
 
     # 列表：典型 MCP 多段内容；逐项抽 text，否则降级到 str
     if isinstance(observation, list):
@@ -98,8 +86,8 @@ def _truncate(text: str) -> str:
 
 
 async def run_function_calling(
-    model: ChatOpenAI,
-    tools: list[StructuredTool],
+    model: NativeChatModel,
+    tools: list[AgentTool],
     messages: list,
     stats_holder: dict[str, dict] | None = None,
 ) -> AsyncGenerator[dict, None]:
@@ -111,7 +99,7 @@ async def run_function_calling(
     # 同一轮内的工具调用结果缓存：(工具名+参数) 相同则复用上次结果，
     # 不再重复握手+执行（消除模型用相同参数重复调同一工具的浪费）。
     call_cache: dict[str, str] = {}
-    # 取真实 model_name 用于成本核算(LangChain ChatOpenAI 的 model_name 字段)
+    # 取真实 model_name 用于成本核算。
     chat_model_name = getattr(model, "model_name", None) or getattr(model, "model", "chat")
     tracer = get_tracer()
 
@@ -144,12 +132,8 @@ async def run_function_calling(
                     iter_text += text
                     yield {"type": "token", "text": text}
                 gathered = chunk if gathered is None else gathered + chunk
-            # 抽 token 用量(stream_usage=True 后流尾的 chunk 带 usage_metadata)
-            usage = getattr(gathered, "usage_metadata", None) or {}
-            in_t = int(usage.get("input_tokens", 0) or 0)
-            out_t = int(usage.get("output_tokens", 0) or 0)
-            cached = int((usage.get("input_token_details") or {}).get("cache_read", 0) or 0)
-            lsp.set_tokens(input=in_t, output=out_t, cached=cached, model_name=chat_model_name)
+            # 流尾 usage 直接交给 tracing 记 token 与成本。
+            lsp.set_usage(getattr(gathered, "usage", None), model_name=chat_model_name)
             tool_calls = getattr(gathered, "tool_calls", None) or []
             lsp.set_payload("tool_calls_count", len(tool_calls))
             if iter_text:
@@ -171,6 +155,7 @@ async def run_function_calling(
         for tc in tool_calls:
             name = tc.get("name", "")
             args = tc.get("args", {}) or {}
+            args_error = tc.get("args_error")
             query = args.get("query", "")
             yield {"type": "tool_start", "tool": name, "query": query}
             try:
@@ -200,7 +185,10 @@ async def run_function_calling(
                     ToolMessage(content=formatted, tool_call_id=tc.get("id", name))
                 )
                 continue
-            if tool is None:
+            if args_error:
+                observation = args_error
+                status = "error"
+            elif tool is None:
                 observation = f"未知工具：{name}"
                 status = "error"
             else:
@@ -255,8 +243,8 @@ _FINAL_RE = re.compile(r"Final\s*Answer\s*:\s*(.*)", re.DOTALL)
 
 
 async def run_react(
-    model: ChatOpenAI,
-    tools: list[StructuredTool],
+    model: NativeChatModel,
+    tools: list[AgentTool],
     user_text: str,
     history: list,
     system_prompt: str,
@@ -287,11 +275,7 @@ async def run_react(
             },
         ) as lsp:
             resp = await model.ainvoke(convo)
-            usage = getattr(resp, "usage_metadata", None) or {}
-            in_t = int(usage.get("input_tokens", 0) or 0)
-            out_t = int(usage.get("output_tokens", 0) or 0)
-            cached = int((usage.get("input_token_details") or {}).get("cache_read", 0) or 0)
-            lsp.set_tokens(input=in_t, output=out_t, cached=cached, model_name=react_model_name)
+            lsp.set_usage(getattr(resp, "usage", None), model_name=react_model_name)
         text = resp.content if isinstance(resp.content, str) else str(resp.content)
 
         final_match = _FINAL_RE.search(text)

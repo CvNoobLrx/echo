@@ -1,10 +1,16 @@
-"""把 MCPServer 配置行转成 langchain-mcp-adapters 的 connection dict。
+"""MCP 2.0 client connection factory with auth and SSRF protection."""
+from __future__ import annotations
 
-负责：解密认证信息 → 拼 headers；SSRF 校验（禁内网地址）；按传输类型组装。
-"""
 import ipaddress
 import socket
+from contextlib import AsyncExitStack, asynccontextmanager
+from dataclasses import dataclass
 from urllib.parse import urlparse
+
+import httpx2
+from mcp.client import Client
+from mcp.client.sse import sse_client
+from mcp.client.streamable_http import streamable_http_client
 
 from app.core.security import decrypt_secret
 from app.models.mcp_server_model import (
@@ -14,13 +20,21 @@ from app.models.mcp_server_model import (
     MCPServer,
 )
 
-# 连接 / 读取超时（秒）
 CONNECT_TIMEOUT = 15.0
 SSE_READ_TIMEOUT = 60.0
 
 
+@dataclass(frozen=True, slots=True)
+class MCPConnectionConfig:
+    server_id: str
+    server_name: str
+    transport: str
+    url: str
+    headers: dict[str, str]
+
+
 def is_safe_url(url: str) -> bool:
-    """SSRF 防护：仅允许 http/https 且非内网/本地地址。"""
+    """Allow only public HTTP(S) endpoints."""
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https"):
         return False
@@ -32,9 +46,8 @@ def is_safe_url(url: str) -> bool:
     except socket.gaierror:
         return False
     for info in infos:
-        ip_str = info[4][0]
         try:
-            ip = ipaddress.ip_address(ip_str)
+            ip = ipaddress.ip_address(info[4][0])
         except ValueError:
             continue
         if (
@@ -49,7 +62,6 @@ def is_safe_url(url: str) -> bool:
 
 
 def _build_headers(server: MCPServer) -> dict[str, str]:
-    """按认证类型解密并拼出请求头。"""
     cfg = server.auth_config or {}
     if server.auth_type == AUTH_BEARER:
         token = cfg.get("token")
@@ -63,20 +75,64 @@ def _build_headers(server: MCPServer) -> dict[str, str]:
     return {}
 
 
-def build_connection(server: MCPServer) -> dict:
-    """MCPServer → 官方 connection dict。URL 不安全时抛 ValueError。"""
+def build_connection(server: MCPServer) -> MCPConnectionConfig:
     if not is_safe_url(server.url):
         raise ValueError("不允许访问该地址（内网/非法 URL）")
+    return MCPConnectionConfig(
+        server_id=str(server.id),
+        server_name=server.name,
+        transport=server.transport,
+        url=server.url,
+        headers=_build_headers(server),
+    )
 
-    headers = _build_headers(server)
-    transport = "sse" if server.transport == TRANSPORT_SSE else "streamable_http"
-    conn: dict = {
-        "transport": transport,
-        "url": server.url,
-    }
-    if headers:
-        conn["headers"] = headers
-    if transport == "sse":
-        conn["timeout"] = CONNECT_TIMEOUT
-        conn["sse_read_timeout"] = SSE_READ_TIMEOUT
-    return conn
+
+@asynccontextmanager
+async def open_mcp_client(config: MCPConnectionConfig):
+    """Open one MCP 2.0 client and own all transport resources."""
+    stack = AsyncExitStack()
+    try:
+        if config.transport == TRANSPORT_SSE:
+            transport = sse_client(
+                config.url,
+                headers=config.headers or None,
+                timeout=CONNECT_TIMEOUT,
+                sse_read_timeout=SSE_READ_TIMEOUT,
+            )
+            client = Client(
+                transport,
+                mode="legacy",
+                read_timeout_seconds=SSE_READ_TIMEOUT,
+                cache=None,
+            )
+        else:
+            http_client = httpx2.AsyncClient(
+                headers=config.headers or None,
+                timeout=httpx2.Timeout(CONNECT_TIMEOUT, read=SSE_READ_TIMEOUT),
+                follow_redirects=True,
+            )
+            await stack.enter_async_context(http_client)
+            transport = streamable_http_client(
+                config.url,
+                http_client=http_client,
+            )
+            client = Client(
+                transport,
+                mode="auto",
+                read_timeout_seconds=SSE_READ_TIMEOUT,
+                cache=None,
+            )
+        connected = await stack.enter_async_context(client)
+        yield connected
+    finally:
+        await stack.aclose()
+
+
+__all__ = [
+    "CONNECT_TIMEOUT",
+    "MCPConnectionConfig",
+    "SSE_READ_TIMEOUT",
+    "build_connection",
+    "is_safe_url",
+    "open_mcp_client",
+]

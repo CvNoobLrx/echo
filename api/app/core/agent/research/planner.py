@@ -1,13 +1,12 @@
 """研究规划：用 LLM 把一句话主题拆成报告标题 + 章节提纲 + 多角度子查询。"""
 from datetime import date
 
-from langchain_openai import ChatOpenAI
-
 from app.config import settings
 from app.core.agent.research.models import PlanSection, ResearchPlan
 from app.core.agent.research.prompt_renderer import render_research_prompt
 from app.core.agent.tracing import push_llm_usage
 from app.core.logging import get_logger
+from app.core.llm.chat_model import NativeChatModel
 from app.core.memory.json_utils import parse_json_object
 
 logger = get_logger(__name__)
@@ -30,7 +29,7 @@ def _fallback_plan(topic: str) -> ResearchPlan:
     )
 
 
-async def make_plan(model: ChatOpenAI, topic: str) -> ResearchPlan:
+async def make_plan(model: NativeChatModel, topic: str) -> ResearchPlan:
     """生成研究计划（标题 + 多视角章节 + 子问题）；异常或解析失败降级兜底。"""
     topic = (topic or "").strip()
     if not topic:

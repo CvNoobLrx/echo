@@ -11,14 +11,13 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from langchain_openai import ChatOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.agent.loop.models import RubricDef, VerifyScore
 from app.core.agent.loop.verifier.base import Verifier
 from app.core.agent.loop.verifier.prompt_renderer import render_verifier_prompt
 from app.core.exceptions import BizError
-from app.core.llm.chat_model import build_chat_model
+from app.core.llm.chat_model import NativeChatModel, build_chat_model
 from app.core.logging import get_logger
 from app.core.memory.json_utils import parse_json_object
 from app.models.model_config_model import ModelConfig
@@ -70,7 +69,7 @@ def _parse_verify_response(text: str, rubric: RubricDef) -> VerifyScore:
 
 
 async def _invoke_critic(
-    model: ChatOpenAI, system: str, user: str
+    model: NativeChatModel, system: str, user: str
 ) -> str:
     """以 critic 角色调用 LLM(独立 session,messages 数组直接构造,不带历史)。"""
     try:
@@ -87,14 +86,14 @@ async def _invoke_critic(
 # ── 同模型 self-critique 基线 ──
 
 class SameModelVerifier(Verifier):
-    """同模型 self-critique:用 generator 同款 ChatOpenAI 实例,但新开 session(messages 独立)。
+    """同模型 self-critique:复用 generator 的原生模型实例,但新开 session(messages 独立)。
 
     存在偏置风险(模型可能倾向认可自己生成的风格),在 A/B 实验中作为基线对照。
     """
 
     kind = "same"
 
-    def __init__(self, model: ChatOpenAI, model_name: str = ""):
+    def __init__(self, model: NativeChatModel, model_name: str = ""):
         self.model = model
         self.model_name = model_name or getattr(model, "model_name", "") or ""
 
@@ -117,7 +116,7 @@ class CrossModelVerifier(Verifier):
 
     kind = "cross"
 
-    def __init__(self, model: ChatOpenAI, model_name: str = ""):
+    def __init__(self, model: NativeChatModel, model_name: str = ""):
         self.model = model
         self.model_name = model_name or getattr(model, "model_name", "") or ""
 
@@ -151,7 +150,7 @@ async def build_verifier(
     user_id: uuid.UUID,
     *,
     kind: str,
-    generator_model: ChatOpenAI,
+    generator_model: NativeChatModel,
     generator_model_name: str = "",
 ) -> Verifier:
     """工厂方法:按 kind 构建 verifier。
@@ -163,7 +162,7 @@ async def build_verifier(
         session: DB session(查 verifier 模型配置)
         user_id: 当前用户
         kind: "same" / "cross"
-        generator_model: 当前 generator 用的 ChatOpenAI(same 模式直接复用)
+        generator_model: 当前 generator 使用的 NativeChatModel(same 模式直接复用)
         generator_model_name: generator 模型名(落库 audit)
     """
     if kind == "same":

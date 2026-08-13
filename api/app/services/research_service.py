@@ -370,10 +370,9 @@ class ResearchService:
 
         深度研究主题输入框 + 定时任务「研究指令」共用此接口。失败抛 BizError（中文）。
         """
-        from langchain_core.messages import HumanMessage
-
         from app.core.agent.research.prompt_renderer import render_research_prompt
         from app.core.llm.chat_model import build_default_chat_model
+        from app.core.llm.types import HumanMessage
 
         raw = (raw_topic or "").strip()
         if not raw:

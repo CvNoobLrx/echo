@@ -11,7 +11,6 @@ import re
 import uuid
 from collections.abc import AsyncGenerator
 
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.agent.orchestrator import run_function_calling, run_react
@@ -24,6 +23,7 @@ from app.core.llm.chat_model import (
     get_default_config_for_type,
     supports_function_call,
 )
+from app.core.llm.types import AIMessage, HumanMessage, SystemMessage
 from app.core.logging import get_logger
 from app.core.storage import get_storage
 from app.db.postgres import SessionLocal
@@ -149,7 +149,7 @@ class ChatService:
         return await self.conv_repo.create(Conversation(user_id=user_id, title=title))
 
     async def _history_messages(self, conv_id: uuid.UUID) -> list:
-        """历史消息转 LangChain 消息（不含 system 与当前问题）。
+        """历史消息转原生 ChatMessage（不含 system 与当前问题）。
 
         当前问题会在主流程单独追加，故这里丢弃末尾那条 user 消息（即本轮刚落库的提问），
         避免当前问题（含附件全文）在 prompt 中重复出现。
@@ -786,8 +786,6 @@ class ChatService:
         大图先压缩（缩放 + 重编码），避免 base64 过大触发多模态接口 400/超限。
         """
         import base64
-
-        from langchain_core.messages import HumanMessage, SystemMessage
 
         config = await get_default_config_for_type(
             self.session, user_id, "multimodal", "多模态"

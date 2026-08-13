@@ -1,8 +1,7 @@
 """知识库检索工具：检索文档/图片片段并收集引用。"""
-from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, Field
 
-from app.core.agent.tools.base import ToolBuildContext, ToolSpec, register_tool
+from app.core.agent.tools.base import AgentTool, ToolBuildContext, ToolSpec, register_tool
 
 KEY = "knowledge_search"
 
@@ -11,7 +10,7 @@ class _QueryInput(BaseModel):
     query: str = Field(..., description="检索的问题或关键词")
 
 
-async def _build(ctx: ToolBuildContext) -> StructuredTool:
+async def _build(ctx: ToolBuildContext) -> AgentTool:
     session = ctx.session
     user_id = ctx.user_id
     citations = ctx.citations
@@ -45,7 +44,7 @@ async def _build(ctx: ToolBuildContext) -> StructuredTool:
                 })
         return "检索到以下知识库内容：\n\n" + "\n\n".join(parts)
 
-    return StructuredTool.from_function(
+    return AgentTool.from_function(
         coroutine=_run,
         name=KEY,
         description="从用户的个人知识库（文档、图片）中检索相关内容。当问题涉及用户上传的资料、文档、笔记时使用。",

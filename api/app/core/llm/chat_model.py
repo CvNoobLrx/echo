@@ -1,14 +1,14 @@
-"""LangChain ChatOpenAI 工厂：按用户的对话模型配置构建可用于 Agent 编排的 chat model。
+"""原生 OpenAI 兼容模型工厂：按用户配置构建 Agent chat runtime。
 
 五个 provider（openai/qwen/doubao/deepseek/zhipu）均为 OpenAI 兼容协议，
-直接用 ChatOpenAI(base_url, api_key, model) 即可，无需为异构协议做动态代理。
+统一由 NativeChatModel 调用 /chat/completions，无需 provider 专属 SDK。
 """
 import uuid
 
-from langchain_openai import ChatOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import BizError
+from app.core.llm.native_chat import NativeChatModel
 from app.core.security import decrypt_secret
 from app.models.model_config_model import ModelConfig
 from app.repositories.model_config_repository import ModelConfigRepository
@@ -40,14 +40,14 @@ async def get_default_config_for_type(
 
 def build_chat_model(
     config: ModelConfig, *, temperature: float = 0.7, streaming: bool = True
-) -> ChatOpenAI:
-    """按模型配置实例化 ChatOpenAI。
+) -> NativeChatModel:
+    """按模型配置实例化原生 chat runtime。
 
-    `stream_usage=True`:让流式响应在最后一个 chunk 带上 usage_metadata,
+    流式请求会开启 usage 回传，让最后一个 chunk 带上 usage_metadata，
     供 ③ Tracing 抽取 input/output tokens 算 cost。不开启的话流式调用没法记 token。
     """
-    return ChatOpenAI(
-        model=config.model_name,
+    return NativeChatModel(
+        model_name=config.model_name,
         api_key=decrypt_secret(config.api_key_encrypted),
         base_url=config.base_url.rstrip("/"),
         temperature=temperature,
@@ -67,8 +67,8 @@ async def build_default_chat_model(
     *,
     temperature: float = 0.7,
     streaming: bool = True,
-) -> tuple[ChatOpenAI, ModelConfig]:
-    """取默认对话配置并构建 ChatOpenAI，返回 (model, config)。"""
+) -> tuple[NativeChatModel, ModelConfig]:
+    """取默认对话配置并构建原生 chat runtime，返回 (model, config)。"""
     config = await get_default_chat_config(session, user_id)
     model = build_chat_model(config, temperature=temperature, streaming=streaming)
     return model, config
@@ -82,4 +82,5 @@ __all__ = [
     "build_chat_model",
     "supports_function_call",
     "build_default_chat_model",
+    "NativeChatModel",
 ]
