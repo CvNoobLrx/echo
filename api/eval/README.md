@@ -12,7 +12,8 @@
 - **独立配置**：`eval/.env.eval` 直接填 embedding/chat/rerank 的 base_url+model+key，用 `LLMClient` 直接建客户端，不依赖系统里建用户/配模型。
 - **固定命名空间**：所有评测数据写在 `EVAL_USER_ID`（固定 UUID）名下，与真实用户隔离，可一键清理。
 - **写入到评测全闭环**：`setup` 复用 app 真实的分块/向量化/萃取链路把 fixtures 写进 ES/Neo4j（顺带也验证了写入链路），再评测。
-- **双输出**：① 数值报告（Markdown 指标表）② 明细（JSON：每题召回了啥/命中没、每段抽了啥 vs gold），看明细可定位问题、调系统策略。
+- **绝对指标**：按当前项目配置运行，不输出纯向量/BM25 等消融对照；结果描述当前固定配置在指定样本上的表现。
+- **三输出**：① 数值报告 ② 逐题明细 ③ manifest（代码版本、参数、模型名、数据指纹与运行状态；不记录 API Key）。
 
 ---
 
@@ -52,7 +53,7 @@ eval/
 ## 准备
 
 1. 起存储：`docker compose up -d postgres elasticsearch neo4j redis`。
-2. 复制 `eval/.env.eval.example` → `eval/.env.eval`，填 embedding（必需）、chat（必需）、rerank（可选）的 key。
+2. 二选一配置模型：复制 `eval/.env.eval.example` 并填 Key；或使用 `--use-app-models --app-user <用户名或 UUID>` 安全复用应用中的默认模型配置。
 3. （可选）把 `fixtures/` 的语料/对话/gold 换成你自己的，更贴合真实数据。
 
 ## 运行（在 api/ 目录）
@@ -64,12 +65,15 @@ uv run python -m eval.run_eval --skip-setup     # 数据已写过，直接评测
 uv run python -m eval.run_eval --skip-check     # 跳过模型可用性自检
 uv run python -m eval.run_eval --only retrieval # 只跑 RAG 检索（retrieval/memory/extraction/dedup）
 uv run python -m eval.run_eval --teardown       # 跑完清理评测数据
+uv run python -m eval.run_eval --use-app-models --app-user <用户名> --check-only
 ```
 
 > 正式跑前会先做**模型可用性自检**：分别调用 embedding / chat / rerank 确认连得通（embedding 还会校验维度是否与 ES 索引一致），不通的必需模型直接中止、rerank 不通则自动跳过其对比列，避免灌了一半数据才发现 key/url 写错。
 > 全程带**进度日志**（写入第几篇语料 / 第几段对话萃取、评测第几题），方便看卡在哪一步。
 
-结果在 `eval/results/`：`report-时间.md`（指标表）+ `details-时间.json`（逐条明细）。
+结果在 `eval/results/`：同一 `run_id` 的报告、逐条明细和 `manifest-*.json`。
+
+RAG 与 C-MTEB 仅报告当前项目检索配置：向量/BM25 分数按 `0.6/0.4` 融合；存在 Rerank 模型时继续重排，否则直接使用融合排序。这里是文档级评测适配，并非逐行调用生产搜索接口。
 
 ## 指标
 

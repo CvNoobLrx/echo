@@ -24,6 +24,7 @@ from app.core.rag.indexing import (
 from eval import clients, metrics
 from eval.benchmarks._common import write_benchmark_details, write_benchmark_report
 from eval.benchmarks.cmteb_t2.loader import load
+from eval.run_manifest import RunManifest, stable_values_sha256
 
 # 评测固定 k = 10（C-MTEB 官方设定）
 K = 10
@@ -37,7 +38,7 @@ def _score(per_query: list[tuple[list, list]]) -> dict:
     return {
         f"nDCG@{K}": metrics.avg([metrics.ndcg_at_k(r, g, K) for r, g in per_query]),
         f"Recall@{K}": metrics.avg([metrics.recall_at_k(r, g, K) for r, g in per_query]),
-        f"MRR@{K}": metrics.avg([metrics.mrr(r, g) for r, g in per_query]),
+        f"MRR@{K}": metrics.avg([metrics.mrr(r[:K], g) for r, g in per_query]),
     }
 
 
@@ -103,6 +104,7 @@ async def run_benchmark(
     query_limit: int | None = None,
     skip_ingest: bool = False,
     keep_corpus: bool = False,
+    run: RunManifest,
 ) -> tuple[dict, list]:
     """跑 C-MTEB T2Retrieval。
 
@@ -117,18 +119,27 @@ async def run_benchmark(
     corpus = data["corpus"]
     queries = data["queries"]
     print(f"  corpus={len(corpus)} 篇，queries={len(queries)} 条（split={data['split']}）")
+    run.record_dataset("cmteb-t2", {
+        "repository": "mteb/T2Retrieval",
+        "revision": data["dataset_revision"],
+        "split": data["split"],
+        "requested_corpus_limit": data["requested_corpus_limit"],
+        "actual_corpus_size": len(corpus),
+        "query_count": len(queries),
+        "query_ids_sha256": stable_values_sha256([query["qid"] for query in queries]),
+        "gold_docs_added": data["gold_docs_added"],
+        "gold_coverage": data["gold_coverage"],
+    })
 
     n_docs = 0
     if not skip_ingest:
+        await _clear_corpus()
         n_docs = await _ingest_corpus(embed_client, corpus)
         # 给 ES 一点时间索引完成
         await asyncio.sleep(2)
 
     uid = str(_CMTEB_USER_ID)
-    vec_pairs: list[tuple[list, list]] = []
-    bm_pairs: list[tuple[list, list]] = []
-    hyb_pairs: list[tuple[list, list]] = []
-    rr_pairs: list[tuple[list, list]] = []
+    scored: list[tuple[list, list]] = []
     details: list[dict] = []
     total = len(queries)
     for i, q in enumerate(queries, 1):
@@ -136,63 +147,58 @@ async def run_benchmark(
         gold = q["relevant_doc_ids"]
         print(f"  [cmteb-t2] {i}/{total}  qid={q['qid']}")
         print(f"    Q: {qtext[:80]}")
-        rv = await clients.retrieve_vector(embed_client, uid, qtext, RECALL)
-        rb = await clients.retrieve_bm25(uid, qtext, RECALL)
-        rh = await clients.retrieve_hybrid(embed_client, uid, qtext, RECALL)
-        vec_pairs.append((rv, gold))
-        bm_pairs.append((rb, gold))
-        hyb_pairs.append((rh, gold))
-        hyb_hit = bool(set(rh[:K]) & set(gold))
+        ranked = await clients.retrieve_project_config(
+            embed_client,
+            rerank_client,
+            uid,
+            qtext,
+            top_k=K,
+            recall=RECALL,
+        )
+        scored.append((ranked, gold))
+        hit = bool(set(ranked[:K]) & set(gold))
         d = {
             "qid": q["qid"],
             "question": qtext,
             "gold": gold,
-            "vector_topk": rv[:K],
-            "bm25_topk": rb[:K],
-            "hybrid_topk": rh[:K],
-            "hybrid_hit": hyb_hit,
+            "retrieved_topk": ranked[:K],
+            "hit": hit,
         }
-        if rerank_client is not None:
-            rr = await clients.rerank_sources(rerank_client, uid, qtext, rh[:RECALL], K)
-            rr_pairs.append((rr, gold))
-            d["hybrid_rerank_topk"] = rr[:K]
-            rr_hit = bool(set(rr[:K]) & set(gold))
-            mark = "✓" if rr_hit else "✗"
-            print(f"    {mark} hybrid+rerank top-{K} 命中: {rr_hit} | hybrid hit: {hyb_hit}")
-        else:
-            mark = "✓" if hyb_hit else "✗"
-            print(f"    {mark} hybrid top-{K} 命中: {hyb_hit}")
+        mark = "✓" if hit else "✗"
+        print(f"    {mark} 当前配置 top-{K} 命中: {hit}")
         details.append(d)
 
-    table = {
-        "纯向量": _score(vec_pairs),
-        "纯BM25": _score(bm_pairs),
-        "混合": _score(hyb_pairs),
-    }
-    if rr_pairs:
-        table["混合+rerank"] = _score(rr_pairs)
+    label = "当前配置(Hybrid+Rerank)" if rerank_client else "当前配置(Hybrid)"
+    table = {label: _score(scored)}
 
     meta = {
         "数据集": "C-MTEB/T2Retrieval",
         "切分": data["split"],
         "corpus 篇数": len(corpus),
         "query 条数": len(queries),
+        "数据集 revision": data["dataset_revision"],
+        "请求 corpus 上限": data["requested_corpus_limit"],
+        "为 gold 补入文档": data["gold_docs_added"],
+        "gold 文档覆盖率": data["gold_coverage"],
         "评测命名空间": str(_CMTEB_USER_ID),
         "embedding 模型": embed_client.model_name,
         "rerank 模型": rerank_client.model_name if rerank_client else "（未配置）",
+        "检索配置": "Hybrid(vector=0.6, BM25=0.4), recall=50, top_k=10",
     }
     if not skip_ingest:
         meta["本次写入"] = f"{n_docs} 篇"
 
     notes = [
         "C-MTEB T2Retrieval 评测：用真实中文搜索场景的 corpus 与 query，"
-        "证明系统在公共基准上的相对水平。仅作系统设计对比，不作绝对水平断言。",
+        "记录当前项目检索配置的绝对指标，不作排行榜或模型领先性断言。",
         "指标遵循 C-MTEB 官方协议（k=10）；source_id 用 corpus 原 cid。",
     ]
     report = write_benchmark_report("cmteb-t2", "C-MTEB T2Retrieval (L2)",
                                     table, meta=meta, extra_notes=notes,
-                                    category="rag")
-    detail_path = write_benchmark_details("cmteb-t2", details, category="rag")
+                                    category="rag", run=run)
+    detail_path = write_benchmark_details(
+        "cmteb-t2", details, category="rag", run=run,
+    )
     print(f"  报告: {report}\n  明细: {detail_path}")
 
     if not keep_corpus:

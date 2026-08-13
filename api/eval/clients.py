@@ -1,12 +1,11 @@
-"""存储客户端访问 + ES 检索变体（文档粒度，返回排序后的 source_id）。
-
-检索变体逻辑参照 app/core/rag/retrieval/search.py，便于做「纯向量/纯BM25/混合/+rerank」四配置对比；
-embed_client / rerank_client 由调用方注入（来自 eval_config，不读 app 用户配置）。
-"""
+"""Evaluation access to the project's current document retrieval pipeline."""
 from app.core.rag.indexing import CHUNK_TYPE_CHILD, CHUNKS_INDEX
+from app.core.llm.client import close_llm_client
 from app.db.elastic import close as _es_close
 from app.db.elastic import get_es
 from app.db.neo4j import close as _neo_close
+from app.db.postgres import close as _pg_close
+from app.db.redis import close as _redis_close
 
 
 def _base_filter(uid: str) -> list[dict]:
@@ -87,6 +86,22 @@ async def retrieve_hybrid(embed_client, uid: str, query: str, recall: int = 20,
     return out
 
 
+async def retrieve_project_config(
+    embed_client,
+    rerank_client,
+    uid: str,
+    query: str,
+    *,
+    top_k: int,
+    recall: int = 20,
+) -> list[str]:
+    """Run the same 0.6/0.4 hybrid fusion and optional rerank as the app."""
+    ranked = await retrieve_hybrid(embed_client, uid, query, recall, wv=0.6, wb=0.4)
+    if rerank_client is not None and ranked:
+        return await rerank_sources(rerank_client, uid, query, ranked[:recall], top_k)
+    return ranked[:top_k]
+
+
 async def rerank_sources(rerank_client, uid: str, query: str,
                          source_ids: list[str], top_k: int) -> list[str]:
     """对候选 source 取代表 chunk 内容做 cross-encoder rerank，返回重排后的 source_id。"""
@@ -108,7 +123,7 @@ async def rerank_sources(rerank_client, uid: str, query: str,
 
 
 async def close_clients() -> None:
-    for closer in (_es_close, _neo_close):
+    for closer in (_es_close, _neo_close, _redis_close, _pg_close, close_llm_client):
         try:
             await closer()
         except Exception:

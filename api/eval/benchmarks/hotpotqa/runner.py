@@ -30,6 +30,9 @@ from eval import metrics as M
 from eval.benchmarks._common import write_benchmark_details, write_benchmark_report
 from eval.benchmarks.hotpotqa.loader import load
 from eval.benchmarks.hotpotqa.qa_verifier import judge_qa
+from eval.run_manifest import RunManifest, stable_values_sha256
+
+_HF_REVISION = "1908d6afbbead072334abe2965f91bd2709910ab"
 
 K_RETRIEVE = 4  # 每题检索 top-4 段落给 chat 答（distractor 共 10 段，2 段是 gold）
 
@@ -198,6 +201,7 @@ async def run_benchmark(
     verifier: str = "none",
     seed: int = 42,
     verifier_client_factory=None,
+    run: RunManifest,
 ) -> tuple[dict, list]:
     """跑 HotpotQA distractor + 可选的 Verifier A/B 实验。
 
@@ -234,6 +238,17 @@ async def run_benchmark(
     print(f"[hotpotqa] 加载数据集（采样 {sample} 条）… verifier={verifier} (实际: {judge_kind_actual})")
     queries = load(n=sample, seed=seed)
     print(f"  实际采样: {len(queries)} 条（bridge/comparison 按比例）")
+    run.record_dataset("hotpotqa", {
+        "repository": "hotpotqa/hotpot_qa",
+        "config": "distractor",
+        "revision": _HF_REVISION,
+        "split": "validation",
+        "requested_sample": sample,
+        "actual_sample": len(queries),
+        "seed": seed,
+        "qids_sha256": stable_values_sha256([query["qid"] for query in queries]),
+        "type_distribution": _type_distribution(queries),
+    })
 
     await ensure_index()
 
@@ -251,6 +266,7 @@ async def run_benchmark(
         print(f"  [hotpotqa] {i}/{total}  qid={qid}  type={q['qtype']}")
         print(f"    Q: {q['question'][:80]}")
         # 1. 灌入本题 10 段
+        await _clear_one(qid)
         await _ingest_one(embed_client, qid, q["paragraphs"])
         await asyncio.sleep(0.05)  # 给 ES 一点索引时间
         try:
@@ -331,25 +347,28 @@ async def run_benchmark(
             "与 EM 一致率": round(agree_rate, 4),
         })
 
-    table: dict[str, dict[str, Any]] = {
-        f"verifier={verifier}": base_row,
-    }
+    row_name = "当前配置" if verifier == "none" else f"当前配置(verifier={verifier})"
+    table: dict[str, dict[str, Any]] = {row_name: base_row}
 
     meta = {
         "数据集": "hotpot_qa / distractor",
         "切分": "validation",
-        "采样数": sample,
+        "数据集 revision": _HF_REVISION,
+        "请求采样数": sample,
+        "实际采样数": len(queries),
+        "采样种子": seed,
         "类型分布": _type_distribution(queries),
         "embedding 模型": embed_client.model_name,
         "chat 模型": chat_client.model_name,
         "rerank 模型": rerank_client.model_name if rerank_client else "(未配置)",
         "verifier 配置": verifier,
         "verifier 实际生效": judge_kind_actual,
+        "检索配置": "Hybrid(vector=0.6, BM25=0.4), recall=10, top_k=4",
     }
     notes = [
         "HotpotQA distractor 评测:每题给 10 段(2 gold + 8 distractor),系统先检索 top-k 再多跳答。",
-        "**污染声明**:dev 集发布于 2018 年,目前主流 LLM 训练集大概率覆盖;本评测仅用于系统设计对比"
-        "(检索/Verifier 配置间),不作绝对水平断言。",
+        "**污染声明**:dev 集发布于 2018 年,目前主流 LLM 训练集大概率覆盖;"
+        "本结果只描述当前固定配置在该样本上的表现,不作模型绝对能力断言。",
         "**EM(严格正确率)**:答案归一化后完全一致(忽略大小写/标点/the&a&an),0/1 平均即「严格答对率」。",
         "**F1(软正确率)**:token 级 precision/recall 调和平均,反映「答对了但措辞略差」(如 "
         "答 `Anomalisa (2015 film)` vs gold `Anomalisa` → F1≈0.5)。业界两个一起报。",
@@ -361,9 +380,11 @@ async def run_benchmark(
     report = write_benchmark_report(
         "hotpotqa", "HotpotQA distractor (L3)",
         table, meta=meta, extra_notes=notes,
-        category="rag",
+        category="rag", run=run,
     )
-    detail_path = write_benchmark_details("hotpotqa", details, category="rag")
+    detail_path = write_benchmark_details(
+        "hotpotqa", details, category="rag", run=run,
+    )
     print(f"  报告: {report}\n  明细: {detail_path}")
     return table, details
 

@@ -9,20 +9,16 @@
 """
 import json
 import random
-from datetime import datetime
 from pathlib import Path
 from typing import Iterable, TypeVar
 
 from eval.benchmarks import CACHE_DIR
+from eval.run_manifest import RunManifest
 
 T = TypeVar("T")
 
 _RESULTS_DIR = Path(__file__).parent.parent / "results"
 _RESULTS_DIR.mkdir(exist_ok=True)
-
-
-def ts() -> str:
-    return datetime.now().strftime("%Y%m%d-%H%M%S")
 
 
 def _category_dir(category: str | None) -> Path:
@@ -42,13 +38,16 @@ def write_benchmark_report(
     benchmark: str, title: str, table: dict, meta: dict | None = None,
     extra_notes: list[str] | None = None,
     category: str | None = None,
+    run: RunManifest | None = None,
 ) -> Path:
     """单 benchmark 报告 Markdown:标题 + 元信息 + 指标表 + 备注。
 
     category 决定落到 results/{rag,memory}/ 还是根目录。
     """
+    if run is None:
+        raise ValueError("run manifest is required")
     lines = [
-        f"# {title} 评测报告 {ts()}",
+        f"# {title} 评测报告 {run.run_id}",
         "",
     ]
     if meta:
@@ -69,17 +68,22 @@ def write_benchmark_report(
         lines.append("|" + "---|" * (len(metric_names) + 1))
         for row, m in table.items():
             lines.append(f"| {row} | " + " | ".join(str(m.get(k, "")) for k in metric_names) + " |")
-    path = _category_dir(category) / f"report-{benchmark}-{ts()}.md"
+    path = _category_dir(category) / f"report-{benchmark}-{run.run_id}.md"
     path.write_text("\n".join(lines), encoding="utf-8")
+    run.record_artifact(kind="report", path=path, benchmark=benchmark, meta=meta)
     return path
 
 
 def write_benchmark_details(
     benchmark: str, details: list, category: str | None = None,
+    run: RunManifest | None = None,
 ) -> Path:
     """单 benchmark 明细 JSON,与报告同目录。"""
-    path = _category_dir(category) / f"details-{benchmark}-{ts()}.json"
+    if run is None:
+        raise ValueError("run manifest is required")
+    path = _category_dir(category) / f"details-{benchmark}-{run.run_id}.json"
     path.write_text(json.dumps(details, ensure_ascii=False, indent=2), encoding="utf-8")
+    run.record_artifact(kind="details", path=path, benchmark=benchmark)
     return path
 
 

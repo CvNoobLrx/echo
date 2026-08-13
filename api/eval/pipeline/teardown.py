@@ -4,6 +4,7 @@
 """
 from app.core.rag.indexing import CHUNKS_INDEX
 from app.db.elastic import get_es
+from app.db.redis import get_redis
 from app.repositories.neo4j.memory_graph_repository import MemoryGraphRepository
 from eval.eval_config import EVAL_USER_ID
 
@@ -26,3 +27,7 @@ async def teardown() -> None:
         await MemoryGraphRepository().delete_user_graph(uid)
     except Exception as e:  # noqa: BLE001
         print(f"[teardown] 清 Neo4j 失败（忽略）: {e}")
+    try:
+        await get_redis().delete(f"reflect:pending:{uid}")
+    except Exception as e:  # noqa: BLE001
+        print(f"[teardown] 清 Redis 评测计数失败（忽略）: {e}")

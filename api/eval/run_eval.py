@@ -22,8 +22,10 @@
 """
 import argparse
 import asyncio
+import sys
 
 from app.config import settings
+from app.db import elastic, neo4j, postgres, redis
 
 from eval import clients, eval_config, reporters
 from eval.pipeline.setup import setup_all
@@ -31,6 +33,30 @@ from eval.pipeline.teardown import teardown
 from eval.tasks import dedup as t_dedup
 from eval.tasks import extraction as t_extraction
 from eval.tasks import retrieval as t_retrieval
+from eval.run_manifest import RunManifest, describe_model
+
+
+def _needs_chat(args) -> bool:
+    if args.benchmark:
+        return args.benchmark in ("hotpotqa", "all")
+    if not args.skip_setup:
+        return True
+    return args.only in (None, "extraction", "dedup")
+
+
+async def _check_storage(args) -> dict[str, bool]:
+    """Check only the stores touched by the selected evaluation."""
+    checks: dict[str, bool] = {}
+    if args.use_app_models:
+        checks["postgresql"] = await postgres.ping()
+    checks["elasticsearch"] = await elastic.ping()
+    if not args.benchmark:
+        checks["neo4j"] = await neo4j.ping()
+        checks["redis"] = await redis.ping()
+    failed = [name for name, ok in checks.items() if not ok]
+    if failed:
+        raise RuntimeError(f"存储连通性检查失败: {', '.join(failed)}")
+    return checks
 
 
 async def _check_models(embed, chat, rerank, need_chat: bool = True):
@@ -48,15 +74,15 @@ async def _check_models(embed, chat, rerank, need_chat: bool = True):
     except Exception as e:
         raise RuntimeError(f"embedding 模型不可用({embed.model_name}):{e}") from e
     dim = len(v)
-    note = ""
     if dim != settings.embedding_dims:
-        note = f"  ⚠ 维度 {dim} 与 ES 索引维度 {settings.embedding_dims} 不一致,检索会失败!请改 .env.eval 的 embedding 模型或 EMBEDDING_DIMS"
+        raise RuntimeError(
+            f"embedding 维度 {dim} 与 ES 索引维度 {settings.embedding_dims} 不一致"
+        )
     print(f"  ✓ embedding 可用({embed.model_name},维度 {dim})")
-    if note:
-        print(note)
 
     # chat
     if need_chat:
+        assert chat is not None
         try:
             txt = await chat.chat([{"role": "user", "content": "回复两个字:可用"}], max_tokens=16)
         except Exception as e:
@@ -68,20 +94,38 @@ async def _check_models(embed, chat, rerank, need_chat: bool = True):
     # rerank(可选)
     if rerank is None:
         print("  - 未配置 rerank,将跳过 rerank 对比列")
-        return None
+        return None, dim
     try:
         await rerank.rerank("测试查询", ["相关的文档内容", "完全无关的内容"], top_n=2)
         print(f"  ✓ rerank 可用({rerank.model_name})")
-        return rerank
+        return rerank, dim
     except Exception as e:
         print(f"  ⚠ rerank 不可用({rerank.model_name}),跳过 rerank 对比:{e}")
-        return None
+        return None, dim
 
 
-async def _run_fixtures(args, embed, chat, rerank) -> None:
+async def _run_fixtures(args, embed, chat, rerank, run: RunManifest) -> None:
     """① 自制集评测流程(原 L1)。"""
     only = args.only
     setup_stats = None
+    run.record_dataset("fixtures", {
+        "corpus_documents": 10,
+        "dialogues": 17,
+        "rag_questions": 22,
+        "memory_questions": 19,
+        "extraction_cases": 10,
+        "dedup_cases": 3,
+        "rag_top_k": t_retrieval.K,
+        "rag_recall_depth": t_retrieval.RECALL,
+        "retrieval_config": {
+            "vector_weight": 0.6,
+            "bm25_weight": 0.4,
+            "rerank_enabled": rerank is not None,
+        },
+        "tracing_enabled": settings.tracing_enabled,
+        "reflection_trigger_threshold": settings.reflection_trigger_threshold,
+        "entity_match": "normalized substring match; 用户 exact only",
+    })
 
     # 0.5 可选:先清空评测命名空间旧数据
     if args.reset and not args.skip_setup:
@@ -89,6 +133,7 @@ async def _run_fixtures(args, embed, chat, rerank) -> None:
         await teardown()
     # 1. 写入(除非 --skip-setup)
     if not args.skip_setup:
+        assert chat is not None
         print("[setup] 写入评测语料与记忆…")
         setup_stats = await setup_all(chat, embed)
         print(f"[setup] 完成:{setup_stats}")
@@ -104,16 +149,18 @@ async def _run_fixtures(args, embed, chat, rerank) -> None:
         print("[eval] 记忆检索…")
         results["记忆检索"], details["记忆检索"] = await t_retrieval.eval_memory(embed)
     if only in (None, "extraction"):
+        assert chat is not None
         print("[eval] 三元组抽取…")
         results["三元组抽取"], details["三元组抽取"] = await t_extraction.eval_extraction(chat)
     if only in (None, "dedup"):
+        assert chat is not None
         print("[eval] 实体去重…")
         results["实体去重"], details["实体去重"] = await t_dedup.eval_dedup(chat, embed)
 
     # 3. 输出
     reporters.print_summary(results)
-    rpt = reporters.write_report(results, setup_stats)
-    det = reporters.write_details(details)
+    rpt = reporters.write_report(results, run, setup_stats)
+    det = reporters.write_details(details, run)
     print(f"\n报告:{rpt}\n明细:{det}")
 
     # 4. 可选清理
@@ -122,7 +169,7 @@ async def _run_fixtures(args, embed, chat, rerank) -> None:
         await teardown()
 
 
-async def _run_benchmark(args, embed, chat, rerank) -> None:
+async def _run_benchmark(args, embed, chat, rerank, run: RunManifest) -> None:
     """①.5 公共评测基准入口。"""
     name = args.benchmark
     targets = ["cmteb-t2", "hotpotqa"] if name == "all" else [name]
@@ -136,36 +183,79 @@ async def _run_benchmark(args, embed, chat, rerank) -> None:
                 query_limit=args.query_limit,
                 skip_ingest=args.skip_setup,
                 keep_corpus=args.keep_corpus,
+                run=run,
             )
         elif bm == "hotpotqa":
             from eval.benchmarks.hotpotqa import run_benchmark
+            assert chat is not None
             await run_benchmark(
                 embed, chat, rerank,
                 sample=args.sample,
                 verifier=args.verifier,
                 seed=args.seed,
                 verifier_client_factory=eval_config.verifier_client,
+                run=run,
             )
         else:
             print(f"  未知 benchmark: {bm}")
 
 
 async def _run(args) -> None:
-    embed = eval_config.embed_client()
-    chat = eval_config.chat_client()
-    rerank = eval_config.rerank_client()
-
-    # 0. 模型可用性自检(除非 --skip-check)
-    if not args.skip_check:
-        # cmteb-t2 不强需 chat;其他都要
-        need_chat = not (args.benchmark == "cmteb-t2")
-        rerank = await _check_models(embed, chat, rerank, need_chat=need_chat)
-
+    request = {"argv": sys.argv[1:], **vars(args)}
+    run = RunManifest(request=request)
+    run.write()
     try:
-        if args.benchmark:
-            await _run_benchmark(args, embed, chat, rerank)
+        need_chat = _needs_chat(args)
+        if not args.skip_check:
+            print("[check] 存储连通性自检…")
+            run.checks["storage"] = await _check_storage(args)
+            run.write()
+
+        if args.use_app_models:
+            embed, chat, rerank = await eval_config.app_model_clients(
+                args.app_user,
+                need_chat=need_chat,
+            )
+            model_source = "app"
         else:
-            await _run_fixtures(args, embed, chat, rerank)
+            embed = eval_config.embed_client()
+            chat = eval_config.chat_client() if need_chat else None
+            rerank = eval_config.rerank_client()
+            model_source = "eval-env"
+
+        run.models = {
+            "source": model_source,
+            "embedding": describe_model(embed),
+            "chat": describe_model(chat),
+            "rerank": describe_model(rerank),
+        }
+        run.write()
+
+        if not args.skip_check:
+            rerank, embedding_dimensions = await _check_models(
+                embed, chat, rerank, need_chat=need_chat,
+            )
+            run.models["embedding"]["dimensions"] = embedding_dimensions
+            run.checks["models"] = {
+                "embedding": True,
+                "chat": True if need_chat else "not-required",
+                "rerank": True if rerank is not None else "not-configured-or-unavailable",
+            }
+            run.write()
+
+        if args.check_only:
+            print(f"[check] 预检完成,manifest: {run.path}")
+            run.complete()
+            return
+
+        if args.benchmark:
+            await _run_benchmark(args, embed, chat, rerank, run)
+        else:
+            await _run_fixtures(args, embed, chat, rerank, run)
+        run.complete()
+    except BaseException as exc:
+        run.fail(exc)
+        raise
     finally:
         await clients.close_clients()
 
@@ -174,6 +264,20 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Echo 离线评测(RAG + 记忆,L1 自制集 + L2/L3 公共基准)")
     # 通用
     p.add_argument("--skip-check", action="store_true", help="跳过模型可用性自检")
+    p.add_argument(
+        "--check-only",
+        action="store_true",
+        help="只检查所需存储与模型,不写入评测数据",
+    )
+    p.add_argument(
+        "--use-app-models",
+        action="store_true",
+        help="复用应用数据库中指定用户的默认模型配置",
+    )
+    p.add_argument(
+        "--app-user",
+        help="--use-app-models 对应的用户名或用户 UUID",
+    )
 
     # L1 自制集开关
     p.add_argument("--skip-setup", action="store_true", help="跳过写入,直接评测")
@@ -202,7 +306,14 @@ def main() -> None:
                    help="[hotpotqa] Verifier 配置（等 ② Verifier Loop 完成后启用）")
     p.add_argument("--seed", type=int, default=42, help="[hotpotqa] 采样种子")
 
-    asyncio.run(_run(p.parse_args()))
+    args = p.parse_args()
+    if args.check_only and args.skip_check:
+        p.error("--check-only 不能与 --skip-check 同时使用")
+    if args.use_app_models and not args.app_user:
+        p.error("--use-app-models 需要同时传 --app-user")
+    if args.app_user and not args.use_app_models:
+        p.error("--app-user 只能与 --use-app-models 一起使用")
+    asyncio.run(_run(args))
 
 
 if __name__ == "__main__":

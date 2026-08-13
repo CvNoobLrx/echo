@@ -15,6 +15,8 @@ from typing import TypedDict
 
 from eval.benchmarks._common import cache_path, stratified_sample
 
+_HF_REVISION = "1908d6afbbead072334abe2965f91bd2709910ab"
+
 
 class HotpotQuery(TypedDict):
     qid: str
@@ -38,7 +40,7 @@ def load(n: int = 500, seed: int = 42) -> list[HotpotQuery]:
     # 用官方组织维护的 parquet 版本(原 hotpot_qa 用 loading script,新版 datasets 不再支持)
     ds = load_dataset(
         "hotpotqa/hotpot_qa", "distractor",
-        cache_dir=cache_dir, split="validation",
+        cache_dir=cache_dir, split="validation", revision=_HF_REVISION,
     )
     queries: list[HotpotQuery] = []
     for row in ds:

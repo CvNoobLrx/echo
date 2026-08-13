@@ -23,7 +23,7 @@
 ## 跑法
 
 ```bash
-# 全量（dev 集 ~ 几千 query）
+# 当前默认固定子集（1000 篇基础 corpus + 所选 query 的全部 gold 文档，100 query）
 uv run python -m eval.run_eval --benchmark cmteb-t2
 
 # 小规模快速验证（先跑通流程再上全量）
@@ -37,8 +37,9 @@ uv run python -m eval.run_eval --benchmark cmteb-t2 --corpus-limit 1000 --query-
 
 ## 简历话术（待填真实数字）
 
-> 在 C-MTEB T2Retrieval（中文 retrieval 业界标杆）上：
-> 混合检索（向量+BM25）nDCG@10 = X，对比纯向量基线 +Y；加 rerank 再 +Z。
+> 在 C-MTEB T2Retrieval-derived 固定子集（注明 corpus/query 数量）上，当前项目 Hybrid 检索配置取得 nDCG@10=X、Recall@10=Y、MRR@10=Z。
+
+> 当前子集会补齐所选 query 的 gold 文档，保证候选库闭合；它是答案感知构造的工程评测子集，不能作为完整 C-MTEB 官方成绩或排行榜对比。
 
 ## 引用
 

@@ -4,14 +4,11 @@ results 结构：{section: {row: {metric: value}}}（每节一张表）。
 details 结构：{section: [明细 dict, ...]}。
 """
 import json
-from datetime import datetime
 from pathlib import Path
 
+from eval.run_manifest import RunManifest
+
 _RESULTS_DIR = Path(__file__).parent / "results"
-
-
-def _ts() -> str:
-    return datetime.now().strftime("%Y%m%d-%H%M%S")
 
 
 def _table(section: str, rows: dict) -> str:
@@ -27,11 +24,14 @@ def _table(section: str, rows: dict) -> str:
     return "\n".join(lines)
 
 
-def write_report(results: dict, setup_stats: dict | None = None) -> Path:
+def write_report(
+    results: dict,
+    run: RunManifest,
+    setup_stats: dict | None = None,
+) -> Path:
     _RESULTS_DIR.mkdir(exist_ok=True)
-    ts = _ts()
     lines = [
-        f"# Echo 评测报告 {ts}",
+        f"# Echo 评测报告 {run.run_id}",
         "",
         "> 小规模自建 gold 集的离线自测，非大规模 benchmark。",
         "> 记忆/抽取名称匹配口径：归一化 + 包含（更完整或更具体的名视为命中，如「日本京都」命中「京都」），通用自指「用户」仅精确匹配。RAG 文档按文件名精确匹配。",
@@ -41,15 +41,17 @@ def write_report(results: dict, setup_stats: dict | None = None) -> Path:
         lines += [f"评测数据：语料 {setup_stats.get('docs', 0)} 篇、对话 {setup_stats.get('dialogues', 0)} 段。", ""]
     for section, rows in results.items():
         lines.append(_table(section, rows))
-    path = _RESULTS_DIR / f"report-{ts}.md"
+    path = _RESULTS_DIR / f"report-{run.run_id}.md"
     path.write_text("\n".join(lines), encoding="utf-8")
+    run.record_artifact(kind="report", path=path, benchmark="fixtures")
     return path
 
 
-def write_details(details: dict) -> Path:
+def write_details(details: dict, run: RunManifest) -> Path:
     _RESULTS_DIR.mkdir(exist_ok=True)
-    path = _RESULTS_DIR / f"details-{_ts()}.json"
+    path = _RESULTS_DIR / f"details-{run.run_id}.json"
     path.write_text(json.dumps(details, ensure_ascii=False, indent=2), encoding="utf-8")
+    run.record_artifact(kind="details", path=path, benchmark="fixtures")
     return path
 
 

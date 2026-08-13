@@ -13,7 +13,7 @@
 - **指标**:
   - 答案 EM(Exact Match)/ F1(token 级 P/R/F1)—— 走 HotpotQA 官方 evaluator 口径
   - 检索 Recall@k(top-k 段落对 gold_titles 的覆盖)
-- **采样**:默认 500 条,分层采样(`bridge` / `comparison` 按原比例),seed 固定可复现
+- **采样**:CLI 默认 100 条,分层采样(`bridge` / `comparison` 按原比例),seed 固定可复现
 - **检索 top-k**:默认 4(distractor 共 10 段,2 段是 gold)
 
 ## 命名空间隔离
@@ -24,7 +24,7 @@
 ## 跑法
 
 ```bash
-# 默认 500 题
+# 默认 100 题
 uv run python -m eval.run_eval --benchmark hotpotqa
 
 # 小规模快速验证
@@ -46,9 +46,7 @@ HotpotQA dev 集发布于 2018 年,主流 LLM 训练集大概率已覆盖。本�
 
 ## 简历话术(待填真实数字)
 
-> 在 HotpotQA distractor 500 题(分层采样,bridge/comparison 按原比例)上:
-> baseline F1 = X / EM = Y / 检索 Recall@4 = Z;
-> 加 ② Verifier Loop 后 F1 +N,跨 family Verifier 较同模型 self-critique 漏检率低 M 个百分点。
+> 在 HotpotQA distractor N 题分层样本（seed=42）上，当前项目配置取得 EM=X、F1=Y、检索 Recall@4=Z。
 
 ## 引用
 
