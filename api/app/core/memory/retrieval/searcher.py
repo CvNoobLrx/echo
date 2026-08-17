@@ -154,6 +154,7 @@ async def search_memory(
             if eid in relations_by_entity and row.get("predicate"):
                 relations_by_entity[eid].append({
                     "predicate": row.get("predicate"),
+                    "predicate_surface": row.get("predicate_surface"),
                     "object_name": row.get("object_name"),
                     "object_type": row.get("object_type"),
                     "source_text": row.get("source_text"),
@@ -249,8 +250,9 @@ def format_memory_context(results: list[dict]) -> str:
         lines.append(head)
         for rel in r.get("relations", []):
             obj = rel.get("object_name") or ""
+            predicate = rel.get("predicate_surface") or rel.get("predicate") or ""
             rel_prefix = "    · 待确认：" if _is_uncertain(rel.get("confidence")) else "    · "
-            lines.append(f"{rel_prefix}{r['name']} {rel['predicate']} {obj}")
+            lines.append(f"{rel_prefix}{r['name']} {predicate} {obj}")
     return "\n".join(lines)
 
 

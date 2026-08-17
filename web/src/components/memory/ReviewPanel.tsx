@@ -2,8 +2,8 @@
  * 记忆审查页 —— V0.0.5 ⑤ 人类反馈闭环
  *
  * 两 Tab:
- * - 📊 全景:KPI 网格 + 类型饼图 + 置信度直方 + 30 天趋势 + 纠错统计
- * - 🔍 审查纠错:筛选低置信度实体,逐条 确认/修正/删除,操作落 memory_corrections 表
+ * - 全景:KPI 网格 + 类型饼图 + 置信度直方 + 30 天趋势 + 纠错统计
+ * - 审查纠错:筛选低置信度实体,逐条 确认/修正/删除,操作落 memory_corrections 表
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
@@ -65,8 +65,8 @@ export default function ReviewPanel() {
         value={subTab}
         onChange={(v) => setSubTab(v as 'overview' | 'audit')}
         options={[
-          { label: '📊 我的记忆全景', value: 'overview' },
-          { label: '🔍 质量审查与纠错', value: 'audit' },
+          { label: '我的记忆全景', value: 'overview' },
+          { label: '质量审查与纠错', value: 'audit' },
         ]}
         style={{ marginBottom: 18 }}
       />
@@ -126,30 +126,28 @@ function OverviewPanel({
       value: data.total_entities,
       sub: `+${data.total_relations} 条关系`,
       color: '#155EEF',
-      bg: 'linear-gradient(135deg, #eef4ff 0%, #ffffff 70%)',
+      bg: '#f8fafc',
     },
     {
       label: '长期记住',
       value: data.long_term,
       sub: '稳定可靠',
       color: '#FAAD14',
-      bg: 'linear-gradient(135deg, #fffaf0 0%, #ffffff 70%)',
+      bg: '#f8fafc',
     },
     {
       label: '你已确认',
       value: data.verified,
       sub: '人类反馈',
       color: '#369F21',
-      bg: 'linear-gradient(135deg, #f3fbef 0%, #ffffff 70%)',
+      bg: '#f8fafc',
     },
     {
       label: '待你确认',
       value: data.pending,
       sub: data.pending > 0 ? '点击处理 →' : '全部已审',
       color: data.pending > 0 ? '#FF7875' : '#98A2B3',
-      bg: data.pending > 0
-        ? 'linear-gradient(135deg, #fff5f5 0%, #ffffff 70%)'
-        : '#fafafa',
+      bg: data.pending > 0 ? '#fffafa' : '#f8fafc',
       clickable: data.pending > 0,
     },
   ]
@@ -290,20 +288,16 @@ function OverviewPanel({
             style={{
               background: k.bg,
               border: '1px solid #eef0f4',
-              borderRadius: 12,
+              borderRadius: 8,
               padding: '16px 18px',
               cursor: k.clickable ? 'pointer' : 'default',
-              transition: 'transform 0.15s, box-shadow 0.15s',
+              transition: 'border-color 0.15s, background 0.15s',
             }}
             onMouseEnter={(e) => {
-              if (k.clickable) {
-                e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 8px 20px -10px rgba(15, 23, 42, 0.18)'
-              }
+              if (k.clickable) e.currentTarget.style.borderColor = '#155EEF'
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = ''
-              e.currentTarget.style.boxShadow = ''
+              e.currentTarget.style.borderColor = '#eef0f4'
             }}
           >
             <div style={{ fontSize: 13, color: '#667085' }}>{k.label}</div>
@@ -335,14 +329,14 @@ function OverviewPanel({
       >
         <Card
           size="small"
-          title={<span style={{ fontWeight: 600 }}>🎨 我的画像维度</span>}
+          title={<span style={{ fontWeight: 600 }}>我的画像维度</span>}
           styles={{ body: { padding: 8 } }}
         >
           <ReactECharts option={typePie} style={{ height: 250 }} />
         </Card>
         <Card
           size="small"
-          title={<span style={{ fontWeight: 600 }}>📈 置信度分布</span>}
+          title={<span style={{ fontWeight: 600 }}>置信度分布</span>}
           extra={
             data.pending > 0 ? (
               <Button
@@ -374,7 +368,7 @@ function OverviewPanel({
         </Card>
         <Card
           size="small"
-          title={<span style={{ fontWeight: 600 }}>📅 近 {data.days} 天新增</span>}
+          title={<span style={{ fontWeight: 600 }}>近 {data.days} 天新增</span>}
           styles={{ body: { padding: 8 } }}
         >
           {data.trend.length === 0 ? (
@@ -413,7 +407,7 @@ function OverviewPanel({
           }}
         >
           <Text strong style={{ fontSize: 13 }}>
-            ✏️ 你的纠错历史
+            你的纠错历史
           </Text>
           {data.correction_counts.confirm && (
             <Tag color="success">已确认 {data.correction_counts.confirm}</Tag>
@@ -641,7 +635,7 @@ function AuditPanel({
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={
             <span style={{ color: '#475467' }}>
-              没有待审查的实体 —— AI 当前萃取质量挺好 ✨
+              没有待审查的实体，当前记忆萃取质量良好
             </span>
           }
           style={{ padding: '40px 0' }}
@@ -663,7 +657,7 @@ function AuditPanel({
 
       {/* 修正弹窗 */}
       <Modal
-        title="✏️ 修正实体"
+        title="修正实体"
         open={!!editing}
         onCancel={() => setEditing(null)}
         onOk={onSaveCorrect}
@@ -759,21 +753,17 @@ function ReviewCard({
     <div
       style={{
         position: 'relative',
-        background: isWeak
-          ? 'linear-gradient(180deg, #fffaf2 0%, #ffffff 100%)'
-          : '#ffffff',
+        background: isWeak ? '#fffcf5' : '#ffffff',
         border: `1px solid ${isWeak ? '#ffe3a3' : '#eef0f4'}`,
-        borderRadius: 12,
+        borderRadius: 8,
         padding: isMobile ? '14px 14px 12px' : '16px 18px 14px',
-        transition: 'border-color 0.18s, box-shadow 0.18s',
+        transition: 'border-color 0.18s, background 0.18s',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = isWeak ? '#FFA940' : '#155EEF'
-        e.currentTarget.style.boxShadow = '0 6px 14px -8px rgba(15, 23, 42, 0.14)'
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = isWeak ? '#ffe3a3' : '#eef0f4'
-        e.currentTarget.style.boxShadow = ''
       }}
     >
       {/* 左侧置信度色条 */}

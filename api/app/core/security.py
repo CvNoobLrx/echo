@@ -1,5 +1,6 @@
 """安全工具：密码哈希、JWT、API Key 对称加密。"""
 from datetime import datetime, timedelta, timezone
+from functools import lru_cache
 from typing import Any, Optional
 
 from cryptography.fernet import Fernet
@@ -47,8 +48,19 @@ def decode_token(token: str) -> Optional[dict[str, Any]]:
 
 
 # ---- API Key 对称加密（Fernet）----
+@lru_cache(maxsize=1)
 def _fernet() -> Fernet:
-    return Fernet(settings.fernet_key.encode())
+    try:
+        return Fernet(settings.fernet_key.encode())
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError(
+            "FERNET_KEY 配置无效：请设置 Fernet.generate_key() 生成的 44 位密钥"
+        ) from exc
+
+
+def validate_secret_encryption() -> None:
+    """启动时验证模型 API Key 的加密配置。"""
+    _fernet()
 
 
 def encrypt_secret(plain: str) -> str:

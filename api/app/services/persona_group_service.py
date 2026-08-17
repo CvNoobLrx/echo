@@ -1,6 +1,6 @@
-"""角色卡组（场景）业务服务：CRUD + 一键开群聊 + 内置模板。
+"""角色卡组（场景）业务服务：CRUD + 内置模板。
 
-卡组把一组角色卡打包，可一键开多 Agent 群聊。成员引用 agent_personas.id；
+卡组把一组角色卡打包保存。成员引用 agent_personas.id；
 内置场景（A股投研天团/周末出游策划团）一键添加 = 创建成员角色（in_group_only）+ 建卡组。
 """
 # 本类有名为 list 的方法，会遮蔽内置 list，使类体内 `-> list[dict]` 注解报错；
@@ -89,25 +89,6 @@ class PersonaGroupService:
         group = await self._get_or_404(user_id, group_id)
         await self.repo.delete(group)
         logger.info("删除卡组: user=%s group=%s", user_id, group_id)
-
-    async def open_chat(self, user_id: uuid.UUID, group_id: uuid.UUID):
-        """用卡组开一个群聊（多 Agent），返回群会话。"""
-        from app.schemas.group_chat_schema import GroupCreateRequest
-        from app.services.group_chat_service import GroupChatService
-
-        group = await self._get_or_404(user_id, group_id)
-        member_ids = list(group.member_persona_ids or [])
-        if not (2 <= len(member_ids) <= 5):
-            raise BizError("卡组成员需 2~5 个角色才能开群聊", code=4048)
-        group_service = GroupChatService(self.session)
-        return await group_service.create_group(
-            user_id,
-            GroupCreateRequest(
-                member_persona_ids=member_ids,
-                title=group.name,
-                enable_tools=bool(group.enable_tools),
-            ),
-        )
 
     @staticmethod
     def list_builtins() -> list[dict]:

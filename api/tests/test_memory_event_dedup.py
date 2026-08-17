@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, patch
 
 from app.core.memory.extraction.models import ExtractedStatement, TripletExtractionResult
 from app.core.memory.extraction.orchestrator import _event_id, run_extraction
+from app.core.memory.retrieval.searcher import format_memory_context
 from app.repositories.neo4j import cypher_queries as cq
 from app.repositories.neo4j.memory_graph_repository import MemoryGraphRepository
 
@@ -38,6 +39,31 @@ class EventStableIdTests(unittest.TestCase):
         second = _event_id("user-1", "吃饭", "用户吃饭", None, second_dialogue)
 
         self.assertNotEqual(first, second)
+
+
+class MemoryRelationFormattingTests(unittest.TestCase):
+    def test_relation_surface_is_preferred_over_canonical_predicate(self):
+        context = format_memory_context(
+            [
+                {
+                    "name": "用户",
+                    "type": "生命体",
+                    "description": "",
+                    "confidence": 0.9,
+                    "relations": [
+                        {
+                            "predicate": "社会关系",
+                            "predicate_surface": "妹妹",
+                            "object_name": "林晓",
+                            "confidence": 0.9,
+                        }
+                    ],
+                }
+            ]
+        )
+
+        self.assertIn("用户 妹妹 林晓", context)
+        self.assertNotIn("用户 社会关系 林晓", context)
 
 
 class EventBatchDeduplicationTests(unittest.IsolatedAsyncioTestCase):

@@ -247,7 +247,8 @@ MATCH (e:Entity {user_id: $user_id})
 WHERE e.id IN $entity_ids
 OPTIONAL MATCH (e)-[r:RELATION]->(o:Entity)
 RETURN e.id AS entity_id, e.name AS entity_name,
-       r.predicate AS predicate, r.source_text AS source_text,
+       r.predicate AS predicate, r.predicate_surface AS predicate_surface,
+       r.source_text AS source_text,
        coalesce(r.importance, 0.5) AS importance,
        coalesce(r.confidence, 0.8) AS confidence,
        o.id AS object_id, o.name AS object_name, o.type AS object_type
@@ -260,6 +261,7 @@ MATCH (e:Entity {user_id: $user_id})
 OPTIONAL MATCH (e)-[r:RELATION]->(o:Entity)
 WITH e, collect({
   predicate: r.predicate,
+  predicate_surface: r.predicate_surface,
   object_name: o.name,
   object_type: o.type,
   confidence: coalesce(r.confidence, 0.8),

@@ -2,17 +2,17 @@
 from elasticsearch import AsyncElasticsearch
 
 from app.config import settings
+from app.core.loop_local import LoopLocal
 
-_client: AsyncElasticsearch | None = None
+_clients = LoopLocal[AsyncElasticsearch]()
 
 
 def get_es() -> AsyncElasticsearch:
-    global _client
-    if _client is None:
+    def _create() -> AsyncElasticsearch:
         auth = None
         if settings.es_username:
             auth = (settings.es_username, settings.es_password)
-        _client = AsyncElasticsearch(
+        return AsyncElasticsearch(
             hosts=[settings.es_host],
             basic_auth=auth,
             max_retries=settings.es_max_retries,
@@ -21,7 +21,8 @@ def get_es() -> AsyncElasticsearch:
             # 连接池：单节点最大连接数
             connections_per_node=settings.es_max_connections,
         )
-    return _client
+
+    return _clients.get_or_create(_create)
 
 
 async def ping() -> bool:
@@ -32,7 +33,6 @@ async def ping() -> bool:
 
 
 async def close() -> None:
-    global _client
-    if _client is not None:
-        await _client.close()
-        _client = None
+    client = _clients.pop_current()
+    if client is not None:
+        await client.close()

@@ -6,6 +6,7 @@ from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.celery_app import celery_app
+from app.core.llm.client import close_llm_client
 from app.db.postgres import create_task_engine
 from app.services.daily_review_service import DailyReviewService
 
@@ -20,6 +21,7 @@ async def _run(user_id: str, review_date: str) -> None:
             )
     finally:
         await engine.dispose()
+        await close_llm_client()
 
 
 @celery_app.task(name="app.tasks.daily_review.generate_daily_review")

@@ -2,7 +2,7 @@
 
 调用对话模型，按受控的陈述类型（FACT/OPINION/PREDICTION/SUGGESTION）和
 时间类型（STATIC/DYNAMIC/ATEMPORAL）标注，并标记指代是否未解析。
-失败返回空列表，不中断流水线。
+失败抛给上层，由任务记录失败状态并允许重试，避免写入空图后伪装成功。
 """
 from app.core.llm.client import LLMClient
 from app.core.logging import get_logger
@@ -29,8 +29,8 @@ async def extract_statements(
         result = StatementExtractionResult.model_validate(data)
         return [s for s in result.statements if s.statement and s.statement.strip()]
     except Exception as e:
-        logger.warning("陈述抽取失败（忽略该块）: %r", e)
-        return []
+        logger.error("陈述抽取失败: %r", e)
+        raise RuntimeError("陈述抽取失败") from e
 
 
 __all__ = ["extract_statements"]

@@ -155,6 +155,9 @@ export const memoryApi = {
   remember(text: string) {
     return client.post<unknown, Wrapped<MemoryItem>>('/memories/remember', { text })
   },
+  retry(id: string) {
+    return client.post<unknown, Wrapped<MemoryItem>>(`/memories/${id}/retry`)
+  },
   profile() {
     return client.get<unknown, Wrapped<MemoryProfile>>('/memories/profile')
   },

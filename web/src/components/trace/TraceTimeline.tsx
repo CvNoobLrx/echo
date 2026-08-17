@@ -6,6 +6,7 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { Empty, Space, Tag, Typography } from 'antd'
+import { CloseCircleOutlined, FileTextOutlined, LinkOutlined, UnorderedListOutlined } from '@ant-design/icons'
 
 import type { SpanItem, TraceDetail } from '@/api/traces'
 
@@ -377,8 +378,7 @@ export default function TraceTimeline({ trace }: { trace: TraceDetail }) {
                     padding: '14px 16px',
                     background: '#ffffff',
                     border: `1px solid ${c.border}33`,
-                    borderLeft: `3px solid ${c.border}`,
-                    borderRadius: 10,
+                    borderRadius: 8,
                     animation: 'fadeInDown 0.2s ease-out',
                   }}
                 >
@@ -486,7 +486,7 @@ function SpanDetailContent({ span, isMobile }: { span: SpanItem; isMobile: boole
           }}
         >
           <Text strong style={{ color: '#cf1322', display: 'block', marginBottom: 4 }}>
-            ❌ 错误信息
+            <CloseCircleOutlined /> 错误信息
           </Text>
           {span.error_message}
         </div>
@@ -497,14 +497,14 @@ function SpanDetailContent({ span, isMobile }: { span: SpanItem; isMobile: boole
         <div
           style={{
             padding: '8px 12px',
-            background: 'linear-gradient(135deg, #f4f1fe 0%, #ffffff 70%)',
-            border: '1px solid #e3dbff',
+            background: '#f8fafc',
+            border: '1px solid #e4e7ec',
             borderRadius: 8,
             fontSize: 12.5,
           }}
         >
           <Space>
-            <span style={{ color: '#7A5AF8', fontWeight: 600 }}>🔗</span>
+            <LinkOutlined style={{ color: '#155EEF' }} />
             <Text type="secondary">这一步属于「质量复核 Loop」的回炉轮次</Text>
           </Space>
         </div>
@@ -514,7 +514,7 @@ function SpanDetailContent({ span, isMobile }: { span: SpanItem; isMobile: boole
       {longPreviews.map(([k, v]) => (
         <div key={k}>
           <Text strong style={{ fontSize: 13, color: '#171719' }}>
-            📝 {fmtKey(k)}
+            <FileTextOutlined /> {fmtKey(k)}
           </Text>
           <div
             style={{
@@ -540,7 +540,7 @@ function SpanDetailContent({ span, isMobile }: { span: SpanItem; isMobile: boole
       {/* 表格字段 */}
       {tableEntries.length > 0 && (
         <div>
-          <Text strong style={{ fontSize: 13, color: '#171719' }}>📋 步骤详情</Text>
+          <Text strong style={{ fontSize: 13, color: '#171719' }}><UnorderedListOutlined /> 步骤详情</Text>
           <div
             style={{
               marginTop: 4,
@@ -605,7 +605,7 @@ function KpiBox({
         padding: '10px 12px',
         background: '#ffffff',
         border: '1px solid #eef0f4',
-        borderRadius: 10,
+        borderRadius: 8,
       }}
     >
       <div style={{ fontSize: 11, color: '#98A2B3' }}>{label}</div>

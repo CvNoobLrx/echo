@@ -16,7 +16,7 @@
 
 - **痛点 1**：内置工具（知识库/记忆/联网/时间）要能让用户**按需启停**，不能全写死全开。
 - **痛点 2**：用户想接**自己的外部工具**（查数据库、调内部 API、第三方 MCP server），不能每加一个都改代码。
-- **方案**：内置工具用**注册表 + ToolSpec 声明式定义**、启停存表；外部工具走 **MCP 协议动态加载**（官方 `langchain-mcp-adapters`），运行时把远程工具转成 LangChain 工具注入 Agent。
+- **方案**：内置工具用**注册表 + ToolSpec 声明式定义**、启停存表；外部工具直接使用官方 **MCP Python SDK 2.x** 发现和调用，统一转换成项目自研 `AgentTool` 注入 Agent。
 
 ---
 
@@ -32,8 +32,9 @@ flowchart TD
   end
   subgraph MCP工具
     MS[(mcp_servers 用户配置)] --> CONN[build_connection<br/>SSRF校验+认证]
-    CONN --> LOAD[load_mcp_tools<br/>远程工具→LangChain工具]
-    LOAD --> CACHE[(进程内TTL缓存)]
+    CONN --> CLIENT[官方 Client<br/>auto / legacy]
+    CLIENT --> LOAD[list_tools 分页<br/>input_schema→AgentTool]
+    LOAD --> CACHE[(按用户+server缓存描述符)]
   end
   BUILD --> TOOLS[最终工具列表]
   CACHE --> TOOLS
@@ -49,7 +50,7 @@ flowchart TD
 每个内置工具用 `ToolSpec` 声明（key/名称/图标/builder 构建函数/默认是否启用），导入时注册进全局注册表。**新增工具只要写一个文件 + 注册，编排逻辑不用改**。
 
 关键是 `builder` 的设计：它不返回静态工具，而是拿到「构建上下文」（含 session、引用收集列表 citations、统计字典 stats_holder、知识库范围 kb_ids）后，构建一个闭包工具。工具执行时，把要给模型看的结果作为**文本返回**，同时把**引用、命中统计这些副产物写进上下文里的共享列表/字典**。
-> 为什么这么做：LangChain 工具只能返回一个字符串给模型，但引用、统计要传回业务层渲染。靠「工具返回文本给模型 + 副产物写进调用方传入的共享对象」旁路传出，绕开这个限制。
+> 为什么这么做：模型消息只需要工具主结果，引用和命中统计还要交给业务层渲染。通过「主结果返回给模型 + 副产物写入调用方共享对象」保持模型协议与前端展示契约解耦。
 
 ### 3.2 三级启停优先级
 
@@ -57,12 +58,14 @@ flowchart TD
 
 ### 3.3 MCP 接入：把外部工具协议接进来
 
-**MCP（Model Context Protocol）** 是 Anthropic 的「AI 工具标准协议」——任何遵循它的 server 暴露的工具都能被统一发现调用。用户配置 server 的 url / 传输方式（SSE / Streamable HTTP）/ 认证，本项目用官方 `langchain-mcp-adapters` 接入，三步：
-1. **建连接**：解密认证信息拼请求头 + **SSRF 校验**（防内网，详见安全篇）+ 按传输方式组装连接配置。
-2. **拉工具**：连 server 把远程工具转成 LangChain 工具。
-3. **注入 Agent**：和内置工具一起进编排，模型可像调内置工具一样调它们。
+**MCP（Model Context Protocol）** 是 AI 工具标准协议。用户配置 server 的 URL、传输方式（SSE / Streamable HTTP）和认证，本项目直接依赖官方 `mcp==2.0.0`：
+1. **建连接**：解密 Bearer/API Key，请求前做 SSRF 校验；Streamable HTTP 使用独立 `httpx2.AsyncClient` 配置认证头、超时和重定向。
+2. **协议协商**：Streamable HTTP 用 `Client(mode="auto")`，优先 MCP 2.0 discover，并兼容旧 initialize 握手；SSE 使用官方 `sse_client` 和 legacy 握手。
+3. **发现工具**：遍历 `list_tools` 分页，把 MCP `input_schema`、名称和描述转为 `AgentTool`。
+4. **调用工具**：优先返回 `structured_content`，其次拼接文本块；`is_error` 转成统一工具异常。
+5. **注入 Agent**：与内置工具合并，模型按同一 JSON Schema / Function Calling 契约调用。
 
-> 面试一句话：MCP 是 AI 工具的标准协议，用官方 adapter 把用户配置的远程 MCP server 工具运行时拉下来转成 LangChain 工具注入 Agent，不改代码就能扩展任意外部工具。
+> 面试一句话：项目直接用官方 MCP SDK 2.x 完成协议协商、分页发现和工具调用，再转成自研 `AgentTool` 注入 Agent，不经过 LangChain 适配层。
 
 ### 3.4 工具名清洗（为什么必须做）
 
@@ -71,7 +74,7 @@ OpenAI function calling 对工具名有硬约束：只能是字母/数字/下划
 ### 3.5 性能：缓存清单 + 持久会话
 
 MCP 的痛点是每轮对话都要连 server 握手拉工具清单，累计延迟高。两个优化：
-- **缓存工具清单**：按用户缓存 5 分钟，缓存键带「所有启用 server 的指纹（id + 更新时间）」——**任一 server 增删改，指纹变化、缓存自动失效**，配置改了立刻生效。
+- **缓存工具描述符**：按「用户 + server」缓存 5 分钟，指纹使用 server 更新时间；配置增删改时服务层主动失效，指纹变化也会兜底失效。单个 server 发现失败不会把其他 server 的残缺总列表缓存起来。
 - **持久会话 vs 无状态**：群聊/深度研究一轮内会多次调工具，用**持久会话**版（整轮复用一条 server 连接、不重复握手）；单聊用**无状态**版（只缓存清单、不预连，只在模型真正调用某 MCP 工具时才连）——这样闲聊或只用内置工具的轮次零 MCP 握手。
 
 > 真实优化过的坑：早期单聊每轮都预开所有 MCP 会话，日志里每轮 4~5 个握手、首字很慢；改成「单聊只在真调用时才连」后消除了无谓握手。按场景选：多次调用用持久会话省握手，可能不调用用无状态避免预连。
@@ -79,6 +82,19 @@ MCP 的痛点是每轮对话都要连 server 握手拉工具清单，累计延�
 ### 3.6 单 server 失败隔离
 
 单个 server 连不上/加载失败就跳过、记日志，不影响其余 server 和内置工具——一个外部 server 挂了 Agent 仍能正常用其他工具。
+
+### 3.7 迁移 MCP 2.0 后删除和保留了什么
+
+删除或简化的模块：
+- 删除 `langchain-mcp-adapters`、`MultiServerMCPClient`、`load_mcp_tools` 和 MCP→LangChain `BaseTool` 转换层。
+- 删除因旧 adapter 返回 Python 字面量字符串而存在的 `literal_eval` 结果修复逻辑。
+- 删除按用户缓存整批 LangChain 工具对象的聚合缓存，改为按 server 缓存不可变工具描述符，不缓存活连接。
+- LangChain、LangGraph、LangSmith 及其消息/工具类型不再是 MCP 或 Agent 的传递依赖。
+
+继续保留的项目优化：
+- 工具名前缀、64 字符限制、非法字符清洗和碰撞去重。
+- Bearer/API Key、SSRF 拒绝、超时、重定向、分页发现和单 server 失败隔离。
+- 5 分钟元数据缓存、配置变更失效、单聊延迟连接，以及群聊/研究整轮持久会话复用。
 
 ---
 
@@ -88,7 +104,7 @@ MCP 的痛点是每轮对话都要连 server 握手拉工具清单，累计延�
 |--------|---------|------|--------|
 | 内置工具定义 | ToolSpec 声明 + 注册表 | 硬编码工具列表 | 新增工具不改编排，可插拔 |
 | 启停 | 三级优先级(本轮>用户>默认) | 全局开关 | 灵活：持久配置 + 本轮临时覆盖 |
-| 外部工具 | MCP 协议 + 官方 adapter | 自定义插件协议 | MCP 是标准协议，生态通用，不重造 |
+| 外部工具 | 官方 MCP SDK 2.x + AgentTool | LangChain adapter / 自定义插件协议 | 跟进 MCP 2.0，同时保持项目工具契约独立 |
 | MCP 工具名 | 清洗 + server 前缀 + 去重 | 原样用 | function name 有字符限制，不清洗会报错 |
 | MCP 连接 | TTL 缓存清单 + 持久会话 | 每次重连 | 消除每轮握手延迟 |
 | 单聊 MCP | 无状态版只在真调用时连 | 每轮预开会话 | 闲聊不调 MCP 的轮次零握手 |
@@ -100,7 +116,7 @@ MCP 的痛点是每轮对话都要连 server 握手拉工具清单，累计延�
 
 - **MCP 工具名含中文/特殊字符致 function calling 报错**：解法：清洗非法字符 + server 前缀 + 去重。
 - **每轮对话重连 MCP server 握手很慢**：解法：进程内 TTL 缓存清单 + 单聊只在真调用时连。
-- **公网 MCP 被 SSRF 拦（代理 fake-ip）**：解法：加 `mcp_allow_private_url` 开关放行（详见安全篇）。
+- **代理 fake-ip 或内网地址被 SSRF 拒绝**：当前策略严格只允许解析到公网 IP 的 HTTP(S) 地址，不提供绕过开关。
 - **needs_config 工具未配置时构建失败**：解法：builder 返回 None 自动跳过。
 - **一个 MCP server 连不上拖垮全部**：解法：单 server try/except 跳过。
 
@@ -112,7 +128,7 @@ MCP 的痛点是每轮对话都要连 server 握手拉工具清单，累计延�
 内置工具用 ToolSpec 声明式定义 + register_tool 注册进全局注册表，新增工具只写一个文件不改编排。构建时按「本轮覆盖 > 用户配置 > 默认」三级优先级决定启停。外部工具走 MCP 协议动态加载。
 
 **Q2（核心）：MCP 是什么？怎么接入的？**
-MCP（Model Context Protocol）是 AI 工具的标准协议，server 暴露工具供客户端统一发现调用。我用官方 langchain-mcp-adapters，把用户配的 MCP server 工具运行时拉下来、清洗工具名加 server 前缀、转成 LangChain 工具注入 Agent，不改代码就能扩展工具。
+MCP（Model Context Protocol）是 AI 工具的标准协议。项目直接使用官方 MCP SDK 2.x：Streamable HTTP 自动协商现代/旧握手，SSE 走 legacy 握手；分页拉取工具 schema，清洗名称并转成自研 AgentTool，不改业务代码即可扩展工具。
 
 **Q3（工程）：MCP 性能怎么优化的？**
 两点：进程内 TTL 缓存工具清单（按 server 指纹失效）避免每轮重连拉清单；持久会话版整轮复用会话不重复握手。单聊用无状态版只缓存清单、只在模型真调用时才连，闲聊轮次零握手。
@@ -134,7 +150,7 @@ OpenAI function calling 要求工具名匹配 [a-zA-Z0-9_-] 且≤64 字符。MC
 让 LLM 调外部工具突破「只能用训练知识」的局限：**ReAct（2022）** 用 prompt 引导调工具 → **Toolformer（Meta 2023）** 让模型自学何时调 API → **Function Calling（OpenAI 2023）** 把工具调用做成原生结构化能力。工具是 Agent 从「会聊天」到「会干活」的关键。
 
 **② MCP（Model Context Protocol，Anthropic 2024.11）**
-在 Function Calling 之上更进一步的标准化尝试。痛点：每家应用接每个工具都要自己写适配，是 M×N 的重复劳动。MCP 定义了**统一协议**——工具方实现一个 MCP server（暴露 tools/resources/prompts），任何 MCP 客户端都能即插即用，把 M×N 降为 M+N。类比「AI 工具界的 USB 接口」。本项目用官方 langchain-mcp-adapters 做 MCP 客户端，接入用户配置的任意 MCP server。
+在 Function Calling 之上更进一步的标准化尝试。痛点：每家应用接每个工具都要自己写适配，是 M×N 的重复劳动。MCP 定义了**统一协议**——工具方实现一个 MCP server（可暴露 tools/resources/prompts），任何 MCP 客户端都能接入，把 M×N 降为 M+N。本项目首版只消费 tools，直接使用官方 SDK 2.x，不启用 resources、prompts、sampling、elicitation 或 roots。
 
 **③ 插件化 / 注册表模式（软件工程）**
 「声明式注册 + 运行时发现」是经典可扩展架构：组件自我声明并注册到中心表，框架运行时遍历表加载，新增组件不改框架代码。本项目内置工具的 ToolSpec + 注册表即此模式。

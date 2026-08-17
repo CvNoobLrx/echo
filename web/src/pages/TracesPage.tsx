@@ -21,9 +21,11 @@ import {
 } from 'antd'
 import {
   ClockCircleOutlined,
+  CheckCircleOutlined,
   CloseCircleOutlined,
   DollarOutlined,
   LinkOutlined,
+  LoadingOutlined,
   ReloadOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons'
@@ -224,7 +226,7 @@ export default function TracesPage() {
           <LoopHealthCard data={loopHealth} />
         </div>
       )}
-      <Card title="🔍 执行轨迹" className="memory-card">
+      <Card title="执行轨迹" className="memory-card">
         {/* 顶部汇总条:紧凑单行(冗余的「近 N 天范围」并到筛选栏右侧,失败率仅当有失败时显示)*/}
         <div
           style={{
@@ -233,9 +235,9 @@ export default function TracesPage() {
             alignItems: 'baseline',
             gap: 18,
             padding: '12px 16px',
-            background: 'linear-gradient(135deg, #f4f8ff 0%, #ffffff 70%)',
-            border: '1px solid #dbe6ff',
-            borderRadius: 12,
+            background: '#f8fafc',
+            border: '1px solid #e4e7ec',
+            borderRadius: 8,
             marginBottom: 14,
           }}
         >
@@ -276,7 +278,7 @@ export default function TracesPage() {
             padding: '12px 16px',
             background: '#ffffff',
             border: '1px solid #eef0f4',
-            borderRadius: 12,
+            borderRadius: 8,
             marginBottom: 14,
           }}
         >
@@ -312,9 +314,9 @@ export default function TracesPage() {
             onChange={(v) => setStatus(v === 'all' ? undefined : (v as string))}
             options={[
               { label: '全部', value: 'all' },
-              { label: '✓ 成功', value: 'ok' },
-              { label: '⚠ 失败', value: 'error' },
-              { label: '⏳ 运行中', value: 'running' },
+              { label: <><CheckCircleOutlined /> 成功</>, value: 'ok' },
+              { label: <><CloseCircleOutlined /> 失败</>, value: 'error' },
+              { label: <><LoadingOutlined /> 运行中</>, value: 'running' },
             ]}
           />
           <div style={{ flex: 1 }} />
@@ -580,9 +582,9 @@ function TraceDetailView({
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 14px',
-            background: 'linear-gradient(135deg, #f4f1fe 0%, #ffffff 70%)',
-            border: '1px solid #e3dbff',
-            borderRadius: 10,
+            background: '#f8fafc',
+            border: '1px solid #e4e7ec',
+            borderRadius: 8,
           }}
         >
           <Space size={8}>
@@ -624,7 +626,7 @@ function TraceDetailView({
       {/* 时间线 */}
       <div>
         <Title level={5} style={{ margin: '8px 0' }}>
-          ⏱ 执行时间线 · {detail.spans.length} 步
+          <ClockCircleOutlined /> 执行时间线 · {detail.spans.length} 步
         </Title>
         <Paragraph type="secondary" style={{ fontSize: 12, margin: '0 0 12px' }}>
           按时间顺序展开,颜色区分节点类型。点任一条查看该步详情(请求内容/回复预览/工具返回)。

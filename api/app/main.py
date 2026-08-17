@@ -17,6 +17,10 @@ logger = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    # 安全配置必须在服务接收请求前有效，避免保存模型时才暴露 500。
+    from app.core.security import validate_secret_encryption
+
+    validate_secret_encryption()
     # 启动：自动把数据库升级到最新迁移（alembic upgrade head）
     from app.db.migrate import upgrade_to_head
 
@@ -51,6 +55,9 @@ async def lifespan(_: FastAPI):
     except Exception as e:
         logger.warning("Tracing 落库器关闭异常: %s", e)
     # 关闭：释放长连接 / 连接池
+    from app.core.llm.client import close_llm_client
+
+    await close_llm_client()
     await postgres.close()
     await elastic.close()
     await neo4j.close()

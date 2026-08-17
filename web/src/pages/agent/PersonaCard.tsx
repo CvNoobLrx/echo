@@ -13,7 +13,7 @@ interface Props {
   onDelete: (p: Persona) => void
 }
 
-// 单张角色卡：玻璃拟态 + 头像光晕封面 + 当前生效流光描边
+// 单张角色卡：头像封面、状态和快捷操作。
 export default function PersonaCard({
   persona,
   index,
@@ -30,7 +30,7 @@ export default function PersonaCard({
   return (
     <div
       className={`persona-card${active ? ' persona-card--active' : ''}`}
-      style={{ animationDelay: `${Math.min(index, 12) * 60}ms` }}
+      data-card-index={index}
     >
       {active && (
         <div className="persona-badge">
@@ -60,7 +60,7 @@ export default function PersonaCard({
       <div className="persona-body">
         <div className="persona-name">{persona.name}</div>
         <div className="persona-meta">
-          🌡️ {persona.temperature.toFixed(1)} · {tempLabel}
+          温度 {persona.temperature.toFixed(1)} · {tempLabel}
           {!persona.avatar_url && ' · 无头像'}
         </div>
         <div className="persona-desc">

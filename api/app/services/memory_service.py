@@ -15,6 +15,7 @@ from app.models.memory_model import (
     Memory,
 )
 from app.repositories.memory_repository import MemoryRepository
+from app.repositories.model_config_repository import ModelConfigRepository
 
 logger = get_logger(__name__)
 
@@ -29,6 +30,7 @@ class MemoryService:
         text = (text or "").strip()
         if not text:
             raise BizError("记忆内容不能为空", code=3001)
+        await self._ensure_extraction_models(user_id)
         memory = Memory(
             user_id=user_id,
             raw_text=text,
@@ -42,6 +44,37 @@ class MemoryService:
         extract_memory_task.delay(str(memory.id))
         logger.info("主动记住已提交萃取: memory=%s", memory.id)
         return memory
+
+    async def retry(self, user_id: uuid.UUID, memory_id: uuid.UUID) -> Memory:
+        """重新投递一条失败的记忆，保留原始内容与审计记录。"""
+        memory = await self.get_detail(user_id, memory_id)
+        if memory.status != "failed":
+            raise BizError("只有萃取失败的记忆可以重试", code=3004)
+        await self._ensure_extraction_models(user_id)
+        memory.status = MEMORY_STATUS_PENDING
+        memory.error_msg = None
+        memory = await self.repo.save(memory)
+
+        from app.tasks.memory import extract_memory_task
+
+        extract_memory_task.delay(str(memory.id))
+        logger.info("失败记忆已重新提交萃取: memory=%s", memory.id)
+        return memory
+
+    async def _ensure_extraction_models(self, user_id: uuid.UUID) -> None:
+        """记忆萃取同时依赖对话模型和向量模型，提交前一次性校验。"""
+        config_repo = ModelConfigRepository(self.session)
+        missing: list[str] = []
+        if not await config_repo.list_by_user(user_id, "chat"):
+            missing.append("对话模型")
+        if not await config_repo.list_by_user(user_id, "embedding"):
+            missing.append("向量模型")
+        if missing:
+            names = "、".join(missing)
+            raise BizError(
+                f"保存记忆前请先在模型配置中添加{names}",
+                code=2010,
+            )
 
     async def get_detail(self, user_id: uuid.UUID, memory_id: uuid.UUID) -> Memory:
         memory = await self.repo.get_by_id(memory_id)

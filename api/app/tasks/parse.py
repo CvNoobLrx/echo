@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 import app.models  # noqa: F401  确保所有 ORM 模型注册到 metadata
 from app.celery_app import celery_app
 from app.config import settings
+from app.core.llm.client import close_llm_client
 from app.core.llm.resolver import get_client_for_type, get_optional_client_for_type
 from app.core.logging import get_logger
 from app.core.rag.chunking import chunk_blocks
@@ -51,6 +52,7 @@ async def _run(document_id: str) -> None:
             await _parse(session, document_id, doc_uuid)
     finally:
         await engine.dispose()
+        await close_llm_client()
         # 关闭本任务事件循环内创建的 ES 客户端
         await elastic.close()
 

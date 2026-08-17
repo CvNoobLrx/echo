@@ -35,51 +35,44 @@ const PROVIDER_LABEL = Object.fromEntries(
   PROVIDER_OPTIONS.map((p) => [p.value, p.label]),
 )
 
-// 每种模型类型一套配色 + 分组标题
+// 模型类型使用统一的 Echo 蓝，差异由名称和说明承担。
 const TYPE_META: Record<
   ModelType,
-  { color: string; bg: string; gradient: string; desc: string }
+  { color: string; bg: string; desc: string }
 > = {
   chat: {
     color: '#155EEF',
     bg: '#EEF4FF',
-    gradient: 'linear-gradient(135deg, #155EEF 0%, #4E8CFF 100%)',
     desc: '负责对话问答的大语言模型',
   },
   multimodal: {
-    color: '#7A5AF8',
-    bg: '#F4F1FE',
-    gradient: 'linear-gradient(135deg, #7A5AF8 0%, #B69CFF 100%)',
+    color: '#155EEF',
+    bg: '#EEF4FF',
     desc: '能看图理解的多模态模型',
   },
   embedding: {
-    color: '#0E9384',
-    bg: '#E6F6F4',
-    gradient: 'linear-gradient(135deg, #0E9384 0%, #4FD1C5 100%)',
+    color: '#155EEF',
+    bg: '#EEF4FF',
     desc: '把文本转成向量用于检索',
   },
   rerank: {
-    color: '#DD6B20',
-    bg: '#FEF3E8',
-    gradient: 'linear-gradient(135deg, #DD6B20 0%, #F6AD55 100%)',
+    color: '#155EEF',
+    bg: '#EEF4FF',
     desc: '对检索结果重排，提升相关度',
   },
   websearch: {
-    color: '#0BA5EC',
-    bg: '#E7F6FE',
-    gradient: 'linear-gradient(135deg, #0BA5EC 0%, #5CC9F5 100%)',
+    color: '#155EEF',
+    bg: '#EEF4FF',
     desc: '联网搜索实时信息',
   },
   asr: {
-    color: '#EC4899',
-    bg: '#FCE7F3',
-    gradient: 'linear-gradient(135deg, #EC4899 0%, #F9A8D4 100%)',
+    color: '#155EEF',
+    bg: '#EEF4FF',
     desc: '语音识别，把语音转成文字',
   },
   verifier: {
-    color: '#7C3AED',
-    bg: '#F3E8FF',
-    gradient: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
+    color: '#155EEF',
+    bg: '#EEF4FF',
     desc: '为研究报告提供跨模型质量校验',
   },
 }
@@ -222,11 +215,10 @@ export default function ModelConfigPage() {
     const provider = PROVIDER_LABEL[item.provider] ?? item.provider
     return (
       <div key={item.id} className="model-card">
-        <div className="model-card-glow" style={{ background: meta.gradient }} />
         <div className="model-card-head">
           <div
             className="model-card-icon"
-            style={{ background: meta.gradient }}
+            style={{ background: meta.bg, color: meta.color }}
           >
             <ApiOutlined />
           </div>
@@ -357,13 +349,13 @@ export default function ModelConfigPage() {
 
       <Collapse
         defaultActiveKey={list.length === 0 ? ['guide'] : []}
-        style={{ marginBottom: 20, background: '#fff', borderRadius: 12 }}
+        style={{ marginBottom: 20, background: '#fff', borderRadius: 8 }}
         items={[
           {
             key: 'guide',
             label: (
               <span style={{ fontWeight: 600 }}>
-                📖 配置流程说明 · 去哪里申请 API Key？
+                配置流程说明 · 去哪里申请 API Key？
               </span>
             ),
             children: (
@@ -497,22 +489,14 @@ export default function ModelConfigPage() {
                         alignItems: 'center',
                         gap: 6,
                         padding: '3px 10px',
-                        borderRadius: 999,
+                        borderRadius: 4,
                         fontSize: 12.5,
                         fontWeight: 500,
                         color: meta.color,
                         background: meta.bg,
                         border: `1px solid ${meta.color}26`,
                         textDecoration: 'none',
-                        transition: 'transform 0.12s, box-shadow 0.18s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-1px)'
-                        e.currentTarget.style.boxShadow = `0 4px 10px -6px ${meta.color}80`
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = ''
-                        e.currentTarget.style.boxShadow = ''
+                        transition: 'background 0.15s',
                       }}
                     >
                       <span
@@ -572,7 +556,7 @@ export default function ModelConfigPage() {
                         width: 4,
                         height: 18,
                         borderRadius: 2,
-                        background: meta.gradient,
+                        background: meta.color,
                       }}
                     />
                     <Typography.Text

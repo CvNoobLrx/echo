@@ -2,22 +2,22 @@
 from redis import asyncio as aioredis
 
 from app.config import settings
+from app.core.loop_local import LoopLocal
 
-_pool: aioredis.ConnectionPool | None = None
-_client: aioredis.Redis | None = None
+_resources = LoopLocal[tuple[aioredis.ConnectionPool, aioredis.Redis]]()
 
 
 def get_redis() -> aioredis.Redis:
-    global _pool, _client
-    if _client is None:
-        _pool = aioredis.ConnectionPool.from_url(
+    def _create() -> tuple[aioredis.ConnectionPool, aioredis.Redis]:
+        pool = aioredis.ConnectionPool.from_url(
             settings.redis_url,
             decode_responses=True,
             max_connections=settings.redis_max_connections,
             health_check_interval=30,
         )
-        _client = aioredis.Redis(connection_pool=_pool)
-    return _client
+        return pool, aioredis.Redis(connection_pool=pool)
+
+    return _resources.get_or_create(_create)[1]
 
 
 async def ping() -> bool:
@@ -28,10 +28,8 @@ async def ping() -> bool:
 
 
 async def close() -> None:
-    global _pool, _client
-    if _client is not None:
-        await _client.aclose()
-        _client = None
-    if _pool is not None:
-        await _pool.disconnect()
-        _pool = None
+    resource = _resources.pop_current()
+    if resource is not None:
+        pool, client = resource
+        await client.aclose()
+        await pool.disconnect()

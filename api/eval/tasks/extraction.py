@@ -42,6 +42,7 @@ async def eval_extraction(chat_client) -> tuple[dict, list]:
     data = json.loads(_GOLD.read_text(encoding="utf-8"))
     ent_scores: list[tuple[float, float, float]] = []
     tri_scores: list[tuple[float, float, float]] = []
+    social_scores: list[tuple[float, float, float]] = []
     details: list[dict] = []
     total = len(data)
     for i, item in enumerate(data, 1):
@@ -53,6 +54,10 @@ async def eval_extraction(chat_client) -> tuple[dict, list]:
         tp, tr, tf = metrics.prf1_triples(pred_tri, gold_tri)
         ent_scores.append((ep, er, ef))
         tri_scores.append((tp, tr, tf))
+        gold_social = {t for t in gold_tri if t[1] == "社会关系"}
+        if gold_social:
+            pred_social = {t for t in pred_tri if t[1] == "社会关系"}
+            social_scores.append(metrics.prf1_triples(pred_social, gold_social))
         details.append({
             "dialogue": item["dialogue"],
             "gold_entities": sorted(gold_ent),
@@ -73,4 +78,6 @@ async def eval_extraction(chat_client) -> tuple[dict, list]:
         }
 
     table = {"实体级": _avg3(ent_scores), "三元组级": _avg3(tri_scores)}
+    if social_scores:
+        table["社会关系专项"] = _avg3(social_scores)
     return table, details

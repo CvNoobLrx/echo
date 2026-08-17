@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   App,
   Button,
@@ -15,17 +15,23 @@ import {
 } from 'antd'
 import {
   CheckCircleFilled,
+  BookOutlined,
+  CompassOutlined,
   DeleteOutlined,
   DownloadOutlined,
   DownOutlined,
   FileSearchOutlined,
   FileWordOutlined,
+  FileTextOutlined,
   GlobalOutlined,
   HighlightOutlined,
   HistoryOutlined,
+  EditOutlined,
   PlusOutlined,
   PrinterOutlined,
   SaveOutlined,
+  SearchOutlined,
+  ToolOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -72,15 +78,15 @@ const SOURCE_META: Record<string, { label: string; color: string }> = {
   mcp: { label: '工具', color: 'purple' },
 }
 
-const STEP_ICON: Record<string, string> = {
-  search: '🔎',
-  web: '🌐',
-  fetch: '📄',
-  kb: '📚',
-  mcp: '🔧',
-  distill: '✨',
-  stage: '🧭',
-  write: '✍️',
+const STEP_ICON: Record<string, ReactNode> = {
+  search: <SearchOutlined />,
+  web: <GlobalOutlined />,
+  fetch: <FileTextOutlined />,
+  kb: <BookOutlined />,
+  mcp: <ToolOutlined />,
+  distill: <HighlightOutlined />,
+  stage: <CompassOutlined />,
+  write: <EditOutlined />,
 }
 
 export default function ResearchPage() {
@@ -450,13 +456,13 @@ export default function ResearchPage() {
   const canManage = !running && (detail?.status === 'done' || finalMd)
 
   const historyList = (
-    <>
-      <Button type="primary" icon={<PlusOutlined />} block onClick={newResearch} style={{ marginBottom: 12 }}>
+    <div className="research-history-list">
+      <Button type="primary" icon={<PlusOutlined />} block onClick={newResearch}>
         新建研究
       </Button>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="research-history-items">
         {reports.length === 0 && (
-          <Typography.Text type="secondary" style={{ fontSize: 13 }}>
+          <Typography.Text type="secondary" className="research-history-empty">
             还没有研究报告，输入一句话开始吧。
           </Typography.Text>
         )}
@@ -466,6 +472,7 @@ export default function ResearchPage() {
             size="small"
             hoverable
             onClick={() => openReport(r.id)}
+            className="research-history-card"
             style={{
               cursor: 'pointer',
               borderColor: currentId === r.id ? '#155EEF' : undefined,
@@ -511,15 +518,15 @@ export default function ResearchPage() {
           </Card>
         ))}
       </div>
-    </>
+    </div>
   )
 
   return (
-    <div className="fluid-page research-page" style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+    <div className="fluid-page research-page">
       {/* 左：历史报告（桌面端常驻；手机端收进抽屉） */}
-      <div className="research-history" style={{ flex: '0 0 260px', minWidth: 220, maxWidth: '100%' }}>
+      <aside className="research-history">
         {historyList}
-      </div>
+      </aside>
 
       {/* 手机端历史抽屉 */}
       <Drawer
@@ -533,7 +540,7 @@ export default function ResearchPage() {
       </Drawer>
 
       {/* 右：研究主区 */}
-      <div style={{ flex: 1, minWidth: 0, width: '100%' }}>
+      <main className="research-main">
         {/* 手机端顶部工具条：新建 / 历史 */}
         <div className="research-mobile-bar">
           <Button icon={<PlusOutlined />} onClick={newResearch}>
@@ -556,7 +563,7 @@ export default function ResearchPage() {
             </p>
 
             <div className="research-hero-input">
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 6 }}>
+              <div className="research-hero-polish-row">
                 <Button
                   type="text"
                   size="small"
@@ -586,14 +593,14 @@ export default function ResearchPage() {
                 icon={<FileSearchOutlined />}
                 onClick={startResearch}
                 block
-                style={{ marginTop: 12, height: 44, borderRadius: 10 }}
+                style={{ marginTop: 12, height: 44, borderRadius: 6 }}
               >
                 开始研究
               </Button>
             </div>
 
             <div className="research-hero-examples">
-              <span className="research-hero-examples-label">试试这些 👇</span>
+              <span className="research-hero-examples-label">示例问题</span>
               <div className="research-hero-chips">
                 {EXAMPLES.map((ex) => (
                   <button key={ex} className="research-chip" onClick={() => setTopic(ex)}>
@@ -605,10 +612,10 @@ export default function ResearchPage() {
 
             <div className="research-flow">
               {[
-                { icon: '🧭', t: '规划', d: '拆解提纲与检索角度' },
-                { icon: '🔎', t: '检索', d: '多源搜索 + 抓取正文' },
-                { icon: '✍️', t: '撰写', d: '分章节撰写并标注引用' },
-                { icon: '🔗', t: '成稿', d: '带来源链接，可存知识库' },
+                { icon: <CompassOutlined />, t: '规划', d: '拆解提纲与检索角度' },
+                { icon: <SearchOutlined />, t: '检索', d: '多源搜索 + 抓取正文' },
+                { icon: <EditOutlined />, t: '撰写', d: '分章节撰写并标注引用' },
+                { icon: <FileWordOutlined />, t: '成稿', d: '带来源链接，可存知识库' },
               ].map((s, i) => (
                 <div key={i} className="research-flow-step">
                   <div className="research-flow-icon">{s.icon}</div>
@@ -684,9 +691,10 @@ export default function ResearchPage() {
               </div>
             )}
 
+            <div className="research-panel-stack">
             {plan && plan.queries?.length > 0 && (
-              <Card size="small" title="检索角度" style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              <Card size="small" title="检索角度">
+                <div className="research-query-tags">
                   {plan.queries.map((q, i) => (
                     <Tag key={i} icon={<GlobalOutlined />} color="blue">
                       {q}
@@ -697,8 +705,8 @@ export default function ResearchPage() {
             )}
 
             {sources.length > 0 && (
-              <Card size="small" title={`参考来源（${sources.length}）`} style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <Card size="small" title={`参考来源（${sources.length}）`}>
+                <div className="research-source-list">
                   {sources.map((s) => (
                     <div key={s.index} style={{ fontSize: 13 }}>
                       <Tag color={SOURCE_META[s.type]?.color}>{SOURCE_META[s.type]?.label || s.type}</Tag>
@@ -792,9 +800,10 @@ export default function ResearchPage() {
                 style={{ marginTop: 24 }}
               />
             )}
+            </div>
           </div>
         )}
-      </div>
+      </main>
 
     </div>
   )

@@ -28,6 +28,17 @@ async def remember(
     return success(service.to_out_dict(memory), "已提交，正在萃取记忆")
 
 
+@router.post("/{memory_id}/retry")
+async def retry_memory(
+    memory_id: uuid.UUID,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
+):
+    service = MemoryService(session)
+    memory = await service.retry(user.id, memory_id)
+    return success(service.to_out_dict(memory), "已重新提交，正在萃取记忆")
+
+
 @router.post("/search")
 async def search_memory(
     body: MemorySearchRequest,

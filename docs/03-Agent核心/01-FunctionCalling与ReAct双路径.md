@@ -7,7 +7,7 @@
 
 ## 0. 能力定位（对应招聘要求）
 
-- 对应 JD：**「Agent / 工具编排」「Function Calling」「ReAct」「LangChain」「多步推理 / 工具循环」**。
+- 对应 JD：**「Agent / 工具编排」「Function Calling」「ReAct」「Agent Runtime」「多步推理 / 工具循环」**。
 - 角色：智能问答的中枢——决定「这个问题要不要查知识库/记忆/联网、怎么把工具结果组织成回答」，是整个项目最核心的 Agent 能力。
 
 ---
@@ -84,7 +84,7 @@ flowchart TD
 
 ### 3.4 工具返回值的格式化（`_format_observation`，易踩坑）
 
-工具返回值五花八门——内置工具返回字符串，**MCP 工具常返回 `[{'type':'text','text':'...'}]`** 这种结构（甚至是它的字符串字面量形式）。`_format_observation` 统一处理：列表逐项抽 `text` 字段拼接、dict 优先取 text 否则 JSON 美化、字符串若是 Python 字面量则 `literal_eval` 后递归格式化、对象取 `text` 属性。目的是给 LLM 和前端**干净可读的文本**，而不是一坨 Python 字面量噪声。
+内置工具可以返回字符串或结构化对象；MCP 2.0 结果在工具适配层已优先提取 `structured_content`，否则拼接文本块，并把 `is_error` 转成统一异常。`_format_observation` 再把 dict/list JSON 美化、抽取 text 字段，最终给 LLM 和前端稳定、可读的文本。
 
 ### 3.5 路径选择（在 ChatService）
 
@@ -101,13 +101,13 @@ flowchart TD
 | 路径契约 | 统一事件流 | 各路径各返各的 | 上层和前端无需关心底层路径 |
 | 循环上限 | 5 轮 | 不限 | 防工具死循环/刷 token |
 | 同轮重复调用 | call_cache 复用 | 每次都执行 | 模型重复调同一工具时省握手和执行 |
-| 工具结果格式化 | 统一 _format_observation | 直接 str() | MCP 返回结构化，str 出来是噪声 |
+| 工具结果格式化 | MCP 层标准化 + _format_observation | 直接 str() | 保留 structured content，文本块和异常语义一致 |
 
 ---
 
 ## 5. 踩坑与解决
 
-- **MCP 工具结果是一坨 `[{'type':'text'...}]` 字面量**：解法：`_format_observation` 抽 text 字段、literal_eval 递归格式化。
+- **MCP 旧适配器把结果变成 Python 字面量字符串**：迁移 MCP 2.0 后在适配层直接读取 `structured_content/content/is_error`，删除 `literal_eval` 修复逻辑。
 - **模型用相同参数重复调同一工具刷延迟**：解法：同轮 call_cache 按「工具名+参数」复用。
 - **流式下 tool_calls 拿不全**：解法：`gathered = gathered + chunk` 合并所有流式块再读 tool_calls。
 - **弱模型 ReAct 不按格式输出**：解法：正则解析失败时整段当回答兜底，不卡死。
@@ -118,7 +118,7 @@ flowchart TD
 ## 6. 面试问答
 
 **Q1（核心）：你的 Agent 怎么编排工具的？**
-方案 B 双路径：把知识库/记忆/联网做成 LangChain 工具，强模型走原生 function calling 工具循环、弱模型走 prompt 模拟的 ReAct 手动解析，两条路径产出统一事件流。LLM 自主决定调哪个工具、调几次。
+方案 B 双路径：把知识库/记忆/联网封装成原生 `AgentTool`，强模型走 Function Calling 工具循环、弱模型走 prompt 模拟的 ReAct 手动解析，两条路径产出统一事件流。LLM 自主决定调哪个工具、调几次。
 
 **Q2（原理）：Function Calling 工具循环怎么跑的？**
 bind_tools 把工具 schema 绑给模型，astream 流式输出；流结束看有没有 tool_calls，没有就是最终回答，有就执行工具、把结果包成 ToolMessage 回灌 messages 继续下一轮，直到模型不再调工具，最多 5 轮防死循环。
@@ -133,7 +133,7 @@ function calling 是模型原生能力、结构化可靠、不用解析文本，
 设 MAX_TOOL_ITERATIONS=5 上限，到顶用现有内容兜底；同轮 call_cache 缓存「工具名+参数」相同的调用避免重复执行。
 
 **Q6（细节）：工具返回值怎么处理的？**
-统一 _format_observation：MCP 常返回 [{'type':'text','text':...}] 结构，抽 text 拼接；dict/list JSON 美化；字符串若是 Python 字面量 literal_eval 递归处理。给 LLM 和前端干净文本而非字面量噪声。
+MCP 适配层先按 `structured_content > 文本块` 标准化结果，并把 `is_error` 转成工具异常；编排层再对 dict/list 做 JSON 美化、对文本直接透传，给 LLM 和前端一致的内容。
 
 **Q7（进阶）：流式输出时怎么拿到 tool_calls？**
 流式下工具调用信息分散在多个 chunk，要 `gathered = gathered + chunk` 把所有流式块合并成完整消息，再从合并结果读 tool_calls。

@@ -162,15 +162,32 @@ class SpanRecorder:
             raise
 
     async def _flush(self, events: list[_SpanEvent]) -> None:
-        """把一批事件落库。"""
+        """把一批事件按外键依赖顺序落库。"""
         async for session in get_session():
-            for ev in events:
-                if ev.kind == "trace_create" and ev.trace:
-                    session.add(_trace_to_orm(ev.trace))
-                elif ev.kind == "span_create" and ev.span:
-                    session.add(_span_to_orm(ev.span))
-                elif ev.kind == "trace_update" and ev.trace:
-                    await _update_trace(session, ev.trace)
+            trace_creates = [
+                ev for ev in events if ev.kind == "trace_create" and ev.trace
+            ]
+            span_creates = [
+                ev for ev in events if ev.kind == "span_create" and ev.span
+            ]
+            trace_updates = [
+                ev for ev in events if ev.kind == "trace_update" and ev.trace
+            ]
+
+            # AgentSpan.trace_id 有外键约束。显式 flush 主记录，不能依赖 ORM 在
+            # 同一批无 relationship 对象之间推断 INSERT 顺序，否则整批轨迹会丢失。
+            for ev in trace_creates:
+                session.add(_trace_to_orm(ev.trace))
+            if trace_creates:
+                await session.flush()
+
+            for ev in span_creates:
+                session.add(_span_to_orm(ev.span))
+            if span_creates:
+                await session.flush()
+
+            for ev in trace_updates:
+                await _update_trace(session, ev.trace)
             await session.commit()
             break
 

@@ -30,7 +30,7 @@ export default function LoopHealthCard({ data }: Props) {
   if (data.total === 0) {
     return (
       <Card
-        title={<span style={{ fontWeight: 600 }}>📊 Loop 健康度(近 {data.days} 天)</span>}
+        title={<span style={{ fontWeight: 600 }}>Loop 健康度(近 {data.days} 天)</span>}
         size="small"
         styles={{ body: { padding: 16 } }}
       >
@@ -50,7 +50,7 @@ export default function LoopHealthCard({ data }: Props) {
     <Card
       title={
         <Space wrap size={8}>
-          <span style={{ fontWeight: 600 }}>📊 Loop 健康度</span>
+        <span style={{ fontWeight: 600 }}>Loop 健康度</span>
           <Text type="secondary" style={{ fontSize: 12 }}>
             近 {data.days} 天
           </Text>

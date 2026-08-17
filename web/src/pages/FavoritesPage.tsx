@@ -51,9 +51,7 @@ export default function FavoritesPage() {
 
   const goTo = (f: FavoriteItem) => {
     const meta = TYPE_META[f.target_type]
-    if (f.target_type === 'message' && f.snapshot?.is_group) {
-      navigate('/group-chat')
-    } else if (f.target_type === 'message' && f.snapshot?.conversation_id) {
+    if (f.target_type === 'message' && f.snapshot?.conversation_id && !f.snapshot?.is_group) {
       navigate(
         `/chat?conversation=${f.snapshot.conversation_id}&message=${f.target_id}`,
       )

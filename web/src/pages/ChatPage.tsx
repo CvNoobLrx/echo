@@ -19,6 +19,7 @@ import {
   FileTextOutlined,
   GlobalOutlined,
   CloseOutlined,
+  CommentOutlined,
   PaperClipOutlined,
   PictureOutlined,
   PlusOutlined,
@@ -897,7 +898,7 @@ export default function ChatPage() {
         <div ref={scrollRef} className="chat-scroll" style={{ flex: 1, overflowY: 'auto', padding: '28px 0' }}>
           {messages.length === 0 ? (
             <div className="chat-empty">
-              <div className="chat-empty-orb">💬</div>
+              <div className="chat-empty-orb"><CommentOutlined /></div>
               <div className="chat-empty-title">开始一段对话</div>
               <div className="chat-empty-sub">
                 我会按需查知识库、调记忆或联网搜索
@@ -1139,18 +1140,11 @@ export default function ChatPage() {
                     autoSize={{ minRows: 2, maxRows: 8 }}
                     style={{ fontSize: 16, padding: 0, resize: 'none' }}
                   />
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginTop: 10,
-                    }}
-                  >
-                    <Space size="large" align="center">
+                  <div className="chat-input-toolbar">
+                    <div className="chat-input-tools">
                       <Upload accept="image/*" showUploadList={false} beforeUpload={onUploadImage as never}>
                         <Tooltip title="上传图片">
-                          <Button type="text" icon={<PictureOutlined style={{ fontSize: 19 }} />} />
+                          <Button type="text" shape="circle" icon={<PictureOutlined style={{ fontSize: 18 }} />} />
                         </Tooltip>
                       </Upload>
                       <Upload
@@ -1159,31 +1153,24 @@ export default function ChatPage() {
                         beforeUpload={onUploadFile as never}
                       >
                         <Tooltip title="上传文档（仅本次对话，不进知识库）">
-                          <Button type="text" icon={<PaperClipOutlined style={{ fontSize: 19 }} />} />
+                          <Button type="text" shape="circle" icon={<PaperClipOutlined style={{ fontSize: 18 }} />} />
                         </Tooltip>
                       </Upload>
                       <Tooltip title="联网搜索">
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 6,
-                            height: 32,
-                          }}
-                        >
+                        <span className="chat-web-toggle">
                           <GlobalOutlined
-                            style={{ fontSize: 18, color: webSearch ? '#155EEF' : '#98A2B3' }}
+                            style={{ fontSize: 17, color: webSearch ? '#155EEF' : '#98A2B3' }}
                           />
                           <Switch size="small" checked={webSearch} onChange={setWebSearch} />
                         </span>
                       </Tooltip>
                       <VoiceInputButton
+                        size={18}
                         onResult={(t) => setInput((prev) => (prev ? prev + ' ' + t : t))}
                       />
-                    </Space>
+                    </div>
                     <Button
                       type="primary"
-                      size="large"
                       icon={<SendOutlined />}
                       loading={sending}
                       onClick={() => onSend()}

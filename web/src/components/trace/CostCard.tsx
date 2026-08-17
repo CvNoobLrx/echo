@@ -77,13 +77,13 @@ export default function CostCard() {
     <Card
       title={
         <Space>
-          <span>💰 成本与执行</span>
+          <span>成本与执行</span>
           <Text type="secondary" style={{ fontSize: 12 }}>
             Agent 任务的真实 token 与成本透视
           </Text>
         </Space>
       }
-      style={{ marginBottom: 22, borderRadius: 16 }}
+      style={{ marginBottom: 22, borderRadius: 8 }}
       extra={
         <Space>
           <Segmented

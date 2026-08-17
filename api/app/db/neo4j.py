@@ -2,20 +2,20 @@
 from neo4j import AsyncDriver, AsyncGraphDatabase
 
 from app.config import settings
+from app.core.loop_local import LoopLocal
 
-_driver: AsyncDriver | None = None
+_drivers = LoopLocal[AsyncDriver]()
 
 
 def get_driver() -> AsyncDriver:
-    global _driver
-    if _driver is None:
-        _driver = AsyncGraphDatabase.driver(
+    return _drivers.get_or_create(
+        lambda: AsyncGraphDatabase.driver(
             settings.neo4j_uri,
             auth=(settings.neo4j_user, settings.neo4j_password),
             max_connection_pool_size=settings.neo4j_max_pool_size,
             connection_acquisition_timeout=settings.neo4j_connection_timeout,
         )
-    return _driver
+    )
 
 
 async def ping() -> bool:
@@ -27,7 +27,6 @@ async def ping() -> bool:
 
 
 async def close() -> None:
-    global _driver
-    if _driver is not None:
-        await _driver.close()
-        _driver = None
+    driver = _drivers.pop_current()
+    if driver is not None:
+        await driver.close()

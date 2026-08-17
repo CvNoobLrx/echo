@@ -2,7 +2,7 @@
  * 研究报告质量评分卡 —— V0.0.5 ② Verifier Loop 落地的前端入口。
  *
  * 显示:
- * - verified 徽章(✅ passed / ⚠️ exceeded / ❌ failed)
+ * - verified 状态徽章(passed / exceeded / failed)
  * - 加权总分 + 通过阈值 + 迭代次数
  * - 6 维评分雷达图(对比维度硬门槛)
  * - 各轮 feedback 可折叠展开(summary / issues / missing_coverage / wrong_citations / weak_chapters)
@@ -144,12 +144,12 @@ function IterationDetail({ it }: { it: LoopIterationDetail }) {
       )}
       {it.repair_action?.patch_queries && it.repair_action.patch_queries.length > 0 && (
         <Text style={{ fontSize: 12, color: '#667085' }}>
-          📍 补搜:{it.repair_action.patch_queries.join(' / ')}
+          补搜:{it.repair_action.patch_queries.join(' / ')}
         </Text>
       )}
       {it.repair_action?.rewrite_chapters && it.repair_action.rewrite_chapters.length > 0 && (
         <Text style={{ fontSize: 12, color: '#667085' }}>
-          ✏️ 重写章节:{it.repair_action.rewrite_chapters.join('、')}
+          重写章节:{it.repair_action.rewrite_chapters.join('、')}
         </Text>
       )}
     </Space>
@@ -163,7 +163,7 @@ export default function QualityCard({ detail }: QualityCardProps) {
     <Card
       title={
         <Space wrap size={8}>
-          <span style={{ fontWeight: 600 }}>📊 质量复核</span>
+          <span style={{ fontWeight: 600 }}>质量复核</span>
           <StatusBadge status={detail.status} />
           {typeof finalTotal === 'number' && (
             <Tag color={finalTotal >= passRate ? 'success' : 'warning'}>

@@ -16,13 +16,12 @@ import {
   RobotOutlined,
   SettingOutlined,
   StarOutlined,
-  TeamOutlined,
   ThunderboltOutlined,
   ToolOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { AuthenticatedImage } from '@/components/AuthenticatedImage'
 import { useAuthStore } from '@/stores/authStore'
 import { useChatHeaderStore } from '@/stores/chatHeaderStore'
@@ -37,7 +36,6 @@ const menuItems = [
     children: [
       { key: '/', icon: <AppstoreOutlined />, label: '仪表盘' },
       { key: '/chat', icon: <CommentOutlined />, label: '对话' },
-      { key: '/group-chat', icon: <TeamOutlined />, label: '群聊' },
       { key: '/research', icon: <FileSearchOutlined />, label: '深度研究' },
       { key: '/traces', icon: <HistoryOutlined />, label: '执行轨迹' },
     ],
@@ -106,6 +104,9 @@ export default function MainLayout() {
       .flatMap((group) => group.children)
       .find((item) => location.pathname === item.key || location.pathname.startsWith(`${item.key}/`))
       ?.key ?? '/chat'
+  const currentPage = menuItems
+    .flatMap((group) => group.children)
+    .find((item) => item.key === selectedKey)
 
   const profileMenu = {
     items: [
@@ -124,15 +125,13 @@ export default function MainLayout() {
 
   const navigation = (
     <>
-      <div className="app-brand" onClick={() => navigate('/')}>
-        <img src={logo} alt="Echo" className="app-brand-logo" />
-        {!collapsed && (
-          <span className="app-brand-wordmark">
-            <strong>回声</strong>
-            <small>Echo</small>
-          </span>
-        )}
-      </div>
+      <Link to="/" className="app-brand" aria-label="返回仪表盘">
+        <img src={logo} alt="" className="app-brand-logo" />
+        <span className="app-brand-wordmark" aria-hidden={collapsed}>
+          <strong>回声</strong>
+          <small>Echo</small>
+        </span>
+      </Link>
       <Menu
         mode="inline"
         items={menuItems}
@@ -145,6 +144,7 @@ export default function MainLayout() {
 
   return (
     <Layout className="app-shell">
+      <a href="#main-content" className="app-skip-link">跳到主要内容</a>
       {!isMobile && (
         <Sider collapsible collapsed={collapsed} trigger={null} width={224} className="app-sider">
           {navigation}
@@ -164,22 +164,27 @@ export default function MainLayout() {
         <Header className="app-header">
           <Button
             type="text"
+            className="app-nav-toggle"
             icon={isMobile || collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => (isMobile ? setDrawerOpen(true) : setCollapsed((value) => !value))}
             aria-label="切换导航"
           />
 
-          {showChatHeader ? (
-            <Space>
-              <Button type="text" icon={<HistoryOutlined />} onClick={chatOpenHistory} />
-              <Button type="text" icon={<PlusOutlined />} onClick={chatNewChat} />
-            </Space>
-          ) : (
-            <span className="app-header-title">回声</span>
+          {!showChatHeader && (
+            <div className="app-page-context">
+              <span className="app-page-title">{currentPage?.label || '工作台'}</span>
+            </div>
           )}
 
+          {showChatHeader ? (
+            <Space>
+              <Button type="text" icon={<HistoryOutlined />} onClick={chatOpenHistory} aria-label="打开历史对话" />
+              <Button type="text" icon={<PlusOutlined />} onClick={chatNewChat} aria-label="新建对话" />
+            </Space>
+          ) : null}
+
           <Dropdown menu={profileMenu} placement="bottomRight">
-            <Button type="text" className="app-user-button">
+            <Button type="text" className="app-user-button" aria-label="打开账号菜单">
               <Space>
                 {user?.avatar ? (
                   <AuthenticatedImage src={user.avatar} alt="头像" className="app-user-avatar" />
@@ -191,7 +196,7 @@ export default function MainLayout() {
             </Button>
           </Dropdown>
         </Header>
-        <Content className="app-content">
+        <Content id="main-content" tabIndex={-1} className="app-content">
           <Outlet />
         </Content>
       </Layout>

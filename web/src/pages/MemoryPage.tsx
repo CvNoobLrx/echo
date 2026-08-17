@@ -21,6 +21,7 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   PlusOutlined,
+  ReloadOutlined,
   SearchOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons'
@@ -28,6 +29,7 @@ import {
   memoryApi,
   type Insight,
   type MemoryHit,
+  type MemoryItem,
   type MemoryProfile,
   type TimelineEvent,
 } from '@/api/memories'
@@ -135,14 +137,22 @@ function ProfilePanel() {
   const [loading, setLoading] = useState(false)
   const [text, setText] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [recentMemories, setRecentMemories] = useState<MemoryItem[]>([])
+  const [deletingId, setDeletingId] = useState<string | null>(null)
   const pollRef = useRef<number | null>(null)
   const pollCount = useRef(0)
 
   const load = async () => {
     setLoading(true)
     try {
-      const { data } = await memoryApi.profile()
-      setProfile(data)
+      const [profileResult, memoryResult] = await Promise.all([
+        memoryApi.profile(),
+        memoryApi.list(1, 100),
+      ])
+      setProfile(profileResult.data)
+      setRecentMemories(
+        memoryResult.data.items.filter((item) => item.source === 'manual').slice(0, 5),
+      )
     } catch (e) {
       message.error((e as Error).message)
     } finally {
@@ -157,6 +167,19 @@ function ProfilePanel() {
     }
   }, [])
 
+  const startPolling = () => {
+    pollCount.current = 0
+    if (pollRef.current) window.clearInterval(pollRef.current)
+    pollRef.current = window.setInterval(() => {
+      pollCount.current += 1
+      load()
+      if (pollCount.current >= 6 && pollRef.current) {
+        window.clearInterval(pollRef.current)
+        pollRef.current = null
+      }
+    }, 4000)
+  }
+
   const onRemember = async () => {
     const value = text.trim()
     if (!value) {
@@ -168,21 +191,22 @@ function ProfilePanel() {
       await memoryApi.remember(value)
       message.success('已提交，正在萃取记忆，稍后自动刷新')
       setText('')
-      // 萃取是异步的，轮询几次刷新画像
-      pollCount.current = 0
-      if (pollRef.current) window.clearInterval(pollRef.current)
-      pollRef.current = window.setInterval(() => {
-        pollCount.current += 1
-        load()
-        if (pollCount.current >= 6 && pollRef.current) {
-          window.clearInterval(pollRef.current)
-          pollRef.current = null
-        }
-      }, 4000)
+      startPolling()
     } catch (e) {
       message.error((e as Error).message)
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const onRetry = async (id: string) => {
+    try {
+      await memoryApi.retry(id)
+      message.success('已重新提交，正在萃取记忆')
+      await load()
+      startPolling()
+    } catch (e) {
+      message.error((e as Error).message)
     }
   }
 
@@ -193,6 +217,19 @@ function ProfilePanel() {
       load()
     } catch (e) {
       message.error((e as Error).message)
+    }
+  }
+
+  const onDeleteMemory = async (id: string) => {
+    setDeletingId(id)
+    try {
+      await memoryApi.remove(id)
+      message.success('写入记录已删除')
+      await load()
+    } catch (e) {
+      message.error((e as Error).message)
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -221,6 +258,63 @@ function ProfilePanel() {
           记住
         </Button>
       </Space.Compact>
+
+      {recentMemories.length > 0 && (
+        <div className="memory-write-status">
+          <Text strong>最近写入</Text>
+          {recentMemories.map((item) => {
+            const status = {
+              pending: { color: 'processing', label: '等待萃取' },
+              extracting: { color: 'processing', label: '正在萃取' },
+              done: { color: 'success', label: '已完成' },
+              failed: { color: 'error', label: '萃取失败' },
+            }[item.status]
+            return (
+              <div key={item.id} className="memory-write-status__item">
+                <Popconfirm
+                  title="删除这条写入记录？"
+                  description="删除后无法恢复"
+                  okText="删除"
+                  cancelText="取消"
+                  okButtonProps={{ danger: true }}
+                  onConfirm={() => onDeleteMemory(item.id)}
+                >
+                  <Button
+                    type="text"
+                    danger
+                    size="small"
+                    className="memory-write-status__delete"
+                    icon={<DeleteOutlined />}
+                    loading={deletingId === item.id}
+                    aria-label="删除写入记录"
+                  />
+                </Popconfirm>
+                <div className="memory-write-status__content">
+                  <Text ellipsis={{ tooltip: item.raw_text }}>{item.raw_text}</Text>
+                  {item.status === 'failed' && item.error_msg && (
+                    <Text type="danger" className="memory-write-status__error">
+                      {item.error_msg}
+                    </Text>
+                  )}
+                </div>
+                <Space size={8} className="memory-write-status__actions">
+                  <Tag color={status.color}>{status.label}</Tag>
+                  {item.status === 'failed' && (
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<ReloadOutlined />}
+                      onClick={() => onRetry(item.id)}
+                    >
+                      重试
+                    </Button>
+                  )}
+                </Space>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       {loading && !profile ? (
         <div style={{ textAlign: 'center', padding: 40 }}>
@@ -632,9 +726,9 @@ function TimelinePanel() {
           alignItems: 'center',
           gap: 10,
           padding: '10px 14px',
-          background: 'linear-gradient(135deg, #f0f7ff 0%, #ffffff 70%)',
-          border: '1px solid #dbe6ff',
-          borderRadius: 12,
+          background: '#f8fafc',
+          border: '1px solid #e4e7ec',
+          borderRadius: 8,
           marginBottom: 18,
         }}
       >

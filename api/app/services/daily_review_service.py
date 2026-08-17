@@ -10,7 +10,7 @@ from app.core.logging import get_logger
 from app.models.conversation_model import ROLE_USER, Conversation, Message
 from app.models.daily_review_model import DailyReview
 from app.models.document_model import Document
-from app.models.memory_model import Memory
+from app.models.memory_model import MEMORY_STATUS_DONE, Memory
 
 logger = get_logger(__name__)
 
@@ -53,6 +53,7 @@ class DailyReviewService:
         memory_rows = await self.session.execute(
             select(Memory.raw_text).where(
                 Memory.user_id == user_id,
+                Memory.status == MEMORY_STATUS_DONE,
                 Memory.created_at >= start,
                 Memory.created_at <= end,
             )

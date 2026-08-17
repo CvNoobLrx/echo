@@ -1,12 +1,18 @@
 """应用配置：全部从环境变量 / .env 读取，不硬编码。"""
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_API_DIR = Path(__file__).resolve().parents[1]
+_PROJECT_DIR = _API_DIR.parent
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+        env_file=(_PROJECT_DIR / ".env", _API_DIR / ".env"),
+        env_file_encoding="utf-8",
+        extra="ignore",
     )
 
     # 应用
@@ -22,7 +28,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
-    fernet_key: str = "change-me-fernet-key"
+    fernet_key: str = ""
 
     # PostgreSQL
     postgres_host: str = "localhost"

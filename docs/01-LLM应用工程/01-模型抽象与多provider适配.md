@@ -1,7 +1,7 @@
 # 模型抽象与多 provider 适配 — 设计与面试
 
 > 用户自配多家大模型（OpenAI/智谱/通义/豆包/DeepSeek），按用途（对话/多模态/向量/重排/联网/语音）分类管理，全项目统一调用。
-> 对应能力域：**LLM 应用工程**。代码：`api/app/core/llm/`（client / provider / resolver / chat_model）+ `models/model_config_model.py` + `services/model_config_service.py`。
+> 对应能力域：**LLM 应用工程**。代码：`api/app/core/llm/`（client / native_chat / types / provider / resolver / chat_model）+ `models/model_config_model.py` + `services/model_config_service.py`。
 
 ---
 
@@ -27,7 +27,7 @@ flowchart LR
   subgraph 调用侧
     SVC[业务 service] -->|按 user+type 取默认| R[resolver]
     R -->|解密 Key| C1[LLMClient<br/>裸 httpx]
-    R -->|解密 Key| C2[build_chat_model<br/>ChatOpenAI/LangChain]
+    R -->|解密 Key| C2[build_chat_model<br/>NativeChatModel]
   end
   DB --> R
   C1 -->|OpenAI 兼容| API[(各 provider<br/>base_url 差异)]
@@ -55,14 +55,16 @@ flowchart LR
 关键认知：**国内外主流大模型几乎都提供 OpenAI 兼容接口**——同样的 `/chat/completions`、`/embeddings`、`/rerank` 路径和请求体，差异只在 `base_url` 和 `model_name`。所以适配多 provider **不需要为每家写一套 SDK**，只要把 base_url 配对（`provider.py` 的 `PROVIDER_DEFAULT_BASE_URL` 给了五家默认地址，用户可覆盖），用同一套 httpx 调用即可。
 > 面试一句话：五家 provider 全走 OpenAI 兼容协议，适配差异收敛到「base_url + model_name + api_key」三个配置项，调用代码只有一套。
 
-### 3.3 两套客户端，各管一摊（`client.py` + `chat_model.py`）
+### 3.3 两套调用接口，共用自研 OpenAI 兼容底座
 
 项目里**刻意保留两套**模型客户端，对应两类场景：
 
-1. **`LLMClient`（裸 httpx）**——`core/llm/client.py`。封装 `embed / chat / vision / rerank` 四个方法，直接 POST OpenAI 兼容端点。用于**不需要 LangChain 的轻量场景**：向量化、记忆萃取调 LLM、图片多模态识别、重排。特点：依赖少、可控、好加重试。
-2. **`build_chat_model` → `ChatOpenAI`（LangChain）**——`core/llm/chat_model.py`。返回 LangChain 的 `ChatOpenAI`，用于 Agent 问答（`bind_tools` 做 function calling）。因为 Agent 工具循环、流式和 function calling 已有成熟封装，自己重写不划算。
+1. **`LLMClient`**——`core/llm/client.py`。封装 `embed / chat / vision / rerank` 四个轻量方法，直接 POST OpenAI 兼容端点，用于向量化、记忆萃取、图片识别和重排。
+2. **`NativeChatModel`**——`core/llm/native_chat.py`。面向 Agent 提供 `complete / stream / bind_tools`，负责原生消息序列化、JSON Schema 工具绑定和流式 Function Calling；`chat_model.py` 只负责按用户配置构建实例。
 
-> 取舍：为什么不用一套？轻量调用引 LangChain 是杀鸡用牛刀；Agent 编排自己撸 function calling 循环又重复造轮子。按场景分两套，各取所长。也**没有**做「动态代理适配异构协议」那种重封装——因为五家都是 OpenAI 兼容，用不上。
+两套接口共享现有 httpx 连接池和 OpenAI 兼容协议，差别只在调用表面：轻量任务不需要消息/工具抽象，Agent 则需要完整的 assistant tool calls、tool result 和流式聚合。项目不再依赖 provider SDK 或 LangChain。
+
+`NativeChatModel.stream()` 会按 tool-call index 聚合名称与 JSON 参数分片，支持多个并行 tool calls、usage-only 尾帧、空 content 和非法 JSON 参数。提供方拒绝 `stream_options.include_usage` 时只针对该参数重试一次；已经输出任何内容后发生连接错误不重放，避免重复文本和工具调用。
 
 ### 3.4 LLMClient 的健壮性：有限重试 + 指数退避（`client.py`）
 
@@ -91,7 +93,7 @@ flowchart LR
 | 决策点 | 选了什么 | 备选 | 为什么 |
 |--------|---------|------|--------|
 | 多 provider 适配 | 统一 OpenAI 兼容 + base_url 配置 | 每家写一套 SDK | 五家都兼容 OpenAI 协议，一套调用搞定，差异收敛到配置 |
-| 客户端封装 | 两套（LLMClient 裸 httpx / ChatOpenAI） | 全用 LangChain / 全自研 | 轻量调用不引重框架，Agent 编排复用 LangChain，各取所长 |
+| 客户端封装 | LLMClient + NativeChatModel | provider SDK / 通用 Agent 框架 | 都走自研 OpenAI 兼容实现，按轻量调用与 Agent 消息工具流分工 |
 | 是否做异构协议动态代理 | 不做 | 类 RedBearLLM 动态代理 | 五家都 OpenAI 兼容，无异构需求，避免过度设计 |
 | Key 存储 | Fernet 对称加密 + 返回掩码 | 明文 / base64 伪加密 | 真加密，泄库也拿不到 Key；详见加密篇 |
 | 模型用途 | 按 type 分 6 类各配默认 | 一个模型打天下 | 向量/重排/多模态/联网/语音模型本就不同，分类管理 |
@@ -112,8 +114,8 @@ flowchart LR
 **Q1（基础）：怎么接入多家大模型的？**
 国内外主流模型大多提供 OpenAI 兼容接口，路径和请求体一致，差异只在 base_url 和 model_name。所以我把这两个 + api_key 做成可配置项，用同一套 httpx 调用适配五家，不为每家写 SDK。
 
-**Q2（设计）：为什么有 LLMClient 和 ChatOpenAI 两套客户端？**
-轻量场景（向量化、萃取调 LLM、多模态、重排）用裸 httpx 的 LLMClient，依赖少可控；需要工具编排的 Agent 问答用 LangChain 的 ChatOpenAI，复用它的 bind_tools/流式/function calling。按场景分工，避免杀鸡用牛刀或重复造轮子。
+**Q2（设计）：为什么有 LLMClient 和 NativeChatModel 两套接口？**
+两者底层都走 OpenAI 兼容 HTTP 和共享连接池。LLMClient 面向 embedding、rerank、vision 等单次调用；NativeChatModel 面向 Agent，额外处理消息角色、工具 JSON Schema、tool calls 分片聚合和 usage。按调用语义分工，避免让轻量任务承担 Agent 协议复杂度。
 
 **Q3（原理）：capability 字段干嘛的？**
 标模型能力，如 function_call、vision。Agent 编排时 `supports_function_call` 判断走原生 function calling（强模型）还是 ReAct prompt 模拟（弱模型）；多模态判断能不能看图。

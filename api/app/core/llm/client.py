@@ -12,6 +12,7 @@ import os
 import httpx
 
 from app.config import settings
+from app.core.loop_local import LoopLocal
 from app.core.agent.tracing import get_tracer
 from app.core.agent.tracing.otel_attrs import (
     GEN_AI_EMBEDDING_DIMENSIONS,
@@ -36,26 +37,25 @@ _RETRY_STATUS = {429, 500, 502, 503, 504}
 _EMBED_BATCH_SIZE = max(1, int(os.getenv("EMBED_BATCH_SIZE", "10")))
 _EMBED_CONCURRENCY = max(1, int(os.getenv("EMBED_CONCURRENCY", "8")))
 
-# 进程级共享 HTTP 客户端：复用连接池，避免每次请求重建 TCP/TLS。
-# 评测上万次嵌入调用时，握手开销累积可观，复用后显著提速。
-_shared_client: httpx.AsyncClient | None = None
+# 同一事件循环内共享连接池。Celery threads 中每个 asyncio.run 都有独立事件循环，
+# 不能跨循环复用 AsyncClient，否则第二个任务会命中已关闭的 loop。
+_clients = LoopLocal[httpx.AsyncClient]()
 
 
 def _get_shared_client() -> httpx.AsyncClient:
-    global _shared_client
-    if _shared_client is None or _shared_client.is_closed:
-        _shared_client = httpx.AsyncClient(
+    client = _clients.get_or_create(
+        lambda: httpx.AsyncClient(
             limits=httpx.Limits(max_connections=100, max_keepalive_connections=20),
         )
-    return _shared_client
+    )
+    return client
 
 
 async def close_llm_client() -> None:
-    """关闭共享 HTTP 客户端（应用/评测退出时调用）。"""
-    global _shared_client
-    if _shared_client is not None and not _shared_client.is_closed:
-        await _shared_client.aclose()
-    _shared_client = None
+    """关闭当前事件循环的 HTTP 客户端。"""
+    client = _clients.pop_current()
+    if client is not None and not client.is_closed:
+        await client.aclose()
 
 
 async def _post_with_retry(

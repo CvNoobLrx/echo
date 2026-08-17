@@ -3,6 +3,7 @@ otherfiles/
 
 # ===== 项目文档（不提交，仅本地参考） =====
 files/
+docs/
 
 # ===== 编辑器 / IDE =====
 .vscode/
@@ -65,3 +66,6 @@ api/eval/cache/
 # 评测脚本与 fixtures 进 git，密钥文件不进、模板要进
 !.env.eval.example
 tests/
+!api/tests/
+api/tests/*
+!api/tests/test_native_agent_runtime.py

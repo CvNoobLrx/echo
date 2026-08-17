@@ -17,7 +17,6 @@ const { Text } = Typography
 
 
 type Phase = {
-  icon: string
   title: string
   duration: string  // 人话耗时
   desc: string     // 一句话描述
@@ -86,7 +85,6 @@ function buildChatNarrative(trace: TraceDetail): { phases: Phase[]; insights: In
     if (preEmbeds.length > 0) {
       const dur = preEmbeds.reduce((s, x) => s + durMs(x), 0)
       phases.push({
-        icon: '🧠',
         title: '主动召回',
         duration: fmtMs(dur),
         desc: '把你的问题向量化,去记忆图谱查相关的历史信息,作为背景拼进 system prompt',
@@ -103,7 +101,6 @@ function buildChatNarrative(trace: TraceDetail): { phases: Phase[]; insights: In
     const roundNo = chatRoundNo(chat)
     // chat 自身阶段
     phases.push({
-      icon: isLast && chatSpans.length > 1 ? '✍️' : '🤔',
       title: isLast && chatSpans.length > 1
         ? '最终回答生成'
         : `决策轮 ${roundNo ?? i + 1}`,
@@ -134,7 +131,6 @@ function buildChatNarrative(trace: TraceDetail): { phases: Phase[]; insights: In
         desc = `并行调用了 ${tools.length} 个工具:${toolNames.join(' / ')}${internalNote}`
       }
       phases.push({
-        icon: '🔧',
         title: `执行工具`,
         duration: fmtMs(dur),
         desc,
@@ -169,7 +165,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
 
   if (planners.length > 0) {
     phases.push({
-      icon: '🗺️',
       title: '规划提纲',
       duration: fmtMs(planners.reduce((s, x) => s + durMs(x), 0)),
       desc: '把研究主题拆成多角度子问题,生成章节大纲',
@@ -178,7 +173,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   if (retrievers.length > 0) {
     const dur = retrievers.reduce((s, x) => s + durMs(x), 0)
     phases.push({
-      icon: '🔎',
       title: '检索资料',
       duration: fmtMs(dur),
       desc: `从联网搜索、知识库、MCP 工具三路并行采集相关资料`,
@@ -187,7 +181,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   }
   if (distillers.length > 0) {
     phases.push({
-      icon: '⚗️',
       title: '逐源提炼',
       duration: fmtMs(distillers.reduce((s, x) => s + durMs(x), 0)),
       desc: '把每个来源原始资料提炼成带来源编号的关键要点,引用对齐前置',
@@ -195,7 +188,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   }
   if (reflectors.length > 0) {
     phases.push({
-      icon: '💭',
       title: '反思补搜',
       duration: fmtMs(reflectors.reduce((s, x) => s + durMs(x), 0)),
       desc: '检查信息缺口,生成补充检索的子查询',
@@ -204,7 +196,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   // 大纲整理(planner 第二次,无法精确识别,跳过)
   if (writers.length > 0) {
     phases.push({
-      icon: '✍️',
       title: '分节写作',
       duration: fmtMs(writers.reduce((s, x) => s + durMs(x), 0)),
       desc: '逐章节流式撰写,吃 curator 分配的要点 + 前文摘要避免重复',
@@ -213,7 +204,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   }
   if (summarizers.length > 0) {
     phases.push({
-      icon: '📋',
       title: '汇总摘要',
       duration: fmtMs(summarizers.reduce((s, x) => s + durMs(x), 0)),
       desc: '从全文提炼 TL;DR + 核心要点',
@@ -221,7 +211,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   }
   if (verifiers.length > 0) {
     phases.push({
-      icon: '🔍',
       title: '质量复核',
       duration: fmtMs(verifiers.reduce((s, x) => s + durMs(x), 0)),
       desc: '独立 LLM-as-judge 按 6 维评分(覆盖度/引用/深度/时效/相关性/可读)',
@@ -231,7 +220,6 @@ function buildResearchNarrative(trace: TraceDetail): { phases: Phase[]; insights
   if (repairs.length > 0) {
     const kinds = [...new Set(repairs.map((s) => s.name.includes('rewrite') ? '重写' : '补搜'))]
     phases.push({
-      icon: '🛠️',
       title: '不合格回炉',
       duration: fmtMs(repairs.reduce((s, x) => s + durMs(x), 0)),
       desc: `按 verifier 反馈选择策略修复:${kinds.join(' + ')}`,
@@ -332,9 +320,9 @@ export default function TraceNarrative({ trace }: { trace: TraceDetail }) {
     <div
       style={{
         padding: '14px 16px',
-        background: 'linear-gradient(135deg, #f4f8ff 0%, #ffffff 70%)',
-        border: '1px solid #dbe6ff',
-        borderRadius: 12,
+        background: '#f8fafc',
+        border: '1px solid #e4e7ec',
+        borderRadius: 8,
       }}
     >
       <div
@@ -348,7 +336,7 @@ export default function TraceNarrative({ trace }: { trace: TraceDetail }) {
         onClick={() => setOpen(!open)}
       >
         <Text strong style={{ fontSize: 14, color: '#171719' }}>
-          📖 流程解读 · 这次任务做了什么
+          流程解读 · 这次任务做了什么
         </Text>
         <Text type="secondary" style={{ fontSize: 12 }}>
           {open ? '点击收起 ▲' : '点击展开 ▼'}
@@ -428,7 +416,7 @@ function PhaseRow({ index, phase }: { index: number; phase: Phase }) {
           }}
         >
           <Text strong style={{ fontSize: 13.5, color: '#171719' }}>
-            {phase.icon} {phase.title}
+            {phase.title}
           </Text>
           <Text type="secondary" style={{ fontSize: 11.5, color: '#155EEF', fontWeight: 600 }}>
             {phase.duration}
@@ -439,7 +427,7 @@ function PhaseRow({ index, phase }: { index: number; phase: Phase }) {
                 padding: '1px 7px',
                 fontSize: 11,
                 fontWeight: 600,
-                borderRadius: 999,
+                borderRadius: 4,
                 background: '#EEF4FF',
                 color: '#155EEF',
               }}
@@ -459,13 +447,13 @@ function PhaseRow({ index, phase }: { index: number; phase: Phase }) {
 
 function InsightRow({ insight }: { insight: Insight }) {
   const meta = {
-    good: { icon: '💡', color: '#369F21' },
-    warn: { icon: '⚠️', color: '#FAAD14' },
-    info: { icon: '📊', color: '#667085' },
+    good: { label: '结论', color: '#369F21' },
+    warn: { label: '注意', color: '#B54708' },
+    info: { label: '信息', color: '#667085' },
   }[insight.kind]
   return (
     <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 12.5 }}>
-      <span>{meta.icon}</span>
+      <span style={{ minWidth: 28, color: meta.color, fontWeight: 600 }}>{meta.label}</span>
       <Text style={{ flex: 1, color: meta.color, lineHeight: 1.6 }}>{insight.text}</Text>
     </div>
   )

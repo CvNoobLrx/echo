@@ -1,4 +1,4 @@
-"""角色卡组（场景）路由：CRUD + 内置模板 + 一键开群聊。"""
+"""角色卡组（场景）路由：CRUD + 内置模板。"""
 import uuid
 
 from fastapi import APIRouter, Depends
@@ -77,15 +77,4 @@ async def delete_group(
     return success(message="已删除")
 
 
-@router.post("/{group_id}/chat")
-async def open_group_chat(
-    group_id: uuid.UUID,
-    user: User = Depends(get_current_user),
-    session: AsyncSession = Depends(get_session),
-):
-    """用该卡组开一个群聊，返回群会话供前端跳转。"""
-    from app.services.conversation_service import ConversationService
-
-    service = PersonaGroupService(session)
-    conv = await service.open_chat(user.id, group_id)
-    return success(ConversationService(session).to_out_dict(conv), "已开启群聊")
+__all__ = ["router"]

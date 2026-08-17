@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { BulbOutlined, CommentOutlined } from '@ant-design/icons'
 
 interface SelInfo {
   text: string
@@ -92,11 +93,11 @@ export default function SelectionPopover({ onAsk }: Props) {
       onMouseDown={(e) => e.preventDefault()} // 防止点击时丢失选区
     >
       <button className="sel-popover-btn" onClick={() => fire('ask')}>
-        💬 追问
+        <CommentOutlined /> 追问
       </button>
       <span className="sel-popover-divider" />
       <button className="sel-popover-btn" onClick={() => fire('explain')}>
-        💡 解释
+        <BulbOutlined /> 解释
       </button>
     </div>
   )

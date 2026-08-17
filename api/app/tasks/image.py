@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 import app.models  # noqa: F401
 from app.celery_app import celery_app
+from app.core.llm.client import close_llm_client
 from app.core.llm.resolver import get_client_for_type, get_optional_client_for_type
 from app.core.logging import get_logger
 from app.core.rag.classifier import classify_content
@@ -38,6 +39,7 @@ async def _run(image_id: str) -> None:
             await _process(session, image_id, img_uuid)
     finally:
         await engine.dispose()
+        await close_llm_client()
         await elastic.close()
 
 

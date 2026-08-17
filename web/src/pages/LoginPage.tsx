@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Button, Checkbox, Form, Input, Tabs, message } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -12,6 +12,21 @@ interface FormValues {
 
 const LS_REMEMBER = 'echo_remember'
 
+function AnimatedEchoLogo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="12" fill="#101828" />
+      <g className="applogin-signal-arcs">
+        <path d="M17 32c0-8.3 6.7-15 15-15" fill="none" stroke="#62D3C5" strokeWidth="5" strokeLinecap="round" />
+        <path d="M24 32a8 8 0 0 1 8-8" fill="none" stroke="#F9FAFB" strokeWidth="5" strokeLinecap="round" />
+        <path d="M32 47c8.3 0 15-6.7 15-15" fill="none" stroke="#62D3C5" strokeWidth="5" strokeLinecap="round" />
+        <path d="M32 40a8 8 0 0 0 8-8" fill="none" stroke="#F9FAFB" strokeWidth="5" strokeLinecap="round" />
+      </g>
+      <circle cx="32" cy="32" r="4" fill="#FFB84D" />
+    </svg>
+  )
+}
+
 export default function LoginPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -22,6 +37,59 @@ export default function LoginPage() {
   const [loginForm] = Form.useForm()
   const [rememberAccount, setRememberAccount] = useState(true)
   const [rememberPassword, setRememberPassword] = useState(false)
+  const [introDone, setIntroDone] = useState(false)
+  const logoTargetRef = useRef<HTMLImageElement>(null)
+  const introLogoRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const target = logoTargetRef.current
+    const intro = introLogoRef.current
+    if (!target || !intro) return
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIntroDone(true)
+      return
+    }
+
+    let cancelled = false
+    let landingAnimation: Animation | undefined
+    const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+
+    const startIntro = async () => {
+      await document.fonts?.ready
+      await nextFrame()
+      await nextFrame()
+      if (cancelled) return
+
+      const targetRect = target.getBoundingClientRect()
+      const x = targetRect.left + targetRect.width / 2 - window.innerWidth / 2
+      const y = targetRect.top + targetRect.height / 2 - window.innerHeight / 2
+      const scale = targetRect.width / intro.getBoundingClientRect().width
+      const landedTransform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`
+
+      landingAnimation = intro.animate(
+        [
+          { transform: 'translate(-50%, -50%) scale(1)', offset: 0 },
+          {
+            transform: 'translate(-50%, -50%) scale(1)',
+            offset: 0.58,
+            easing: 'cubic-bezier(0.2, 0, 0, 1)',
+          },
+          { transform: landedTransform, offset: 1 },
+        ],
+        { duration: 2400, fill: 'forwards', easing: 'linear' },
+      )
+      landingAnimation.onfinish = () => {
+        if (!cancelled) setIntroDone(true)
+      }
+    }
+
+    void startIntro()
+    return () => {
+      cancelled = true
+      landingAnimation?.cancel()
+    }
+  }, [])
 
   useEffect(() => {
     try {
@@ -91,6 +159,7 @@ export default function LoginPage() {
       size="large"
     >
       <Form.Item
+        label="邮箱"
         name="email"
         validateTrigger="onBlur"
         rules={[
@@ -98,9 +167,18 @@ export default function LoginPage() {
           { type: 'email', message: '邮箱格式不正确' },
         ]}
       >
-        <Input prefix={<MailOutlined />} placeholder="邮箱" autoComplete="email" allowClear />
+        <Input
+          prefix={<MailOutlined />}
+          type="email"
+          name="email"
+          inputMode="email"
+          placeholder="name@example.com"
+          autoComplete="email"
+          allowClear
+        />
       </Form.Item>
       <Form.Item
+        label="密码"
         name="password"
         rules={[
           { required: true, message: '请输入密码' },
@@ -109,12 +187,14 @@ export default function LoginPage() {
       >
         <Input.Password
           prefix={<LockOutlined />}
-          placeholder="密码（至少 6 位）"
+          name="password"
+          placeholder="至少 6 位"
           autoComplete={isLogin ? 'current-password' : 'new-password'}
         />
       </Form.Item>
       {!isLogin && (
         <Form.Item
+          label="确认密码"
           name="confirm"
           dependencies={['password']}
           rules={[
@@ -131,7 +211,8 @@ export default function LoginPage() {
         >
           <Input.Password
             prefix={<LockOutlined />}
-            placeholder="确认密码"
+            name="confirmPassword"
+            placeholder="再次输入密码"
             autoComplete="new-password"
           />
         </Form.Item>
@@ -172,28 +253,40 @@ export default function LoginPage() {
   )
 
   return (
-    <div className="applogin">
+    <div className={`applogin ${introDone ? 'applogin--ready' : 'applogin--intro'}`}>
       <div className="applogin-bg" />
-      <div className="applogin-box">
-        <img src={logo} alt="Echo" className="applogin-logo" />
-        <h1 className="applogin-title">回声 Echo</h1>
-        <p className="applogin-sub">
-          {tab === 'login' ? '登录以继续你的知识之旅' : '创建账号，开启你的 AI 知识库'}
-        </p>
-        <Tabs
-          activeKey={tab}
-          onChange={setTab}
-          centered
-          items={[
-            { key: 'login', label: '登录', children: renderForm(onLogin, '登 录', true) },
-            {
-              key: 'register',
-              label: '注册',
-              children: renderForm(onRegister, '注 册', false),
-            },
-          ]}
-        />
-        <div className="applogin-foot">个人 AI 知识库与记忆助手</div>
+      {!introDone && (
+        <div
+          ref={introLogoRef}
+          className="applogin-logo-intro"
+        >
+          <AnimatedEchoLogo className="applogin-logo-intro-svg" />
+        </div>
+      )}
+      <div className={`applogin-box ${introDone ? 'applogin-box--ready' : 'applogin-box--intro'}`}>
+        <img ref={logoTargetRef} src={logo} alt="Echo" className="applogin-logo" />
+        <div className="applogin-enter applogin-enter--heading">
+          <h1 className="applogin-title">回声 Echo</h1>
+          <p className="applogin-sub">
+            {tab === 'login' ? '登录以继续你的知识之旅' : '创建账号，开启你的 AI 知识库'}
+          </p>
+        </div>
+        <div className="applogin-enter applogin-enter--form">
+          <Tabs
+            activeKey={tab}
+            onChange={setTab}
+            centered
+            items={[
+              { key: 'login', label: '登录', children: renderForm(onLogin, '登录', true) },
+              {
+                key: 'register',
+                label: '注册',
+                children: renderForm(onRegister, '注册', false),
+              },
+            ]}
+          />
+        </div>
+        <div className="applogin-foot applogin-enter applogin-enter--foot">个人 AI 知识库与记忆助手</div>
       </div>
     </div>
   )

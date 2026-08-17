@@ -4,7 +4,7 @@ Echo 是一个多账号私有的个人 AI 知识库与记忆助手。核心链�
 
 面试开场可以概括为：
 
-> 我基于 FastAPI、React 和四类存储实现了一个个人 AI 知识库与记忆助手。知识库采用父子块、IK 中文分词、向量与 BM25 混合检索；记忆从对话异步萃取实体、关系和事件写入 Neo4j。Agent 侧用 LangChain 编排知识、记忆、联网和 MCP 工具，强模型走 Function Calling，弱模型走 ReAct，最终通过 SSE 流式输出。系统按 user_id 做全链路隔离，并用 Docker Compose 部署四存储、API、Worker 和 Web。
+> 我基于 FastAPI、React 和四类存储实现了一个个人 AI 知识库与记忆助手。知识库采用父子块、IK 中文分词、向量与 BM25 混合检索；记忆从对话异步萃取实体、关系和事件写入 Neo4j。Agent 侧使用自研运行时编排知识、记忆、联网和 MCP 工具，强模型走 Function Calling，弱模型走 ReAct，外部工具由官方 MCP SDK 2.x 接入，最终通过 SSE 流式输出。系统按 user_id 做全链路隔离，并用 Docker Compose 部署四存储、API、Worker 和 Web。
 
 最值得展开的三个取舍：
 

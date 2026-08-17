@@ -102,8 +102,9 @@ async def _do_recall(
                 for rel in h.get("relations", [])[:2]:
                     obj = rel.get("object_name") or ""
                     if obj:
+                        predicate = rel.get("predicate_surface") or rel.get("predicate") or ""
                         rel_prefix = _uncertain_prefix(rel.get("confidence"))
-                        lines.append(f"  · {rel_prefix}{name} {rel.get('predicate', '')} {obj}")
+                        lines.append(f"  · {rel_prefix}{name} {predicate} {obj}")
         except Exception as e:
             logger.warning("主动召回-记忆失败（忽略）: %s", e)
         return lines
