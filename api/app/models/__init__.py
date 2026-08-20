@@ -11,7 +11,6 @@ from app.models.document_model import Document
 from app.models.document_block_model import DocumentBlock
 from app.models.daily_review_model import DailyReview
 from app.models.favorite_model import Favorite
-from app.models.group_member_model import GroupMember
 from app.models.image_model import Image
 from app.models.knowledge_base_model import KnowledgeBase
 from app.models.loop_model import LoopIteration, LoopRun
@@ -20,8 +19,8 @@ from app.models.memory_model import Memory
 from app.models.memory_correction_model import MemoryCorrection
 from app.models.message_feedback_model import MessageFeedback
 from app.models.model_config_model import ModelConfig
-from app.models.notify_channel_model import NotifyChannel
-from app.models.persona_group_model import PersonaGroup
+from app.models.news_delivery_model import NewsDelivery
+from app.models.news_subscription_model import NewsSubscription
 from app.models.research_report_model import ResearchReport
 from app.models.skill_model import Skill
 from app.models.tag_model import Tag, document_tags, image_tags
@@ -39,7 +38,6 @@ __all__ = [
     "DocumentBlock",
     "DailyReview",
     "Favorite",
-    "GroupMember",
     "Image",
     "KnowledgeBase",
     "LoopIteration",
@@ -49,8 +47,8 @@ __all__ = [
     "MemoryCorrection",
     "MessageFeedback",
     "ModelConfig",
-    "NotifyChannel",
-    "PersonaGroup",
+    "NewsDelivery",
+    "NewsSubscription",
     "ResearchReport",
     "Skill",
     "Tag",

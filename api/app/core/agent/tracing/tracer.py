@@ -3,7 +3,7 @@
 业务侧使用:
     tracer = get_tracer()
 
-    # 起一次完整任务 trace(研究/对话/定时任务):
+    # 起一次完整任务 trace（研究/对话）：
     async with tracer.trace(user_id, task_type="research", task_name=...) as trace_ctx:
         async with tracer.span("planner", span_type="planner") as sp:
             sp.set_attribute("plan_size", 5)

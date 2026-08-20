@@ -94,7 +94,7 @@ async def _qianfan_search_structured(
 
 
 async def _tavily_search_structured(
-    api_key: str, query: str, top_k: int
+    api_key: str, query: str, top_k: int, *, topic: str | None = None, days: int | None = None
 ) -> list[dict]:
     payload = {
         "api_key": api_key,
@@ -102,6 +102,10 @@ async def _tavily_search_structured(
         "max_results": top_k,
         "search_depth": "basic",
     }
+    if topic:
+        payload["topic"] = topic
+    if days:
+        payload["days"] = days
     async with httpx.AsyncClient(timeout=30) as client:
         resp = await client.post(TAVILY_SEARCH_URL, json=payload)
         resp.raise_for_status()
@@ -117,12 +121,20 @@ async def _tavily_search_structured(
 
 
 async def web_search_structured(
-    provider: str, api_key: str, query: str, top_k: int = 10
+    provider: str,
+    api_key: str,
+    query: str,
+    top_k: int = 10,
+    *,
+    topic: str | None = None,
+    days: int | None = None,
 ) -> list[dict]:
     """结构化联网搜索：返回 [{title, url, snippet}]（带 url，供抓正文）。"""
     provider = (provider or "").lower()
     if provider == "tavily":
-        return await _tavily_search_structured(api_key, query, top_k)
+        return await _tavily_search_structured(
+            api_key, query, top_k, topic=topic, days=days
+        )
     return await _qianfan_search_structured(api_key, query, top_k)
 
 

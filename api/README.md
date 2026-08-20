@@ -14,7 +14,7 @@ app/core/agent/              Function Calling、ReAct、MCP、联网工具
 app/core/rag/                解析、父子分块、ES 索引与混合检索
 app/core/memory/             三元组萃取、召回、反思与图谱 schema
 app/core/storage/            本地文件与 OSS 抽象
-app/tasks/                   Celery parse、image、memory 任务
+app/tasks/                   Celery parse、image、memory、news 任务
 migrations/                 Alembic 迁移
 tests/                      RAG 与记忆可靠性测试
 ```
@@ -43,7 +43,8 @@ uv run python run.py
 Worker：
 
 ```powershell
-uv run celery -A app.celery_app.celery_app worker -l info -Q default,parse,memory --pool=solo
+uv run celery -A app.celery_app.celery_app worker -l info -Q default,parse,memory,news --pool=solo
+uv run celery -A app.celery_app.celery_app beat -l info
 ```
 
 验证：

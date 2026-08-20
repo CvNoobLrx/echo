@@ -8,7 +8,7 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.agent.tools import list_tools_for_user
-from app.core.agent.tools.base import BUILTIN_REGISTRY
+from app.core.agent.tools.base import ALWAYS_ENABLED_TOOL_KEYS, BUILTIN_REGISTRY
 from app.core.exceptions import BizError
 from app.models.tool_config_model import TOOL_TYPE_BUILTIN
 from app.repositories.tool_config_repository import ToolConfigRepository
@@ -29,6 +29,8 @@ class ToolService:
         """启停某个工具。校验工具存在。"""
         if tool_key not in BUILTIN_REGISTRY:
             raise BizError("工具不存在", code=4040, status_code=404)
+        if tool_key in ALWAYS_ENABLED_TOOL_KEYS:
+            raise BizError("系统基础工具无需配置", code=4000, status_code=400)
         await self.repo.upsert(
             user_id, tool_key, enabled, tool_type=TOOL_TYPE_BUILTIN
         )

@@ -1,5 +1,6 @@
 """Echo 的非周期异步任务队列。"""
 from celery import Celery
+from celery.schedules import crontab
 
 from app.config import settings
 
@@ -13,6 +14,7 @@ celery_app = Celery(
         "app.tasks.image",
         "app.tasks.memory",
         "app.tasks.daily_review",
+        "app.tasks.news",
     ],
 )
 
@@ -28,5 +30,12 @@ celery_app.conf.update(
         "app.tasks.parse.*": {"queue": "parse"},
         "app.tasks.image.*": {"queue": "parse"},
         "app.tasks.memory.*": {"queue": "memory"},
+        "app.tasks.news.*": {"queue": "news"},
+    },
+    beat_schedule={
+        "daily-news-at-eight": {
+            "task": "app.tasks.news.dispatch_daily_news",
+            "schedule": crontab(hour=8, minute=0),
+        },
     },
 )

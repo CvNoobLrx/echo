@@ -4,11 +4,11 @@
 用代码常量而非预灌数据：免迁移、可随版本演进、不污染用户数据。
 
 每个模板结构与 Skill 出参对齐（key 作为模板唯一标识，复制时不写入库）。
-工具白名单只勾内置工具 key（knowledge_search / memory_search / web_search / datetime）。
+工具白名单只勾可配置的内置工具 key（knowledge_search / memory_search / web_search）。
 """
 
 # 内置工具 key 参考（与 core/agent/tools/builtin 注册一致）：
-#   knowledge_search 知识库检索 / memory_search 记忆检索 / web_search 联网搜索 / datetime 时间
+#   knowledge_search 知识库检索 / memory_search 记忆检索 / web_search 联网搜索
 BUILTIN_SKILLS: list[dict] = [
     {
         "key": "kb_study",

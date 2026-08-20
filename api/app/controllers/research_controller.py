@@ -32,7 +32,7 @@ async def optimize_topic(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
-    """一键润色研究指令（深度研究主题 + 定时任务研究指令共用）。"""
+    """一键润色深度研究主题。"""
     optimized = await ResearchService(session).optimize_topic(user.id, body.topic)
     return success({"optimized": optimized})
 

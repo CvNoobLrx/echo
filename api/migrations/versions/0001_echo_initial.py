@@ -17,7 +17,9 @@ depends_on = None
 
 
 def upgrade() -> None:
-    Base.metadata.create_all(bind=op.get_bind())
+    # Historical follow-up revisions use inspector guards, so a fresh database
+    # can safely create the current schema here without duplicate-table failures.
+    Base.metadata.create_all(bind=op.get_bind(), checkfirst=True)
 
 
 def downgrade() -> None:

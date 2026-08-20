@@ -30,6 +30,7 @@ __pycache__/
 *$py.class
 *.so
 .pytest_cache/
+api/.pytest-eval-tmp/
 .mypy_cache/
 .ruff_cache/
 .coverage
@@ -50,6 +51,7 @@ coverage/
 .vscode/
 # ===== 模型缓存（运行时下载，不进 git） =====
 api/storage/docling-models/
+api/storage/[0-9a-f]*/
 storage/docling-models/
 
 # ===== 构建产物 =====
@@ -69,3 +71,4 @@ tests/
 !api/tests/
 api/tests/*
 !api/tests/test_native_agent_runtime.py
+!api/tests/test_news_email.py

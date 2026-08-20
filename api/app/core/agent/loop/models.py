@@ -24,7 +24,7 @@ class RubricDim(BaseModel):
 
 
 class RubricDef(BaseModel):
-    """一套 rubric 定义(研究 / 定时任务 / 未来扩展)。"""
+    """一套产物评分 rubric 定义。"""
 
     name: str                     # "research" / "task"
     dims: list[RubricDim]

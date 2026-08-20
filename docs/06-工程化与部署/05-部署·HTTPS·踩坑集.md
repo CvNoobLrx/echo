@@ -1,6 +1,6 @@
 # Echo 部署与 HTTPS
 
-基础 Compose 包含 7 个服务：PostgreSQL、Elasticsearch、Neo4j、Redis、API、Worker 和 Web。生产覆盖文件限制内存、收紧存储端口并将 Web 暴露到 80/443。
+基础 Compose 包含 8 个服务：PostgreSQL、Elasticsearch、Neo4j、Redis、API、Worker、Beat 和 Web。生产覆盖文件限制内存、收紧存储端口并将 Web 暴露到 80/443。
 
 部署前需要：
 
@@ -8,12 +8,13 @@
 - 为 PostgreSQL 与 Neo4j 设置独立密码。
 - 将证书放到 `web/certs/echo.crt` 与 `web/certs/echo.key`，或按实际域名调整 Nginx 配置。
 - 确认 Elasticsearch IK 镜像已成功构建。
+- 配置 SMTP 发件服务器、发件地址、账号和授权码。
 
 常见踩坑：
 
-**Q：为什么 Compose 显示 7 个容器，不是 4 个？**
+**Q：为什么 Compose 显示 8 个容器，不是 4 个？**
 
-A：4 个是存储容器；完整应用还需要 API、异步 Worker 和 Web。Echo 已移除 Beat，所以从裁剪前的 8 个服务收敛为 7 个。
+A：4 个是存储容器；完整应用还需要 API、异步 Worker、每日新闻 Beat 和 Web。Beat 不执行重任务，只在每天 08:00 向 `news` 队列派发任务。
 
 **Q：文档上传后一直处理中？**
 

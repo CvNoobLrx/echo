@@ -45,7 +45,7 @@ async def agent_briefing(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
-    """Agent 简报：最近完成的深度研究报告（含定时任务产出）。"""
+    """Agent 简报：最近完成的深度研究报告。"""
     return success(await DashboardService(session).agent_briefing(user.id))
 
 

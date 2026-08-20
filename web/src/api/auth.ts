@@ -47,8 +47,8 @@ export const authApi = {
       new_password: newPassword,
     })
   },
-  updateProfile(nickname: string) {
-    return client.put<unknown, Wrapped<UserInfo>>('/auth/profile', { nickname })
+  updateProfile(body: { nickname?: string; email?: string | null }) {
+    return client.put<unknown, Wrapped<UserInfo>>('/auth/profile', body)
   },
   uploadAvatar(file: File) {
     const form = new FormData()

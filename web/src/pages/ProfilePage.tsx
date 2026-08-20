@@ -24,6 +24,9 @@ export default function ProfilePage() {
   const [editingNick, setEditingNick] = useState(false)
   const [nickname, setNickname] = useState('')
   const [savingNick, setSavingNick] = useState(false)
+  const [editingEmail, setEditingEmail] = useState(false)
+  const [email, setEmail] = useState('')
+  const [savingEmail, setSavingEmail] = useState(false)
   // 修改密码弹窗
   const [pwdOpen, setPwdOpen] = useState(false)
   const [pwdForm] = Form.useForm()
@@ -33,7 +36,9 @@ export default function ProfilePage() {
     setNickname(user?.nickname || '')
   }, [user?.nickname])
 
-  const displayName = user?.nickname || user?.username || '用户'
+  useEffect(() => { setEmail(user?.email || '') }, [user?.email])
+
+  const displayName = user?.nickname || user?.email || user?.username || '用户'
 
   const onSaveNickname = async () => {
     const v = nickname.trim()
@@ -43,7 +48,7 @@ export default function ProfilePage() {
     }
     setSavingNick(true)
     try {
-      await authApi.updateProfile(v)
+      await authApi.updateProfile({ nickname: v })
       await fetchUser()
       setEditingNick(false)
       message.success('昵称已更新')
@@ -52,6 +57,18 @@ export default function ProfilePage() {
     } finally {
       setSavingNick(false)
     }
+  }
+
+  const onSaveEmail = async () => {
+    const value = email.trim().toLowerCase()
+    if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) { message.warning('请输入有效的邮箱地址'); return }
+    setSavingEmail(true)
+    try {
+      await authApi.updateProfile({ email: value || null })
+      await fetchUser()
+      setEditingEmail(false)
+      message.success(value ? '邮箱已更新' : '邮箱已清除')
+    } catch (e) { message.error((e as Error).message) } finally { setSavingEmail(false) }
   }
 
   const onChangePassword = async (v: {
@@ -90,8 +107,6 @@ export default function ProfilePage() {
   }
 
   const infoRows = [
-    { icon: <UserOutlined />, label: '账号', value: user?.username || '-' },
-    { icon: <MailOutlined />, label: '邮箱', value: user?.email || '未绑定' },
     {
       icon: <CalendarOutlined />,
       label: '注册时间',
@@ -107,7 +122,14 @@ export default function ProfilePage() {
         <div className="profile-head">
           <div className="profile-avatar-wrap">
             {user?.avatar ? (
-              <AuthenticatedImage src={user.avatar} alt="头像" className="profile-avatar" />
+              <AuthenticatedImage
+                src={user.avatar}
+                alt="头像"
+                className="profile-avatar"
+                width={104}
+                height={104}
+                style={{ width: 104, height: 104, maxWidth: 104, maxHeight: 104 }}
+              />
             ) : (
               <Avatar size={104} icon={<UserOutlined />} className="profile-avatar-fallback">
                 {displayName[0]?.toUpperCase()}
@@ -120,7 +142,7 @@ export default function ProfilePage() {
             </Upload>
           </div>
           <div className="profile-name">{displayName}</div>
-          <div className="profile-sub">@{user?.username}</div>
+          <div className="profile-sub">{user?.email || user?.username}</div>
         </div>
 
         {/* 信息行 */}
@@ -172,6 +194,17 @@ export default function ProfilePage() {
                   </Button>
                 </>
               )}
+            </span>
+          </div>
+
+          <div className="profile-row">
+            <span className="profile-row-icon"><MailOutlined /></span><span className="profile-row-label">邮箱</span>
+            <span className="profile-row-value">
+              {editingEmail ? <span style={{ display: 'inline-flex', gap: 8, width: '100%', flexWrap: 'wrap' }}>
+                <Input autoFocus type="email" value={email} onChange={(event) => setEmail(event.target.value)} onPressEnter={onSaveEmail} maxLength={255} placeholder="name@example.com" aria-label="账号邮箱" />
+                <Button type="primary" icon={<CheckOutlined />} loading={savingEmail} onClick={onSaveEmail} aria-label="保存邮箱" />
+                <Button onClick={() => { setEmail(user?.email || ''); setEditingEmail(false) }}>取消</Button>
+              </span> : <><span className={user?.email ? '' : 'profile-empty'}>{user?.email || '未设置'}</span><Button type="link" size="small" icon={<EditOutlined />} onClick={() => setEditingEmail(true)}>编辑</Button></>}
             </span>
           </div>
 

@@ -128,7 +128,6 @@ class DashboardService:
             {
                 "id": str(rid),
                 "title": title or topic,
-                "scheduled": False,
                 "created_at": t.isoformat() if t else None,
             }
             for rid, title, topic, t in rows.all()

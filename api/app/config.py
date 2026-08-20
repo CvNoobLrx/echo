@@ -65,6 +65,15 @@ class Settings(BaseSettings):
     celery_broker_url: str = "redis://localhost:6379/1"
     celery_result_backend: str = "redis://localhost:6379/2"
 
+    # 每日新闻邮件
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_from_name: str = "回声 Echo"
+    smtp_security: str = "starttls"  # starttls | ssl | none
+
     # 文件存储
     storage_backend: str = "local"  # local | oss
     storage_dir: str = "./storage"

@@ -24,7 +24,6 @@ export interface MemoryStatsData {
 export interface AgentBriefItem {
   id: string
   title: string
-  scheduled: boolean
   created_at: string | null
 }
 

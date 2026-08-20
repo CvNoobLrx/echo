@@ -2,7 +2,6 @@
 
 本模块是**纯异步生成器**，与传输层解耦：
 - 在线发起：由 research_service 在后台任务里消费，事件经 Redis bus 广播给前端（可断线续传）。
-- 定时任务（②）：将来由 Celery worker 直接消费同一引擎，无需 bus。
 
 产出事件（dict）：
   {"type": "status", "phase": str, "detail": str}

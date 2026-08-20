@@ -96,10 +96,7 @@ class LoopController:
         self.task_type = task_type
         self.task_id = task_id
 
-        # 选 rubric:默认按 task_type 取(research / task)
-        self.rubric_name = rubric_name or (
-            "research" if task_type == "research" else "task"
-        )
+        self.rubric_name = rubric_name or "research"
         rubric = RUBRICS.get(self.rubric_name)
         if rubric is None:
             raise ValueError(f"未知 rubric: {self.rubric_name}")

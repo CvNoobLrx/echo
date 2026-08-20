@@ -8,7 +8,12 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import app.core.agent.tools.builtin  # noqa: F401  触发内置工具注册
-from app.core.agent.tools.base import AgentTool, BUILTIN_REGISTRY, ToolBuildContext
+from app.core.agent.tools.base import (
+    ALWAYS_ENABLED_TOOL_KEYS,
+    AgentTool,
+    BUILTIN_REGISTRY,
+    ToolBuildContext,
+)
 from app.core.logging import get_logger
 from app.repositories.tool_config_repository import ToolConfigRepository
 
@@ -48,7 +53,9 @@ async def _build_builtin_tools(
     )
     tools: list[AgentTool] = []
     for key, spec in BUILTIN_REGISTRY.items():
-        on = overrides.get(key, enabled.get(key, spec.default_enabled))
+        on = key in ALWAYS_ENABLED_TOOL_KEYS or overrides.get(
+            key, enabled.get(key, spec.default_enabled)
+        )
         if not on:
             continue
         try:
@@ -70,7 +77,7 @@ async def build_enabled_tools(
 ) -> list[AgentTool]:
     """构建用户当前启用的工具列表（内置 + MCP，MCP 为无状态版本，每次调用新建连接）。
 
-    保留给不便用上下文管理器的场景；问答/群聊生成请用 build_enabled_tools_cm（持久会话，省握手）。
+    保留给不便用上下文管理器的场景；问答生成请用 build_enabled_tools_cm（持久会话，省握手）。
 
     overrides: {tool_key: bool} 本轮临时开关（对话请求传入），优先级最高。
     citations: 引用收集器，传给知识库工具。
@@ -131,6 +138,8 @@ async def list_tools_for_user(
     enabled = await _enabled_map(session, user_id)
     out: list[dict] = []
     for key, spec in BUILTIN_REGISTRY.items():
+        if key in ALWAYS_ENABLED_TOOL_KEYS:
+            continue
         out.append({
             "tool_key": key,
             "name": spec.name,

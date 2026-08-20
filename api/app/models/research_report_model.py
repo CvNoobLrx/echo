@@ -2,7 +2,6 @@
 
 存一次深度研究的主题、提纲、最终报告 Markdown、来源列表与状态。
 报告独立存储，可一键存入知识库（不直接污染知识库）。
-task_id 预留给定时任务（②）关联，本批次为空。
 """
 import uuid
 from datetime import datetime
@@ -41,8 +40,6 @@ class ResearchReport(Base):
     outline: Mapped[dict | None] = mapped_column(JSONB, nullable=True)  # 提纲+查询
     sources: Mapped[list | None] = mapped_column(JSONB, nullable=True)  # 来源列表
     error_msg: Mapped[str | None] = mapped_column(Text, nullable=True)
-    # 预留：关联定时任务（②）；本批次为空
-    task_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

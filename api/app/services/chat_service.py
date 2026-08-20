@@ -309,10 +309,15 @@ class ChatService:
             overrides["web_search"] = body.enable_web_search
 
         if skill and (skill.tool_keys or []):
-            from app.core.agent.tools.base import BUILTIN_REGISTRY
+            from app.core.agent.tools.base import (
+                ALWAYS_ENABLED_TOOL_KEYS,
+                BUILTIN_REGISTRY,
+            )
 
             whitelist = set(skill.tool_keys)
             for key in BUILTIN_REGISTRY:
+                if key in ALWAYS_ENABLED_TOOL_KEYS:
+                    continue
                 overrides[key] = key in whitelist
 
         from app.repositories.knowledge_base_repository import (

@@ -17,7 +17,6 @@ export interface FavoriteItem {
     summary?: string
     conversation_id?: string
     url?: string
-    is_group?: boolean
   } | null
   created_at: string
 }

@@ -11,7 +11,7 @@ import GraphPage from './pages/GraphPage'
 import ChatPage from './pages/ChatPage'
 import ResearchPage from './pages/ResearchPage'
 import FavoritesPage from './pages/FavoritesPage'
-import NotifyChannelPage from './pages/NotifyChannelPage'
+import NewsPushPage from './pages/NewsPushPage'
 import SkillPage from './pages/SkillPage'
 import TracesPage from './pages/TracesPage'
 import AgentConfigPage from './pages/AgentConfigPage'
@@ -50,7 +50,8 @@ export default function App() {
             <Route path="settings/agent" element={<AgentConfigPage />} />
             <Route path="settings/skills" element={<SkillPage />} />
             <Route path="settings/tools" element={<ToolConfigPage />} />
-            <Route path="settings/notify" element={<NotifyChannelPage />} />
+            <Route path="settings/news" element={<NewsPushPage />} />
+            <Route path="settings/notify" element={<Navigate to="/settings/news" replace />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

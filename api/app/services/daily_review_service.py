@@ -3,7 +3,7 @@
 import uuid
 from datetime import date, datetime, time
 
-from sqlalchemy import and_, or_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import get_logger
@@ -40,13 +40,7 @@ class DailyReviewService:
                 Message.role == ROLE_USER,
                 Message.created_at >= start,
                 Message.created_at <= end,
-                or_(
-                    and_(
-                        Conversation.user_id == user_id,
-                        Conversation.is_group.isnot(True),
-                    ),
-                    Message.sender_user_id == user_id,
-                ),
+                Conversation.user_id == user_id,
             )
             .limit(30)
         )

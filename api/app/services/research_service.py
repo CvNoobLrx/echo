@@ -368,7 +368,7 @@ class ResearchService:
     async def optimize_topic(self, user_id: uuid.UUID, raw_topic: str) -> str:
         """调用默认对话模型，把口语化/笼统的研究指令润色成清晰可执行的研究主题。
 
-        深度研究主题输入框 + 定时任务「研究指令」共用此接口。失败抛 BizError（中文）。
+        供深度研究主题输入框使用。失败抛 BizError（中文）。
         """
         from app.core.agent.research.prompt_renderer import render_research_prompt
         from app.core.llm.chat_model import build_default_chat_model

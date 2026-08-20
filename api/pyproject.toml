@@ -23,6 +23,7 @@ dependencies = [
     # ===== 缓存/队列 Redis + Celery =====
     "redis==5.2.1",
     "celery==5.4.0",
+    "aiosmtplib>=3.0,<6",
     # ===== 安全：JWT / 密码 / API Key 加密 =====
     "python-jose[cryptography]==3.3.0",
     "passlib==1.7.4",

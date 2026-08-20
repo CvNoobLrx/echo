@@ -49,21 +49,6 @@ class ResearchReportRepository:
         )
         return list(result.scalars().all()), int(total or 0)
 
-    async def list_by_task(
-        self, user_id: uuid.UUID, task_id: uuid.UUID, limit: int = 30
-    ) -> list[ResearchReport]:
-        """保留 task_id 关联的研究运行历史（按时间倒序）。"""
-        stmt = (
-            select(ResearchReport)
-            .where(
-                ResearchReport.user_id == user_id,
-                ResearchReport.task_id == task_id,
-            )
-            .order_by(ResearchReport.created_at.desc())
-            .limit(limit)
-        )
-        return list((await self.session.execute(stmt)).scalars().all())
-
     async def delete(self, report: ResearchReport) -> None:
         await self.session.delete(report)
         await self.session.commit()

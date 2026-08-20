@@ -53,6 +53,7 @@ export default function LoginPage() {
 
     let cancelled = false
     let landingAnimation: Animation | undefined
+    let targetRevealAnimation: Animation | undefined
     const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
 
     const startIntro = async () => {
@@ -69,15 +70,25 @@ export default function LoginPage() {
 
       landingAnimation = intro.animate(
         [
-          { transform: 'translate(-50%, -50%) scale(1)', offset: 0 },
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0 },
           {
             transform: 'translate(-50%, -50%) scale(1)',
-            offset: 0.58,
+            offset: 0.56,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          },
+          {
+            transform: landedTransform,
+            opacity: 1,
+            offset: 0.94,
             easing: 'cubic-bezier(0.2, 0, 0, 1)',
           },
-          { transform: landedTransform, offset: 1 },
+          { transform: landedTransform, opacity: 0, offset: 1 },
         ],
         { duration: 2400, fill: 'forwards', easing: 'linear' },
+      )
+      targetRevealAnimation = target.animate(
+        [{ opacity: 0 }, { opacity: 1 }],
+        { duration: 220, delay: 2180, fill: 'forwards', easing: 'cubic-bezier(0.2, 0, 0, 1)' },
       )
       landingAnimation.onfinish = () => {
         if (!cancelled) setIntroDone(true)
@@ -88,6 +99,7 @@ export default function LoginPage() {
     return () => {
       cancelled = true
       landingAnimation?.cancel()
+      targetRevealAnimation?.cancel()
     }
   }, [])
 

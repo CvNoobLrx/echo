@@ -25,13 +25,11 @@ class AgentPersonaService:
         self.session = session
         self.repo = AgentPersonaRepository(session)
 
-    async def list(
-        self, user_id: uuid.UUID, include_group_only: bool = False
-    ) -> list[AgentPersona]:
+    async def list(self, user_id: uuid.UUID) -> list[AgentPersona]:
         items = await self.repo.list_by_user(user_id)
         # 角色列表为空：懒创建一个开箱即用的默认角色（覆盖新/存量用户，无需回填）
         if not items:
-            from app.services.persona_scenario_builtins import DEFAULT_PERSONA
+            from app.services.persona_defaults import DEFAULT_PERSONA
 
             default = AgentPersona(
                 user_id=user_id,
@@ -42,10 +40,6 @@ class AgentPersonaService:
             )
             await self.repo.add(default)
             items = await self.repo.list_by_user(user_id)
-        # 默认只返回「单个角色」（隐藏仅作为卡组成员的角色，保持列表干净）；
-        # include_group_only=True 时返回全部（群聊页解析成员头像用）
-        if not include_group_only:
-            items = [p for p in items if not p.in_group_only]
         return items
 
     async def _get_or_404(

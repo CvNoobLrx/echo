@@ -25,7 +25,8 @@ class ChangePasswordRequest(BaseModel):
 
 
 class UpdateProfileRequest(BaseModel):
-    nickname: str = Field(min_length=1, max_length=64)
+    nickname: str | None = Field(default=None, min_length=1, max_length=64)
+    email: str | None = Field(default=None, max_length=255)
 
 
 class TokenPair(BaseModel):

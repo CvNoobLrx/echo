@@ -13,6 +13,9 @@ from pydantic import BaseModel
 TOOL_TYPE_BUILTIN = "builtin"
 TOOL_TYPE_MCP = "mcp"
 
+# 系统基础能力不暴露给用户配置，也不会被持久配置或技能白名单关闭。
+ALWAYS_ENABLED_TOOL_KEYS = frozenset({"datetime"})
+
 
 @dataclass
 class ToolBuildContext:
@@ -96,6 +99,7 @@ def register_tool(spec: ToolSpec) -> ToolSpec:
 __all__ = [
     "TOOL_TYPE_BUILTIN",
     "TOOL_TYPE_MCP",
+    "ALWAYS_ENABLED_TOOL_KEYS",
     "AgentTool",
     "ToolBuildContext",
     "ToolSpec",

@@ -388,7 +388,7 @@ export default function ModelConfigPage() {
                   {[
                     { name: '对话 Chat', tag: '必配', desc: '负责所有问答对话的大语言模型。建议选支持 Function Call 的强模型（勾上「工具调用」能力），才能自动调用知识库/记忆/联网等工具。', provider: '智谱 glm-4 / DeepSeek deepseek-chat / 通义 qwen-max' },
                     { name: '向量 Embedding', tag: '必配', desc: '把文档和问题转成向量，知识库检索和记忆召回都依赖它。配了知识库才有意义。', provider: '智谱 embedding-3 / 通义 text-embedding-v3' },
-                    { name: '多模态 Multimodal', tag: '可选', desc: '能看图理解的模型。对话/群聊发图片让 AI 分析时用到（勾「图片理解」能力）。', provider: '智谱 glm-4v / 通义 qwen-vl-max / 豆包 vision' },
+                    { name: '多模态 Multimodal', tag: '可选', desc: '能看图理解的模型。对话发图片让 AI 分析时用到（勾「图片理解」能力）。', provider: '智谱 glm-4v / 通义 qwen-vl-max / 豆包 vision' },
                     { name: 'Rerank 重排', tag: '可选', desc: '对知识库检索结果重新排序，提升相关度。不配也能用，配了检索更准。', provider: '通义 gte-rerank' },
                     { name: '联网搜索 Websearch', tag: '可选', desc: '让 AI 能查实时信息（新闻/股价/天气）。配了并在对话开启联网开关才生效。', provider: '百度千帆 / Tavily' },
                     { name: '语音识别 ASR', tag: '可选', desc: '把语音转文字，对话输入框的麦克风用它（更准）。不配则用浏览器免费识别。', provider: '通义千问 paraformer-v2 / OpenAI whisper-1' },

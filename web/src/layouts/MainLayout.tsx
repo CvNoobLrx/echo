@@ -63,7 +63,7 @@ const menuItems = [
       { key: '/settings/agent', icon: <RobotOutlined />, label: '角色配置' },
       { key: '/settings/skills', icon: <ThunderboltOutlined />, label: '技能' },
       { key: '/settings/tools', icon: <ToolOutlined />, label: '工具配置' },
-      { key: '/settings/notify', icon: <BellOutlined />, label: '消息推送' },
+      { key: '/settings/news', icon: <BellOutlined />, label: '新闻推送' },
     ],
   },
 ]
@@ -187,7 +187,13 @@ export default function MainLayout() {
             <Button type="text" className="app-user-button" aria-label="打开账号菜单">
               <Space>
                 {user?.avatar ? (
-                  <AuthenticatedImage src={user.avatar} alt="头像" className="app-user-avatar" />
+                  <AuthenticatedImage
+                    src={user.avatar}
+                    alt="头像"
+                    className="app-user-avatar"
+                    width={28}
+                    height={28}
+                  />
                 ) : (
                   <Avatar size={28} icon={<UserOutlined />} />
                 )}

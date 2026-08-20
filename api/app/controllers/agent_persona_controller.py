@@ -16,13 +16,12 @@ router = APIRouter(prefix="/personas", tags=["agent"])
 
 @router.get("")
 async def list_personas(
-    all: bool = False,
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
-    """角色列表。默认只返回「单个角色」；all=true 返回全部（含仅卡组成员，群聊页解析头像用）。"""
+    """返回当前用户的角色列表。"""
     service = AgentPersonaService(session)
-    items = await service.list(user.id, include_group_only=all)
+    items = await service.list(user.id)
     return success([service.to_out_dict(p) for p in items])
 
 

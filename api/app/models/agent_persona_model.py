@@ -34,8 +34,6 @@ class AgentPersona(Base):
     temperature: Mapped[float] = mapped_column(Float, default=0.7)
     # 是否当前生效（每用户最多一条 true，service 层保证互斥）
     is_active: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-    # 仅作为角色卡组成员存在（如内置场景拉入的角色），不在「单个角色」列表单独展示
-    in_group_only: Mapped[bool] = mapped_column(Boolean, default=False)
     # 列表排序（预留）
     sort: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(

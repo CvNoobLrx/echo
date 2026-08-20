@@ -29,7 +29,7 @@ class Verifier(ABC):
         """对 artifact 评分。
 
         Args:
-            topic: 任务主题(深度研究的题目 / 定时任务的研究指令)
+            topic: 深度研究主题
             artifact: 待评产物。结构由 controller 提供,通用约定:
                 {
                     "title": str,
