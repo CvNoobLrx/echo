@@ -99,6 +99,28 @@ class SpanRecorder:
         """span 结束时调。"""
         self._enqueue(_SpanEvent(kind="span_create", span=span))
 
+    async def flush_pending(self) -> None:
+        """立即排空当前队列，供短生命周期的 Celery 事件循环使用。"""
+        if self.is_running():
+            await self._queue.join()
+            return
+
+        events: list[_SpanEvent] = []
+        while True:
+            try:
+                events.append(self._queue.get_nowait())
+            except asyncio.QueueEmpty:
+                break
+        if not events:
+            return
+        try:
+            await self._flush(events)
+        except Exception as e:
+            logger.warning("SpanRecorder flush_pending 失败,本批 %d 条丢弃: %s", len(events), e)
+        finally:
+            for _ in events:
+                self._queue.task_done()
+
     def _enqueue(self, ev: _SpanEvent) -> None:
         """入队,满则丢最旧并 warning(内存安全优先)。"""
         try:

@@ -71,6 +71,7 @@ function fmtTime(iso: string): string {
 const TASK_TYPE_LABELS: Record<string, string> = {
   research: '深度研究',
   chat: '对话',
+  news: '每日新闻',
   verify: '审稿',
   repair: '修复',
 }
@@ -78,6 +79,7 @@ const TASK_TYPE_LABELS: Record<string, string> = {
 const TASK_TYPE_COLORS: Record<string, string> = {
   research: 'purple',
   chat: 'blue',
+  news: 'orange',
   verify: 'cyan',
   repair: 'magenta',
 }

@@ -28,14 +28,14 @@ import contextvars
 import logging
 import random
 import uuid
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from app.config import settings
 from app.core.agent.tracing.models import SpanRecord, TraceRecord
 from app.core.agent.tracing.pricing import estimate_cost_cny
-from app.core.agent.tracing.span_recorder import get_recorder
+from app.core.agent.tracing.span_recorder import SpanRecorder, get_recorder
 
 if TYPE_CHECKING:
     from app.core.llm.types import Usage
@@ -50,6 +50,23 @@ _current_trace: contextvars.ContextVar[TraceRecord | None] = contextvars.Context
 _current_span: contextvars.ContextVar[SpanRecord | None] = contextvars.ContextVar(
     "tracing.current_span", default=None
 )
+_current_recorder: contextvars.ContextVar[SpanRecorder | None] = contextvars.ContextVar(
+    "tracing.current_recorder", default=None
+)
+
+
+def _active_recorder() -> SpanRecorder:
+    return _current_recorder.get() or get_recorder()
+
+
+@contextmanager
+def use_recorder(recorder: SpanRecorder):
+    """为当前任务绑定独立 recorder，适配 Celery threads 并发。"""
+    token = _current_recorder.set(recorder)
+    try:
+        yield
+    finally:
+        _current_recorder.reset(token)
 
 
 class _SpanHandle:
@@ -179,7 +196,7 @@ class Tracer:
         trace_token = _current_trace.set(record)
         # trace 创建事件先入队(create 记录)
         try:
-            get_recorder().push_trace_create(record)
+            _active_recorder().push_trace_create(record)
         except Exception as e:
             logger.warning("trace 创建入队失败: %s", e)
 
@@ -196,7 +213,7 @@ class Tracer:
                 (record.finished_at - record.started_at).total_seconds() * 1000
             )
             try:
-                get_recorder().push_trace_update(record)
+                _active_recorder().push_trace_update(record)
             except Exception as e:
                 logger.warning("trace 更新入队失败: %s", e)
             _current_trace.reset(trace_token)
@@ -244,7 +261,7 @@ class Tracer:
                 (record.finished_at - record.started_at).total_seconds() * 1000
             )
             try:
-                get_recorder().push_span(record)
+                _active_recorder().push_span(record)
             except Exception as e:
                 logger.warning("span 入队失败: %s", e)
             _current_span.reset(span_token)

@@ -5,18 +5,27 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.celery_app import celery_app
+from app.config import settings
+from app.core.agent.tracing.span_recorder import SpanRecorder
+from app.core.agent.tracing.tracer import use_recorder
 from app.core.llm.client import close_llm_client
 from app.db.postgres import create_task_engine
 from app.services.news_service import NewsService
 
 
-async def _with_service(callback):
+async def _with_service(callback, *, record_traces: bool = False):
     engine = create_task_engine()
     maker = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    recorder = SpanRecorder() if record_traces and settings.tracing_enabled else None
     try:
         async with maker() as session:
-            return await callback(NewsService(session))
+            if recorder is None:
+                return await callback(NewsService(session))
+            with use_recorder(recorder):
+                return await callback(NewsService(session))
     finally:
+        if recorder is not None:
+            await recorder.flush_pending()
         await engine.dispose()
         await close_llm_client()
 
@@ -42,7 +51,7 @@ def deliver_news_task(self, delivery_id: str) -> str:
         await service.run_delivery(uuid.UUID(delivery_id))
 
     try:
-        asyncio.run(_with_service(run))
+        asyncio.run(_with_service(run, record_traces=True))
     except Exception as exc:
         failure = exc
         final = self.request.retries >= self.max_retries

@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.agent.research.retriever import get_websearch_config
+from app.core.agent.tracing import get_tracer, push_llm_usage
 from app.core.agent.web_search import web_search_structured
 from app.core.exceptions import BizError
 from app.core.llm.chat_model import build_default_chat_model
@@ -179,30 +180,37 @@ class NewsService:
         delivery = await self.repo.get_delivery_by_id(delivery_id)
         if delivery is None:
             raise RuntimeError("新闻发送记录不存在")
-        delivery.status = STATUS_GENERATING
-        delivery.started_at = datetime.now(timezone.utc)
-        delivery.error_message = None
-        await self.repo.save_delivery(delivery)
 
-        try:
-            user = await UserRepository(self.session).get_by_id(delivery.user_id)
-            if user is None:
-                raise RuntimeError("账号不存在")
-            if not user.email:
-                raise RuntimeError("账号邮箱未设置")
-            subscription = await self.repo.get_subscription(user.id)
-            topics = subscription.topics if subscription else []
-            digest = await self._generate_digest(user.id, topics)
-            subject, text_body, html_body = self._render_email(digest)
-            delivery.recipient_email = user.email
-            delivery.subject = subject
-            smtp_config = self._smtp_config(subscription)
-            await send_email(user.email, subject, text_body, html_body, config=smtp_config)
-            delivery.status = STATUS_SENT
-            delivery.finished_at = datetime.now(timezone.utc)
-            await self.repo.save_delivery(delivery)
-        except Exception:
-            raise
+        tracer = get_tracer()
+        async with tracer.trace(
+            user_id=delivery.user_id,
+            task_type="news",
+            task_id=delivery.id,
+            task_name="每日新闻推送",
+            attributes={"trigger": delivery.trigger},
+        ):
+            async with tracer.span("每日新闻推送", span_type="other"):
+                delivery.status = STATUS_GENERATING
+                delivery.started_at = datetime.now(timezone.utc)
+                delivery.error_message = None
+                await self.repo.save_delivery(delivery)
+
+                user = await UserRepository(self.session).get_by_id(delivery.user_id)
+                if user is None:
+                    raise RuntimeError("账号不存在")
+                if not user.email:
+                    raise RuntimeError("账号邮箱未设置")
+                subscription = await self.repo.get_subscription(user.id)
+                topics = subscription.topics if subscription else []
+                digest = await self._generate_digest(user.id, topics)
+                subject, text_body, html_body = self._render_email(digest)
+                delivery.recipient_email = user.email
+                delivery.subject = subject
+                smtp_config = self._smtp_config(subscription)
+                await send_email(user.email, subject, text_body, html_body, config=smtp_config)
+                delivery.status = STATUS_SENT
+                delivery.finished_at = datetime.now(timezone.utc)
+                await self.repo.save_delivery(delivery)
 
     async def record_delivery_failure(
         self, delivery_id: uuid.UUID, exc: Exception, *, final: bool
@@ -280,6 +288,7 @@ class NewsService:
                 ),
             ]
         )
+        push_llm_usage(response, model)
         raw = response.content if isinstance(response.content, str) else str(response.content)
         raw = raw.strip()
         if raw.startswith("```"):
